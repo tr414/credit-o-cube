@@ -30,8 +30,6 @@ public class UserService {
 	public Optional<User> findUserById(int id) {
 		return userRepo.findById(id);
 	}
-	
-
 		
 	public void deleteUser(int id) {
 
