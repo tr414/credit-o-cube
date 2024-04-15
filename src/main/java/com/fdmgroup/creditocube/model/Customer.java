@@ -8,14 +8,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import com.fdmgroup.creditocube.model.DebitAccount;
+import com.fdmgroup.creditocube.model.User;
+
 
 @Entity
 public class Customer extends User {
 
-	@Id
-	@Column(name = "customer_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int customerId;
+
 
 	@Column(name = "account_number")
 	@OneToMany(mappedBy = "customer")
@@ -25,13 +25,7 @@ public class Customer extends User {
 	private String address;
 	private double Salary;
 
-	public int getCustomerId() {
-		return customerId;
-	}
 
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
-	}
 
 	public String getNric() {
 		return nric;
