@@ -16,6 +16,7 @@ import com.fdmgroup.creditocube.model.User;
 public class Customer extends User {
 
 
+
 	@Column(name = "account_number")
 	@OneToMany(mappedBy = "customer")
 	private List<DebitAccount> debitAccounts;
@@ -23,6 +24,7 @@ public class Customer extends User {
 	private String nric;
 	private String address;
 	private double Salary;
+
 
 
 	public String getNric() {
