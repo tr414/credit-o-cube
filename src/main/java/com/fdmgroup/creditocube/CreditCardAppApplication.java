@@ -8,6 +8,9 @@ public class CreditCardAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CreditCardAppApplication.class, args);
+
+		// online gitlab edit
+		private int y;
 	}
 
 }
