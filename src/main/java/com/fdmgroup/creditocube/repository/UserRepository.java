@@ -10,11 +10,5 @@ import com.fdmgroup.creditocube.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer>{
 
-//	@Query("SELECT u FROM User u WHERE u.firstName LIKE :userFirstName")
-//	public ArrayList<User> findUserByFirstName(@Param("userFirstName")String userFirstName);
-//	@Query("SELECT u FROM User u WHERE u.firstName LIKE :userLastName")
-//	public ArrayList<User> findUserByLastName(@Param("userLastName")String userLastName);
-//	@Query("SELECT u FROM User u WHERE u.username LIKE :username")
-//	public ArrayList<User> findUserByUsername(@Param("username") String username);
 
 }

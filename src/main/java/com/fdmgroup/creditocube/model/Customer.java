@@ -15,8 +15,6 @@ import com.fdmgroup.creditocube.model.User;
 @Entity
 public class Customer extends User {
 
-
-
 	@Column(name = "account_number")
 	@OneToMany(mappedBy = "customer")
 	private List<DebitAccount> debitAccounts;
