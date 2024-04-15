@@ -25,9 +25,7 @@ public class CustomerController {
     @Autowired
     CustomerService customerService; // Service for customer-related operations
 
-	
-	
-	
+		
     /**
      * Handles the GET request for the login page.
      * This method maps the "/login" URL to return the login view.
