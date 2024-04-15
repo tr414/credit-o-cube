@@ -8,6 +8,10 @@ public class CreditCardAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CreditCardAppApplication.class, args);
+		
+		
+		// eclipse local edit
+		private int x;
 	}
 
 }
