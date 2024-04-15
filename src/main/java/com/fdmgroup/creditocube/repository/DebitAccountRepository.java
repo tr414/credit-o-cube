@@ -12,6 +12,4 @@ public interface DebitAccountRepository extends JpaRepository<DebitAccount, Long
 
 	public Optional<DebitAccount> findByAccountNumber(long accountNumber);
 
-//	public List<DebitAccount> findByCustomer(long customerID);
-
 }

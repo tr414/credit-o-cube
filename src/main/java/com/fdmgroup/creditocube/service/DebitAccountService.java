@@ -9,13 +9,18 @@ import org.springframework.stereotype.Service;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
+import com.fdmgroup.creditocube.model.User;
 import com.fdmgroup.creditocube.repository.DebitAccountRepository;
+import com.fdmgroup.creditocube.repository.UserRepository;
 
 @Service
 public class DebitAccountService {
 
 	@Autowired
 	private DebitAccountRepository debitAccountRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	public void createAccount(DebitAccount account) {
 
@@ -57,11 +62,24 @@ public class DebitAccountService {
 
 	public List<DebitAccount> findAllDebitAccountsForCustomer(Customer customer) {
 
+		Optional<User> optionalCustomer = userRepository.findById(customer.getUser_id());
+
+		// find all accounts
 		List<DebitAccount> allAccountList = debitAccountRepository.findAll();
 		List<DebitAccount> accountListInCustomer = new ArrayList<>();
 
+		// check if customer exists
+		if (optionalCustomer.isEmpty()) {
+			return accountListInCustomer;
+		}
+
+		Customer targetCustomer = (Customer) optionalCustomer.get();
+
+		// retrieve acounts that belong to a customer
 		allAccountList.forEach(account -> {
-			accountListInCustomer.add(account);
+			if (account.getCustomer() == targetCustomer) {
+				accountListInCustomer.add(account);
+			}
 		});
 		return accountListInCustomer;
 

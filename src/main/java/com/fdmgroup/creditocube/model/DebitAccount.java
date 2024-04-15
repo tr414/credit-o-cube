@@ -7,8 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import com.fdmgroup.creditocube.model.Customer;
-
 
 @Entity
 public class DebitAccount {
@@ -27,6 +25,11 @@ public class DebitAccount {
 	@ManyToOne
 	@JoinColumn(name = "fk_customer_id")
 	private Customer customer;
+
+	public DebitAccount(Customer customer) {
+		super();
+		this.customer = customer;
+	}
 
 	public long getAccountNumber() {
 		return accountNumber;
