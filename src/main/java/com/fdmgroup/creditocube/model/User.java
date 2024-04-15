@@ -14,7 +14,18 @@ public abstract class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int user_id;
 	private String email;
-	private long phoneNumber;
+	
+	@Column(name="phone_number")
+	private int phoneNumber;
+	
+	private String username;
+	private String password;
+	@Column(name="first_name")
+	private String firstName;
+	@Column(name="last_name")
+	private String lastName;
+	
+	
 	public int getUser_id() {
 		return user_id;
 	}
@@ -30,13 +41,9 @@ public abstract class User {
 	public long getPhoneNumber() {
 		return phoneNumber;
 	}
-	public void setPhoneNumber(long phoneNumber) {
+	public void setPhoneNumber(int phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	private String username;
-	private String password;
-	private String firstName;
-	private String lastName;
 	
 	public String getUsername() {
 		return username;
