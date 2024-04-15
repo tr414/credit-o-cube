@@ -53,6 +53,7 @@ public class DebitAccountServiceTest {
 	public void testCreateAccount() {
 		when(debitAccountRepository.findByAccountNumber(account.getAccountNumber())).thenReturn(Optional.empty());
 		debitAccountService.createAccount(account);
+
 		Mockito.verify(debitAccountRepository).findByAccountNumber(123456L);
 		Mockito.verify(debitAccountRepository).save(account);
 
@@ -78,6 +79,7 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("4. Test findAllDebitAccountsForCustomer returns a list of accounts when customer exists")
 	public void testFindAllDebitAccountsForCustomer() {
+
 		when(userRepository.findById(customer.getUser_id())).thenReturn(Optional.of(customer));
 		when(debitAccountRepository.findAll()).thenReturn(List.of(account));
 		List<DebitAccount> result = debitAccountService.findAllDebitAccountsForCustomer(customer);
@@ -89,7 +91,8 @@ public class DebitAccountServiceTest {
 	public void testCloseDebitAccount() {
 		when(debitAccountRepository.findByAccountNumber(account.getAccountNumber())).thenReturn(Optional.of(account));
 		debitAccountService.closeDebitAccount(account);
-//		assertTrue(debitAccountRepository.findByAccountNumber(account.getAccountNumber()).isEmpty());
+
 		Mockito.verify(debitAccountRepository).delete(account);
+
 	}
 }
