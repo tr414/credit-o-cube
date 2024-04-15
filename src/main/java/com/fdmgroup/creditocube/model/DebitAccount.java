@@ -23,7 +23,7 @@ public class DebitAccount {
 	private double accountBalance;
 
 	@ManyToOne
-	@JoinColumn(name = "fk_customer_id")
+	@JoinColumn(name = "fk_user_id")
 	private Customer customer;
 
 	public DebitAccount(Customer customer) {

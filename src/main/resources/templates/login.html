@@ -1,28 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="../css/login.css">
+	<!-- Title of the HTML document displayed in the browser's title bar -->
+    <title>Login</title>
 </head>
 <body>
-    <div class="container">
-        <img src="logo.png" alt="Logo" class="logo">
-        <form>
-            <div class="form-group">
-                <label for="username">User ID</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">PIN</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <div class="signup">
-            <button onclick="window.location.href='#'">Get Started</button>
+	<!-- Header for the login page -->
+    <h1>Login</h1>
+    
+    <!-- Login form setup to post data to the '/login' URL -->
+    <form th:action="@{/login}" method="post">
+    	<!-- Username input section -->
+        <div>
+            <label for="username">Username:</label>
+            <!-- Input field for the username, required for form submission -->
+            <input type="text" id="username" name="username" required>
         </div>
-    </div>
+        
+        <!-- Password input section -->
+        <div>
+            <label for="password">Password:</label>
+            <!-- Input field for the password, required for form submission -->
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <!-- Submit button for the form -->
+        <div>
+            <button type="submit">Login</button>
+        </div>
+    </form>
 </body>
 </html>
