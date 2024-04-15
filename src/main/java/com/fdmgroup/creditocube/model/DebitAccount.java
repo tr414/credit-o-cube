@@ -49,6 +49,10 @@ public class DebitAccount {
 	@JoinColumn(name = "fk_user_id")
 	private Customer customer;
 
+	public DebitAccount() {
+
+	}
+
 	/**
 	 * Constructs a new debit account with the given customer.
 	 *
