@@ -1,5 +1,8 @@
 package com.fdmgroup.creditocube.model;
 
-public class Admin {
+import jakarta.persistence.Entity;
+
+@Entity
+public class Admin extends User {
 
 }
