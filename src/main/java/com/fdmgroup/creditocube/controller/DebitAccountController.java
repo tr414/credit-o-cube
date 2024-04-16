@@ -47,7 +47,8 @@ public class DebitAccountController {
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
 
-		List<DebitAccount> accounts = sessionCustomer.getDebitAccounts();
+		List<DebitAccount> accounts = debitAccountService.findAllDebitAccountsForCustomer(sessionCustomer);
+
 		session.setAttribute("accounts", accounts);
 
 		return ("account-dashboard");
@@ -106,9 +107,6 @@ public class DebitAccountController {
 			return "redirect:/login";
 		}
 
-		// Get the authenticated customer session object.
-		Customer sessionCustomer = optionalCustomer.get();
-
 		// Find the debit account associated with the provided account number.
 		Optional<DebitAccount> optionalDebitAccount = debitAccountService
 				.findDebitAccountByAccountNumber(accountNumber);
@@ -118,17 +116,9 @@ public class DebitAccountController {
 			return "redirect:/login";
 		}
 
-		// Get the debit account to be closed.
-		DebitAccount sessionDebitAccount = optionalDebitAccount.get();
+		DebitAccount targetDebitAccount = optionalDebitAccount.get();
 
-		// Get the list of debit accounts associated with the customer.
-		List<DebitAccount> accountList = sessionCustomer.getDebitAccounts();
-
-		// Remove the debit account to be closed from the customer's list of accounts.
-		accountList.remove(sessionDebitAccount);
-
-		// Update the customer's list of debit accounts.
-		sessionCustomer.setDebitAccounts(accountList);
+		debitAccountService.closeDebitAccount(targetDebitAccount);
 
 		// Return a redirect to the dashboard page.
 		return "redirect:/home";

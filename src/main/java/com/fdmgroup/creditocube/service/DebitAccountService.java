@@ -134,33 +134,39 @@ public class DebitAccountService {
 
 	/**
 	 * Closes a debit account in the system.
-	 * 
+	 *
 	 * @param account the debit account to be closed
 	 */
 	public void closeDebitAccount(DebitAccount account) {
+		// Check if the account exists in the database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
 
 		if (optionalAccount.isEmpty()) {
 			return;
 		}
 
+		// Get the target debit account
 		DebitAccount targetAccount = optionalAccount.get();
 
-		// determine if customer exists in database
-		Customer target = targetAccount.getCustomer();
-
-		Optional<Customer> optionalCustomer = customerRepository.findById(target.getUser_id());
+		// Determine if the customer exists in the database
+		Optional<Customer> optionalCustomer = customerRepository.findById(targetAccount.getCustomer().getUser_id());
 
 		if (optionalCustomer.isEmpty()) {
 			System.out.println("Customer not found");
 			return;
 		}
 
+		// Get the customer who owns the account
 		Customer accountHolder = optionalCustomer.get();
+
+		// Remove the target debit account from the customer's list of accounts
 		accountHolder.getDebitAccounts().remove(targetAccount);
 
+		// Delete the target debit account from the database
 		debitAccountRepository.delete(targetAccount);
-		customerRepository.save(target);
+
+		// Save the updated customer to the database
+		customerRepository.save(accountHolder);
 	}
 
 }
