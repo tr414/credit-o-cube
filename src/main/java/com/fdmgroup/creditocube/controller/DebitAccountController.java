@@ -66,7 +66,7 @@ public class DebitAccountController {
 		sessionCustomer.setDebitAccounts(accountList);
 
 		// Return a redirect to the dashboard page.
-		return "redirect:/dashboard";
+		return "redirect:/home";
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class DebitAccountController {
 		sessionCustomer.setDebitAccounts(accountList);
 
 		// Return a redirect to the dashboard page.
-		return "redirect:/dashboard";
+		return "redirect:/home";
 	}
 
 }

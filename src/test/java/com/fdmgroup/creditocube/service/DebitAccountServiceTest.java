@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
-import com.fdmgroup.creditocube.model.User;
 import com.fdmgroup.creditocube.repository.DebitAccountRepository;
 import com.fdmgroup.creditocube.repository.UserRepository;
 
@@ -36,7 +35,7 @@ public class DebitAccountServiceTest {
 
 	private DebitAccount account;
 	private Customer customer;
-	private User user;
+//	private User user;
 
 	@BeforeEach
 	public void setUp() {
