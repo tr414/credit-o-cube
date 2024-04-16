@@ -74,6 +74,7 @@ public class CustomerService {
 	 * @return the newly created user, now stored in the database with an encoded
 	 *         password
 	 */
+
 	public Customer registerNewCustomer(String username, String rawPassword, String firstName, String lastName,
 			String email, Integer phoneNumber, String nric, String address, Double salary, String gender,
 			LocalDate dob) {
