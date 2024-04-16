@@ -1,0 +1,147 @@
+/* Reset default margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  width: 100%;
+  /* Ensure container takes full width */
+  max-width: 1200px;
+  /* Maximum width of container */
+  margin: 0 auto;
+  /* Center container on page */
+  padding: 0 20px;
+  /* Padding on sides */
+}
+
+/* Header styles */
+header {
+  background: #f5f5f5;
+  padding: 40px 0;
+  display: flex;
+  justify-content: center; /* Center items horizontally */
+  align-items: center;
+  position: relative; /* Set position relative for absolute child positioning */
+}
+
+.links {
+  position: absolute;
+  right: 20px; /* Align links to the right */
+  display: flex;
+}
+
+.links a {
+  text-decoration: none;
+  color: #333;
+  margin-left: 30px; /* Increase spacing between links */
+  padding: 8px 16px; /* Add padding for a button-like appearance */
+  border: 1px solid transparent; /* Add a transparent border for a button-like appearance */
+  border-radius: 4px; /* Slightly rounded corners for the buttons */
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transitions for hover effects */
+}
+
+.links a:hover {
+  background-color: #333; /* Change background color on hover */
+  color: #fff; /* Change text color on hover */
+  border-color: #333; /* Add border color on hover for emphasis */
+}
+
+.logo, .links {
+  position: absolute; /* Position them absolutely within the header */
+}
+
+.logo {
+  left: 50%; /* Center logo */
+  transform: translateX(-50%); /* Align center of logo with center of header */
+}
+
+/* Hero section styles */
+.hero {
+  background-image: url('../images/tech.jpg');
+  /* Adjust path as needed */
+  background-size: cover;
+  color: #fff;
+  text-align: center;
+  padding: 100px 0;
+}
+
+.hero h1 {
+  font-size: 36px;
+}
+
+/* Section styles */
+.section {
+  padding: 80px 0;
+}
+
+.section-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  /* Align items to the top */
+  text-align: center;
+}
+
+.section h2 {
+  margin-bottom: 30px;
+}
+
+.section .text {
+  flex: 1;
+  margin-right: 20px;
+  /* Separate text and image */
+  text-align: left;
+  /* Align text to the left */
+}
+
+.section .text p {
+  font-size: 20px;
+  line-height: 1.6;
+  /* Space between lines */
+}
+
+.section .image {
+  flex: 1;
+  margin-left: 20px;
+  /* Separate text and image */
+  text-align: center;
+  /* Center image */
+}
+
+.section img {
+  max-width: 100%;
+  height: auto;
+}
+
+.section-header {
+  text-align: center; /* Center the text within the header */
+  margin-bottom: 30px; /* Space below the header */
+}
+
+/* Alternate section styles */
+.section.alternate {
+  background: #f5f5f5;
+}
+
+/* Footer styles */
+footer {
+  background: #333;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+footer a {
+  color: #fff;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

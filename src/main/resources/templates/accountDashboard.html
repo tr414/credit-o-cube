@@ -17,18 +17,19 @@
         <form th:action="@{/createDebitAccount}" method="get">
             <input type="submit" value="Create Debit Account">
         </form>
+        
+        <div>
+        <table>
+        	
+        </table>
+        </div>
+       
+       
         <!-- Logout form with CSRF token -->
-        <!-- Logout form configured to submit a POST request to the '/logout' URL.
-             This form includes a CSRF token for security purposes, ensuring that
-             logout requests are protected against CSRF attacks. -->
-        <form th:action="@{/logout}" method="post">
-            <!-- Hidden input field for the CSRF token, dynamically filled by Thymeleaf.
-                 The th:name and th:value attributes ensure the CSRF token is included
-                 in the form submission, which is necessary for security. -->
+        
+        <form th:action="@{/logout}" method="post">           
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-            <!-- Submit button for logging out. Clicking this button will send the
-                 form data to the server, triggering the logout process. -->
+    
             <input type="submit" value="Logout">
         </form>
     </div>
