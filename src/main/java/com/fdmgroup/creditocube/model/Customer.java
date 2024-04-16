@@ -1,5 +1,6 @@
 package com.fdmgroup.creditocube.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -17,7 +18,29 @@ public class Customer extends User {
 
 	private String nric;
 	private String address;
-	private double Salary;
+	private Double salary;
+	private String gender;
+	private LocalDate dob;
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public void setSalary(Double salary) {
+		this.salary = salary;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
 	/**
 	 * Default constructor for JPA use.
@@ -33,21 +56,27 @@ public class Customer extends User {
 	 * @param password the password for the new user
 	 */
 	public Customer(String username, String password, List<DebitAccount> debitAccounts, String nric, String address,
-			double salary) {
+			double salary, String gender) {
 		super();
 		setUsername(username);
 		setPassword(password);
 		this.debitAccounts = debitAccounts;
 		this.nric = nric;
 		this.address = address;
-		this.Salary = salary;
+		this.salary = salary;
+		this.gender = gender;
+
 	}
 
 	/**
-	 * Gets the NRIC of the customer.
+	 * Gets the list of debit accounts associated with the customer.
 	 * 
-	 * @return A string representing the customer's NRIC.
+	 * @return A list of DebitAccount objects associated with the customer.
 	 */
+	public List<DebitAccount> getDebitAccounts() {
+		return debitAccounts;
+	}
+
 	public String getNric() {
 		return nric;
 	}
@@ -85,7 +114,7 @@ public class Customer extends User {
 	 * @return A double value representing the customer's salary.
 	 */
 	public double getSalary() {
-		return Salary;
+		return salary;
 	}
 
 	/**
@@ -94,16 +123,7 @@ public class Customer extends User {
 	 * @param salary The new salary to be set for the customer.
 	 */
 	public void setSalary(double salary) {
-		Salary = salary;
-	}
-
-	/**
-	 * Gets the list of debit accounts associated with the customer.
-	 * 
-	 * @return A list of DebitAccount objects associated with the customer.
-	 */
-	public List<DebitAccount> getDebitAccounts() {
-		return debitAccounts;
+		this.salary = salary;
 	}
 
 	/**
