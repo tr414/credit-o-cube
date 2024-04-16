@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fdmgroup.creditocube.model.Customer;
@@ -30,7 +31,13 @@ public class DebitAccountController {
 
 	@GetMapping("/accountDashboard")
 	public String goToAccountDashboard() {
-		return "accountDashboard";
+		return ("accountDashboard");
+	}
+
+	@GetMapping("/createDebitAccount")
+	public String goToCreateDebitAccountPage() {
+
+		return ("createDebitAccount");
 	}
 
 	/**
@@ -40,6 +47,7 @@ public class DebitAccountController {
 	 * @return A redirect to the dashboard page after creating the new debit
 	 *         account.
 	 */
+	@PostMapping("/createDebitAccount")
 	public String createDebitAccount(@SessionAttribute Customer customer) {
 
 		// Find the user associated with the provided customer ID.
@@ -56,14 +64,7 @@ public class DebitAccountController {
 		// Create a new debit account for the customer.
 		DebitAccount newAccount = new DebitAccount(sessionCustomer);
 
-		// Get the list of debit accounts associated with the customer.
-		List<DebitAccount> accountList = sessionCustomer.getDebitAccounts();
-
-		// Add the new debit account to the customer's list of accounts.
-		accountList.add(newAccount);
-
-		// Update the customer's list of debit accounts.
-		sessionCustomer.setDebitAccounts(accountList);
+		debitAccountService.createAccount(newAccount);
 
 		// Return a redirect to the dashboard page.
 		return "redirect:/home";

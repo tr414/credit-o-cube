@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
-import com.fdmgroup.creditocube.model.User;
+import com.fdmgroup.creditocube.repository.CustomerRepository;
 import com.fdmgroup.creditocube.repository.DebitAccountRepository;
-import com.fdmgroup.creditocube.repository.UserRepository;
 
 /**
  * This class provides services for managing debit accounts.
@@ -23,7 +22,7 @@ public class DebitAccountService {
 	private DebitAccountRepository debitAccountRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private CustomerRepository customerRepository;
 
 	/**
 	 * Creates a new debit account in the system.
@@ -40,10 +39,30 @@ public class DebitAccountService {
 			return;
 		}
 
-		// otherwise, persist
-		else {
-			debitAccountRepository.save(account);
+		// determine if customer exists in database
+		Customer target = account.getCustomer();
+
+		Optional<Customer> optionalCustomer = customerRepository.findById(target.getUser_id());
+
+		if (optionalCustomer.isEmpty()) {
+			System.out.println("Customer not found");
+			return;
 		}
+
+		// determine if customer has 5 or more accounts
+		Customer accountHolder = optionalCustomer.get();
+		List<DebitAccount> accountList = accountHolder.getDebitAccounts();
+
+		if (accountList.size() >= 5) {
+			System.out.println("You cannot have 5 or more debit accounts per customer.");
+			return;
+		}
+
+		// otherwise, add account
+		accountList.add(account);
+		accountHolder.setDebitAccounts(accountList);
+		debitAccountRepository.save(account);
+		customerRepository.save(accountHolder);
 
 	}
 
@@ -96,12 +115,12 @@ public class DebitAccountService {
 		List<DebitAccount> accountListInCustomer = new ArrayList<>();
 
 		// check if customer exists
-		Optional<User> optionalCustomer = userRepository.findById(customer.getUser_id());
+		Optional<Customer> optionalCustomer = customerRepository.findById(customer.getUser_id());
 		if (optionalCustomer.isEmpty()) {
 			return accountListInCustomer;
 		}
 
-		Customer targetCustomer = (Customer) optionalCustomer.get();
+		Customer targetCustomer = optionalCustomer.get();
 
 		// retrieve acounts that belong to a customer
 		allAccountList.forEach(account -> {

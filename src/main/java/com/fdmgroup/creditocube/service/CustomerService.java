@@ -73,7 +73,6 @@ public class CustomerService {
 	 *         password
 	 */
 	public Customer registerNewCustomer(String username, String rawPassword) {
-		System.out.println(username + "/password: " + rawPassword);
 		Customer customer = new Customer();
 		customer.setUsername(username);
 		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
