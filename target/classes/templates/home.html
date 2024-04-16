@@ -14,16 +14,10 @@
     <div>
         <p>You are now logged in!</p>
 
-        <form th:action="@{/accountDashboard}" method="get">
+        <form th:action="@{/account-dashboard}" method="get">
             <button type="submit">Go To Account Dashboard</button>
         </form>
-        <!-- Logout form with CSRF token -->
-        <!-- Logout form configured to submit a POST request to the '/logout' URL.
-             This form includes a CSRF token for security purposes, ensuring that
-             logout requests are protected against CSRF attacks. -->
-        <form th:action="@{/accountDashboard}" method="get">
-            <input type="submit" value="Go to Account Dashboard">
-        </form>
+
         <form th:action="@{/updateCustomerDetails}" method="get">
             <input type="submit" value="Update Personal Details">
         </form>

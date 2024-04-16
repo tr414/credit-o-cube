@@ -35,7 +35,7 @@ public class DebitAccountController {
 	@Autowired
 	private HttpSession session;
 
-	@GetMapping("/accountDashboard")
+	@GetMapping("/account-dashboard")
 	public String goToAccountDashboard(Principal principal) {
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
