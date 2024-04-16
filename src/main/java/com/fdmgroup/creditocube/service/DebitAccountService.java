@@ -58,6 +58,12 @@ public class DebitAccountService {
 			return;
 		}
 
+		// check account balance is positive
+		if (account.getAccountBalance() <= 0) {
+			System.out.println("Account balance is not positive");
+			return;
+		}
+
 		// otherwise, add account
 		accountList.add(account);
 		accountHolder.setDebitAccounts(accountList);
@@ -158,6 +164,11 @@ public class DebitAccountService {
 
 		// Get the customer who owns the account
 		Customer accountHolder = optionalCustomer.get();
+
+		if (targetAccount.getAccountBalance() <= 0) {
+			System.out.println("Account balance is not positive, please deposit");
+			return;
+		}
 
 		// Remove the target debit account from the customer's list of accounts
 		accountHolder.getDebitAccounts().remove(targetAccount);

@@ -16,6 +16,7 @@ import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -67,7 +68,12 @@ public class DebitAccountController {
 	 *         account.
 	 */
 	@PostMapping("/createDebitAccount")
-	public String createDebitAccount(Principal principal) {
+	public String createDebitAccount(Principal principal, HttpServletRequest request) {
+
+		// Get request parameters
+		String accountName = request.getParameter("account-name");
+		String stringBalance = request.getParameter("account-balance");
+		double balance = Double.parseDouble(stringBalance);
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
@@ -82,11 +88,13 @@ public class DebitAccountController {
 
 		// Create a new debit account for the customer.
 		DebitAccount newAccount = new DebitAccount(sessionCustomer);
+		newAccount.setAccountName(accountName);
+		newAccount.setAccountBalance(balance);
 
 		debitAccountService.createAccount(newAccount);
 
 		// Return a redirect to the dashboard page.
-		return "redirect:/home";
+		return "redirect:/account-dashboard";
 	}
 
 	/**
@@ -121,7 +129,7 @@ public class DebitAccountController {
 		debitAccountService.closeDebitAccount(targetDebitAccount);
 
 		// Return a redirect to the dashboard page.
-		return "redirect:/home";
+		return "redirect:/account-dashboard";
 	}
 
 }
