@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<!-- Title of the HTML document, which will appear in the browser's title bar -->
+    <title>Register</title>
+</head>
+<body>
+	<!-- Main header for the registration page -->
+    <h1>Register</h1>
+    
+    <!-- Registration form that posts data to the '/register' endpoint when submitted -->
+    <form th:action="@{/register}" method="post">
+    	<!-- Username input field -->
+        <div>
+            <label for="username">Username:</label>
+            <!-- Input field for username, which is required to submit the form -->
+            <input type="text" id="username" name="username" required>
+        </div>
+        
+        <!-- Password input field -->
+        <div>
+            <label for="password">Password:</label>
+            <!-- Input field for password, which is also required to submit the form -->
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <!-- Submit button for the form -->
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url('../images/tech.jpg'); /* Replace 'your-image.jpg' with the path to your image */
+  background-size: cover; /* Ensure the image covers the entire background */
+  background-position: center; /* Center the image */
+  background-attachment: fixed; /* Fix the background image */
+  display: flex;
+  justify-content: flex-end; /* Position container on the right side */
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: #C5FF00;
+  width: 300px; /* Adjust the width as desired */
+  padding: 60px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  margin-right: 20px; /* Add some gap between container and right edge */
+}
+
+.logo {
+  width: 100px; /* Adjust as needed */
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left; /* Align text to the left */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: calc(100% - 22px); /* Adjust for input padding */
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #ccc; /* Only the bottom border */
+  background: none;
+  outline: none;
+}
+
+button {
+  width: calc(100% - 20px); /* Adjust the width with gap */
+  margin-bottom: 10px; /* Add some gap between buttons */
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none; /* Remove underline */
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.signup button,
+button[type="submit"] {
+  font-weight: bold;
+}
+
+.signup button:hover,
+button[type="submit"]:hover {
+  text-decoration: none; /* Remove underline */
+}

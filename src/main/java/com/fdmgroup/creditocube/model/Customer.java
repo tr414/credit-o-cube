@@ -17,9 +17,18 @@ public class Customer extends User {
 
     private String nric;
     private String address;
-    private double Salary;
+    private double salary;
+    private String gender;
     
-    /**
+    public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	/**
      * Default constructor for JPA use.
      */
     // Constructors
@@ -38,7 +47,7 @@ public class Customer extends User {
 		this.debitAccounts = debitAccounts;
 		this.nric = nric;
 		this.address = address;
-		Salary = salary;
+		this.salary = salary;
 	}
 
 	/**
@@ -83,7 +92,7 @@ public class Customer extends User {
      * @return A double value representing the customer's salary.
      */
     public double getSalary() {
-        return Salary;
+        return salary;
     }
 
     /**
@@ -92,7 +101,7 @@ public class Customer extends User {
      * @param salary The new salary to be set for the customer.
      */
     public void setSalary(double salary) {
-        Salary = salary;
+        this.salary = salary;
     }
 
     /**
