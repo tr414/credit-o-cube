@@ -29,7 +29,7 @@ public class MainWebController {
 
 	@GetMapping("/") // http://localhost:8080/
 	public String slashIndex() {
-		return ("index");
+		return ("landing");
 	}
 
 }

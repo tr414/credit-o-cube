@@ -41,7 +41,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/register", "/login", "/static/**").permitAll() // Allow public access to registration and login pages
+                .requestMatchers("/register", "/login", "/static/**", "/").permitAll() // Allow public access to registration and login pages
                 .anyRequest().authenticated()) // Require authentication for all other requests
             .formLogin(form -> form
                 .loginPage("/login") // Custom login page URL
