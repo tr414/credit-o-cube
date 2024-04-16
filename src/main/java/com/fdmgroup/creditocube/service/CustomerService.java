@@ -99,8 +99,8 @@ public class CustomerService {
 	public Customer updateCustomerDetails(String username, String rawPassword, String firstName, String lastName,
 			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			String oldUsername) {
-		Optional<Customer> optionalCustomer = customerRepo.findCustomerByUsername(oldUsername);
-		Customer customer = optionalCustomer.get();
+
+		Customer customer = customerRepo.findCustomerByUsername(oldUsername).get();
 		customer.setUsername(username);
 		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
 		customer.setFirstName(firstName);

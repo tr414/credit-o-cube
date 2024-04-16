@@ -1,12 +1,15 @@
 package com.fdmgroup.creditocube.controller;
 
+import java.security.Principal;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.UserService;
@@ -82,7 +85,18 @@ public class CustomerController {
 
 	// viewing the update details page
 	@GetMapping("/updateCustomerDetails")
-	public String updateCustomerDetails() {
+	public String updateCustomerDetails(Model model, Principal principal) {
+		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
+		model.addAttribute("username", customer.getUsername());
+		model.addAttribute("firstName", customer.getFirstName());
+		model.addAttribute("lastName", customer.getLastName());
+		model.addAttribute("email", customer.getEmail());
+		model.addAttribute("phoneNumber", customer.getPhoneNumber());
+		model.addAttribute("nric", customer.getNric());
+		model.addAttribute("address", customer.getAddress());
+		model.addAttribute("salary", customer.getSalary());
+		model.addAttribute("gender", customer.getGender());
+		model.addAttribute("dob", customer.getDob());
 		return "updateCustomerDetails";
 	}
 
@@ -90,11 +104,11 @@ public class CustomerController {
 	@PostMapping("/updateCustomerDetails")
 	public String updateCustomerDetails(String username, String password, String firstName, String lastName,
 			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
-			String oldUsername) {
-
+			Principal principal) {
+		String oldUsername = principal.getName();
 		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
 				address, salary, gender, dob, oldUsername);
-		return "redirect:/home"; // Redirects to the home page after successful update
+		return "redirect:/login"; // Redirects to the login page after successful update
 	}
 
 }

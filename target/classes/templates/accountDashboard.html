@@ -3,31 +3,24 @@
 
 <head>
     <!-- Title of the HTML document displayed in the browser's title bar -->
-    <title>Home</title>
+    <title>Account Dashboard</title>
 </head>
 
 <body>
     <!-- Main heading displayed on the home page -->
-    <h1>Welcome to the Home Page!</h1>
+    <h1>Welcome to the Account Dashboard</h1>
 
     <!-- A welcome message indicating the user is logged in -->
     <div>
         <p>You are now logged in!</p>
 
-        <form th:action="@{/accountDashboard}" method="get">
-            <button type="submit">Go To Account Dashboard</button>
+        <form th:action="@{/createDebitAccount}" method="get">
+            <input type="submit" value="Create Debit Account">
         </form>
         <!-- Logout form with CSRF token -->
         <!-- Logout form configured to submit a POST request to the '/logout' URL.
              This form includes a CSRF token for security purposes, ensuring that
              logout requests are protected against CSRF attacks. -->
-        <form th:action="@{/accountDashboard}" method="get">
-            <input type="submit" value="Go to Account Dashboard">
-        </form>
-        <form th:action="@{/updateCustomerDetails}" method="get">
-            <input type="submit" value="Update Personal Details">
-        </form>
-
         <form th:action="@{/logout}" method="post">
             <!-- Hidden input field for the CSRF token, dynamically filled by Thymeleaf.
                  The th:name and th:value attributes ensure the CSRF token is included
