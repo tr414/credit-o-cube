@@ -110,5 +110,14 @@ public class CustomerController {
 				address, salary, gender, dob, oldUsername);
 		return "redirect:/login"; // Redirects to the login page after successful update
 	}
+	
+	// Delete customer account
+	@PostMapping("/deleteCustomerAccount")
+	public String deleteCustomerAccount(Principal principal) {
+		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
+		customerService.deleteCustomer(customer.getUser_id());
+		System.out.println("Deleted customer account");
+		return "redirect:/login";
+	}
 
 }
