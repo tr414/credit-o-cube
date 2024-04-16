@@ -145,7 +145,22 @@ public class DebitAccountService {
 		}
 
 		DebitAccount targetAccount = optionalAccount.get();
+
+		// determine if customer exists in database
+		Customer target = targetAccount.getCustomer();
+
+		Optional<Customer> optionalCustomer = customerRepository.findById(target.getUser_id());
+
+		if (optionalCustomer.isEmpty()) {
+			System.out.println("Customer not found");
+			return;
+		}
+
+		Customer accountHolder = optionalCustomer.get();
+		accountHolder.getDebitAccounts().remove(targetAccount);
+
 		debitAccountRepository.delete(targetAccount);
+		customerRepository.save(target);
 	}
 
 }
