@@ -14,10 +14,10 @@
     <div>
         <p>You are now logged in!</p>
 
-        <form th:action="@{/account-dashboard}" method="get">
-            <button type="submit">Go To Account Dashboard</button>
-        </form>
 
+        <form th:action="@{/accountDashboard}" method="get">
+            <input type="submit" value="Go to Account Dashboard">
+        </form>
         <form th:action="@{/updateCustomerDetails}" method="get">
             <input type="submit" value="Update Personal Details">
         </form>

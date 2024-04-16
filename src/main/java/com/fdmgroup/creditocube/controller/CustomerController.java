@@ -86,6 +86,7 @@ public class CustomerController {
 	// viewing the update details page
 	@GetMapping("/updateCustomerDetails")
 	public String updateCustomerDetails(Model model, Principal principal) {
+		System.out.println("Username: " + principal.getName());
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
 		model.addAttribute("username", customer.getUsername());
 		model.addAttribute("firstName", customer.getFirstName());
@@ -106,6 +107,8 @@ public class CustomerController {
 			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			Principal principal) {
 		String oldUsername = principal.getName();
+		System.out.println("Old Username in updateCustomerDetails postMapping: " + principal.getName());
+
 		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
 				address, salary, gender, dob, oldUsername);
 		return "redirect:/login"; // Redirects to the login page after successful update

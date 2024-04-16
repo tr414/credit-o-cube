@@ -101,6 +101,7 @@ public class CustomerService {
 			String oldUsername) {
 
 		Customer customer = customerRepo.findCustomerByUsername(oldUsername).get();
+		System.out.println("Old Username in updateCustomerDetails in CustomerService: " + customer.getUsername());
 		customer.setUsername(username);
 		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
 		customer.setFirstName(firstName);
