@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registration Page</title>
-  <link rel="stylesheet" href="../css/register.css">
+    <meta charset="UTF-8">
+    <title>Update Customer Details</title>
 </head>
-
 <body>
   <div class="main-container">
     <div class="mandatory-and-back">
@@ -18,7 +13,7 @@
       <div class="mandatory-statement">All fields are mandatory.</div>
     </div>
     <div class="registration-container">
-      <form id="registration-form" th:action="@{/register}" method="post">
+      <form id="registration-form" th:action="@{/updateCustomerDetails}" method="post">
         
         <div class="form-row">
           <div class="form-group">
@@ -51,6 +46,10 @@
           <div class="form-group">
             <label for="salary">Salary</label>
             <input type="text" id="salary" name="salary" required>
+          </div>
+          <div class="form-group">
+            <label for="oldUsername">oLD Username</label>
+            <input type="text" id="oldUsername" name="oldUsername" required>
           </div>
           <div class="form-group">
             <label for="username">Username</label>

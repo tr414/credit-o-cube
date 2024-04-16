@@ -21,7 +21,7 @@ public abstract class User {
 	private String email;
 
 	@Column(name = "phone_number")
-	private int phoneNumber;
+	private Integer phoneNumber;
 
 	@Column(nullable = false, unique = true)
 	private String username;

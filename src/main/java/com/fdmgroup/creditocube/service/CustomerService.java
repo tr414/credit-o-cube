@@ -1,5 +1,6 @@
 package com.fdmgroup.creditocube.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -69,14 +70,49 @@ public class CustomerService {
 	 *
 	 * @param username    the username for the new user, must be unique and not null
 	 * @param rawPassword the password for the new user before encoding
+	 * @param dob
 	 * @return the newly created user, now stored in the database with an encoded
 	 *         password
 	 */
-	public Customer registerNewCustomer(String username, String rawPassword) {
-		System.out.println(username + "/password: " + rawPassword);
+	public Customer registerNewCustomer(String username, String rawPassword, String firstName, String lastName,
+			String email, Integer phoneNumber, String nric, String address, Double salary, String gender,
+			LocalDate dob) {
+
+		// if customer doesn't exist, create
 		Customer customer = new Customer();
 		customer.setUsername(username);
 		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
+		customer.setFirstName(firstName);
+		customer.setLastName(lastName);
+		customer.setEmail(email);
+		customer.setPhoneNumber(phoneNumber);
+		customer.setNric(nric);
+		customer.setAddress(address);
+		customer.setSalary(salary);
+		customer.setGender(gender);
+		customer.setDob(dob);
 		return customerRepo.save(customer);
+
 	}
+
+	public Customer updateCustomerDetails(String username, String rawPassword, String firstName, String lastName,
+			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
+			String oldUsername) {
+		Optional<Customer> optionalCustomer = customerRepo.findCustomerByUsername(oldUsername);
+		Customer customer = optionalCustomer.get();
+		customer.setUsername(username);
+		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
+		customer.setFirstName(firstName);
+		customer.setLastName(lastName);
+		customer.setEmail(email);
+		customer.setPhoneNumber(phoneNumber);
+		customer.setNric(nric);
+		customer.setAddress(address);
+		customer.setSalary(salary);
+		customer.setGender(gender);
+		customer.setDob(dob);
+		return customerRepo.save(customer);
+
+	}
+
 }
