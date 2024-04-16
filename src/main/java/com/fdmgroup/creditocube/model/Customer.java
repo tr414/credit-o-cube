@@ -12,8 +12,8 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Customer extends User {
 
-    @OneToMany(mappedBy = "customer")
-    private List<DebitAccount> debitAccounts;
+	@OneToMany(mappedBy = "customer")
+	private List<DebitAccount> debitAccounts;
 
     private String nric;
     private String address;
@@ -40,24 +40,26 @@ public class Customer extends User {
      * @param username the username for the new user
      * @param password the password for the new user
      */
-    public Customer(String username, String password, List<DebitAccount> debitAccounts, String nric, String address, double salary) {
+    public Customer(String username, String password, List<DebitAccount> debitAccounts, String nric, String address, double salary, String gender) {
 		super();
-        setUsername(username);
-        setPassword(password);
+		setUsername(username);
+		setPassword(password);
 		this.debitAccounts = debitAccounts;
 		this.nric = nric;
 		this.address = address;
 		this.salary = salary;
+		this.gender = gender;
+
 	}
 
 	/**
-     * Gets the NRIC of the customer.
-     * 
-     * @return A string representing the customer's NRIC.
-     */
-    public String getNric() {
-        return nric;
-    }
+	 * Gets the list of debit accounts associated with the customer.
+	 * 
+	 * @return A list of DebitAccount objects associated with the customer.
+	 */
+	public List<DebitAccount> getDebitAccounts() {
+		return debitAccounts;
+	}
 
     /**
      * Sets the NRIC of the customer.
@@ -105,15 +107,6 @@ public class Customer extends User {
     }
 
     /**
-     * Gets the list of debit accounts associated with the customer.
-     * 
-     * @return A list of DebitAccount objects associated with the customer.
-     */
-    public List<DebitAccount> getDebitAccounts() {
-        return debitAccounts;
-    }
-
-    /**
      * Sets the list of debit accounts for the customer.
      * 
      * @param debitAccounts The new list of DebitAccount objects to be associated with the customer.
@@ -121,5 +114,6 @@ public class Customer extends User {
     public void setDebitAccounts(List<DebitAccount> debitAccounts) {
         this.debitAccounts = debitAccounts;
     }
+
 
 }
