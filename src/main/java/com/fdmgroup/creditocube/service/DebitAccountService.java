@@ -3,6 +3,7 @@ package com.fdmgroup.creditocube.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -114,6 +115,17 @@ public class DebitAccountService {
 		}
 	}
 
+	public Optional<DebitAccount> findDebitAccountByAccountId(long id) {
+
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(id);
+
+		if (optionalAccount.isEmpty()) {
+			return Optional.empty();
+		} else {
+			return optionalAccount;
+		}
+	}
+
 	/**
 	 * Returns a list of all debit accounts in the system that belong to a specific
 	 * customer.
@@ -189,49 +201,54 @@ public class DebitAccountService {
 		customerRepository.save(accountHolder);
 	}
 
-//<<<<<<< HEAD
-//	public void depositIntoAccount(DebitAccount account, double amount) {
-//		// Check if the account exists in the database
-//		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
-//
-//		if (optionalAccount.isEmpty()) {
-//			return;
-//		}
-//
-//		DebitAccount targetAccount = optionalAccount.get();
-//		Customer targetCustomer = account.getCustomer();
-//
-//		// Check if account holder is present in database
-//		Optional<Customer> optionalAccountHolder = customerRepository.findById(targetCustomer.getUser_id());
-//
-//		if (optionalAccountHolder.isEmpty()) {
-//			System.out.println("Customer not found");
-//			return;
-//		}
-//
-//		// Get the account holder
-//		Customer accountHolder = optionalAccountHolder.get();
-//
-//		if (amount <= 0) {
-//			return;
-//		}
-//
-//		double newBalance = targetAccount.getAccountBalance() + amount;
-//		targetAccount.setAccountBalance(newBalance);
-//
-//		debitAccountRepository.save(targetAccount);
-//		customerRepository.save(accountHolder);
-//
-//=======
-//	public String generateUniqueDebitAccountNumber() {
-//		String accountNumber;
-//		final Random random = new Random();
-//		do {
-//			long number = (long) (100000000 + random.nextInt(900000000));
-//			accountNumber = String.format("%09d", number);
-//		} while (debitAccountRepository.findByAccountNumber(accountNumber));
-//		return accountNumber;
-//>>>>>>> 158431d39da75a21d3d4b38bd91bc043acf874de
-//	}
+	public void depositIntoAccount(DebitAccount account, double amount) {
+		// Check if the account exists in the database
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+
+		if (optionalAccount.isEmpty()) {
+			return;
+		}
+
+		DebitAccount targetAccount = optionalAccount.get();
+		Customer targetCustomer = account.getCustomer();
+
+		// Check if account holder is present in database
+		Optional<Customer> optionalAccountHolder = customerRepository.findById(targetCustomer.getUser_id());
+
+		if (optionalAccountHolder.isEmpty()) {
+			System.out.println("Customer not found");
+			return;
+		}
+
+		// Get the account holder
+		Customer accountHolder = optionalAccountHolder.get();
+
+		if (amount <= 0) {
+			return;
+		}
+
+		double newBalance = targetAccount.getAccountBalance() + amount;
+		targetAccount.setAccountBalance(newBalance);
+
+		debitAccountRepository.save(targetAccount);
+		customerRepository.save(accountHolder);
+	}
+
+	public String generateUniqueDebitAccountNumber() {
+		String accountNumber;
+		final Random random = new Random();
+		do {
+			long number = (long) (100000000 + random.nextInt(900000000));
+			accountNumber = String.format("%09d", number);
+		} while (accountNumberExists(accountNumber));
+		return accountNumber;
+
+	}
+
+	private boolean accountNumberExists(String accountNumber) {
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
+
+		return optionalAccount.isPresent();
+	}
 
 }

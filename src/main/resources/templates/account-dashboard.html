@@ -37,7 +37,7 @@
 					</td>
 					<td>
 						<form th:action="@{/deleteDebitAccount}" method="POST">
-							<input type="hidden" th:value="${account.accountNumber}" name="accountNumber">
+							<input type="hidden" th:value="${account.id}" name="accountId">
 							<button type="submit">Close Account</button>
 						</form>
 					</td>

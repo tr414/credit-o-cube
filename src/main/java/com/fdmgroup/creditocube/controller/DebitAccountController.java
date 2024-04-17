@@ -90,6 +90,7 @@ public class DebitAccountController {
 		DebitAccount newAccount = new DebitAccount(sessionCustomer);
 		newAccount.setAccountName(accountName);
 		newAccount.setAccountBalance(balance);
+		newAccount.setAccountNumber(debitAccountService.generateUniqueDebitAccountNumber());
 
 		debitAccountService.createAccount(newAccount);
 
@@ -105,7 +106,7 @@ public class DebitAccountController {
 	 * @return A redirect to the dashboard page after closing the debit account.
 	 */
 	@PostMapping("/deleteDebitAccount")
-	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam int accountNumber) {
+	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam long accountId) {
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerById(customer.getUser_id());
@@ -116,8 +117,7 @@ public class DebitAccountController {
 		}
 
 		// Find the debit account associated with the provided account number.
-		Optional<DebitAccount> optionalDebitAccount = debitAccountService
-				.findDebitAccountByAccountNumber(accountNumber);
+		Optional<DebitAccount> optionalDebitAccount = debitAccountService.findDebitAccountByAccountId(accountId);
 
 		// If the debit account is not found, redirect to the login page.
 		if (optionalDebitAccount.isEmpty()) {
