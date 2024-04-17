@@ -42,7 +42,7 @@ public class DebitAccountServiceTest {
 	public void init() {
 		debitAccountService = new DebitAccountService(debitAccountRepository, customerRepository);
 		account = new DebitAccount();
-		account.setAccountNumber(123456);
+		account.setAccountId(123456);
 		customer = new Customer();
 		customer.setUser_id(1);
 		account.setCustomer(customer);
@@ -54,14 +54,13 @@ public class DebitAccountServiceTest {
 
 		// Arrange
 		optionalAccount = Optional.of(account);
-		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
-				.thenReturn(optionalAccount);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
 
 		// Act
 		debitAccountService.createAccount(account);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
 		Mockito.verify(customerRepository, never()).findById(1);
 
 		// Explanation: This test case simulates a scenario where an account with the
@@ -81,15 +80,14 @@ public class DebitAccountServiceTest {
 		// Arrange
 		optionalAccount = Optional.empty();
 		optionalCustomer = Optional.empty();
-		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
-				.thenReturn(optionalAccount);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
 		// Act
 		debitAccountService.createAccount(account);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
 		Mockito.verify(debitAccountRepository, never()).save(account);
 
@@ -115,15 +113,14 @@ public class DebitAccountServiceTest {
 		customer.setDebitAccounts(accountList);
 		optionalAccount = Optional.empty();
 		optionalCustomer = Optional.of(customer);
-		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
-				.thenReturn(optionalAccount);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
 		// Act
 		debitAccountService.createAccount(account);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
 		Mockito.verify(debitAccountRepository, never()).save(account);
 
@@ -141,14 +138,13 @@ public class DebitAccountServiceTest {
 	public void testUpdateAccount_AccountExists() {
 		// Arrange
 		optionalAccount = Optional.of(account);
-		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
-				.thenReturn(optionalAccount);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
 
 		// Act
 		debitAccountService.updateAccount(account);
 
 		// Assert
-		Mockito.verify(debitAccountRepository, Mockito.times(1)).findByAccountNumber(account.getAccountNumber());
+		Mockito.verify(debitAccountRepository, Mockito.times(1)).findById(account.getAccountId());
 		Mockito.verify(debitAccountRepository, Mockito.times(1)).save(account);
 
 		// Explanation: This test case simulates a scenario where an account with the
@@ -164,14 +160,13 @@ public class DebitAccountServiceTest {
 	public void testUpdateAccount_AccountNotFound() {
 		// Arrange
 		optionalAccount = Optional.empty();
-		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
-				.thenReturn(optionalAccount);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
 
 		// Act
 		debitAccountService.updateAccount(account);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
 		Mockito.verify(debitAccountRepository, never()).save(account);
 
 		// Explanation: This test case simulates a scenario where the provided account
@@ -193,15 +188,14 @@ public class DebitAccountServiceTest {
 		optionalAccount = Optional.of(account);
 		optionalCustomer = Optional.of(customer);
 
-		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
-				.thenReturn(optionalAccount);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
 		// Act
 		debitAccountService.closeDebitAccount(account);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
 		Mockito.verify(debitAccountRepository).delete(account);
 		Mockito.verify(customerRepository).save(customer);
@@ -226,15 +220,14 @@ public class DebitAccountServiceTest {
 		optionalCustomer = Optional.of(customer);
 
 		// Mock behavior
-		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
-				.thenReturn(optionalAccount);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
 		// Call method
 		debitAccountService.closeDebitAccount(account);
 
 		// Verify interaction
-		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
 		Mockito.verify(debitAccountRepository, never()).delete(account);
 		Mockito.verify(customerRepository, never()).save(customer);
@@ -252,14 +245,13 @@ public class DebitAccountServiceTest {
 	public void testCloseDebitAccount_AccountNotFound() {
 		// Arrange
 		optionalAccount = Optional.empty();
-		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
-				.thenReturn(optionalAccount);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
 
 		// Act
 		debitAccountService.closeDebitAccount(account);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
 		Mockito.verify(debitAccountRepository, never()).delete(account);
 
 		// Explanation: This test case simulates a scenario where the provided account
@@ -273,7 +265,8 @@ public class DebitAccountServiceTest {
 	@DisplayName("9. Test that findDebitAccountByAccountNumber returns the account with the right number")
 	public void testFindDebitAccountByAccountNumber_AccountExists() {
 		// Arrange
-		long accountNumber = 123456L;
+
+		String accountNumber = "123456";
 		DebitAccount account = new DebitAccount();
 		account.setAccountNumber(accountNumber);
 		Optional<DebitAccount> optionalAccount = Optional.of(account);
@@ -298,7 +291,7 @@ public class DebitAccountServiceTest {
 	@DisplayName("10. Test that findDebitAccountByAccountNumber does not return an account that does not exist")
 	public void testFindDebitAccountByAccountNumber_AccountNotFound() {
 		// Arrange
-		long accountNumber = 123456L;
+		String accountNumber = "123456";
 		Optional<DebitAccount> optionalAccount = Optional.empty();
 		Mockito.when(debitAccountRepository.findByAccountNumber(accountNumber)).thenReturn(optionalAccount);
 
@@ -325,10 +318,10 @@ public class DebitAccountServiceTest {
 		customer.setUser_id(1);
 		List<DebitAccount> allAccounts = new ArrayList<>();
 		DebitAccount account1 = new DebitAccount();
-		account1.setAccountNumber(123456L);
+		account1.setAccountNumber("123456");
 		account1.setCustomer(customer);
 		DebitAccount account2 = new DebitAccount();
-		account2.setAccountNumber(654321L);
+		account2.setAccountNumber("654321");
 		account2.setCustomer(customer);
 		allAccounts.add(account1);
 		allAccounts.add(account2);
@@ -364,10 +357,10 @@ public class DebitAccountServiceTest {
 		// Arrange
 		List<DebitAccount> allAccounts = new ArrayList<>();
 		DebitAccount account1 = new DebitAccount();
-		account1.setAccountNumber(123456L);
+		account1.setAccountNumber("123456");
 		account1.setCustomer(new Customer()); // Different customer
 		DebitAccount account2 = new DebitAccount();
-		account2.setAccountNumber(654321L);
+		account2.setAccountNumber("654321");
 		account2.setCustomer(new Customer()); // Different customer
 		allAccounts.add(account1);
 		allAccounts.add(account2);
