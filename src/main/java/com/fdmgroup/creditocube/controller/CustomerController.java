@@ -3,6 +3,7 @@ package com.fdmgroup.creditocube.controller;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.fdmgroup.creditocube.model.Customer;
+import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.UserService;
@@ -114,6 +116,8 @@ public class CustomerController {
 	public String home(Model model, Principal principal, SessionStatus status) {
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
 		model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
+		List<DebitAccount> customerAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
+		model.addAttribute("accounts", customerAccounts);
 		return "customer-dashboard";
 	}
 	// home is the customer dashboard
