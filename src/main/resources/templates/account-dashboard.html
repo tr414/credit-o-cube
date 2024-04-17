@@ -1,62 +1,71 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Dashboard Wireframe</title>
-	<link rel="stylesheet" href="../css/header-sidebar.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Wireframe</title>
+    <link rel="stylesheet" href="../css/header-sidebar.css">
+    <link rel="stylesheet" href="../css/account-dashboard.css">
 </head>
-
 <body>
-	<div class="top-bar">
-		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
-			src="path_to_logo.png" alt="FDM Logo">
-		<button class="logout-button"
-			onclick="window.location.href='login'">Logout</button>
-	</div>
-	<div>
-		<table>
-			<thead>
-				<tr>
-					<th>Account Number</th>
-					<th>Account Name</th>
-					<th>Account Balance</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="account : ${session.accounts}">
-					<td th:text="${account.accountNumber}"></td>
-					<td th:text="${account.accountName}"></td>
-					<td th:text="${account.accountBalance}"></td>
-					<td>
-						<form th:action="@{/deleteDebitAccount}" method="POST">
-							<input type="hidden" th:value="${account.accountNumber}" name="accountNumber">
-							<button type="submit">Close Account</button>
-						</form>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	
-	</div>
-	
-	
-	<form th:action="@{/createDebitAccount}" method="get">
-		<input type="submit" value="Create Debit Account">
-	</form>
-	<div class="side-menu" id="sideMenu">
-		<a href="#">Transaction history</a> 
-		<a href="#">Transfer money</a> 
-		<a href="#">Deposit / Withdraw</a> 
-		<a href="creditcard-dashboard">Credit card dashboard</a> 
-		<a href="account-dashboard">Account dashboard</a>
-		<a href="customer-dashboard">Main dashboard</a>
-		<!-- Add other menu items here -->
-	</div>
 
-	<script src="../js/sidebar.js"></script>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
+        <img src="../img/CreditOCubeLogo.png" alt="Logo" class="logo">
+        <button class="logout-button" onclick="window.location.href='login'">Logout</button>
+    </div>
+    
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="user-greeting">
+            What would you like to do today?
+        </div>
+        <a href="#">Transaction history</a> 
+        <a href="#">Transfer money</a> 
+        <a href="#">Deposit / Withdraw</a> 
+        <a href="creditcard-dashboard">Credit card dashboard</a> 
+        <a href="account-dashboard">Account dashboard</a>
+        <a href="customer-dashboard">Main dashboard</a>
+        <!-- Add other menu items here -->
+    </div>
 
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Accounts Table -->
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Account Number</th>
+                        <th>Account Name</th>
+                        <th>Account Balance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="account : ${session.accounts}">
+                        <td th:text="${account.accountNumber}"></td>
+                        <td th:text="${account.accountName}"></td>
+                        <td th:text="${account.accountBalance}"></td>
+                        <td>
+                            <form th:action="@{/deleteDebitAccount}" method="POST">
+                                <input type="hidden" th:value="${account.accountNumber}" name="accountNumber">
+                                <button type="submit">Close Account</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Create Debit Account Button -->
+        <form th:action="@{/createDebitAccount}" method="get">
+            <input type="submit" value="Create Debit Account">
+        </form>
+    </div>
+
+    <!-- JavaScript for Sidebar Toggle -->
+    <script src="../js/sidebar.js"></script>
 </body>
-
 </html>
