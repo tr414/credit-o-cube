@@ -24,6 +24,14 @@ public class DebitAccountService {
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	public DebitAccountService() {
+	}
+
+	public DebitAccountService(DebitAccountRepository debitAccountRepository, CustomerRepository customerRepository) {
+		this.debitAccountRepository = debitAccountRepository;
+		this.customerRepository = customerRepository;
+	}
+
 	/**
 	 * Creates a new debit account in the system.
 	 * 

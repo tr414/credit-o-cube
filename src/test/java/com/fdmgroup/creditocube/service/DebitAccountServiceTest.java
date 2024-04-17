@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,22 +33,34 @@ public class DebitAccountServiceTest {
 	@InjectMocks
 	private DebitAccountService debitAccountService;
 
+	DebitAccount account;
+	Optional<DebitAccount> optionalAccount;
+	Customer customer;
+	Optional<Customer> optionalCustomer;
+
+	@BeforeEach
+	public void init() {
+		debitAccountService = new DebitAccountService(debitAccountRepository, customerRepository);
+		account = new DebitAccount();
+		account.setAccountNumber(123456);
+		customer = new Customer();
+		customer.setUser_id(1);
+		account.setCustomer(customer);
+	}
+
 	@Test
 	@DisplayName("1. Test that createAccount does not create a new account if an existing account is present")
 	public void testCreateAccount_AccountExists() {
-		// Mock data
-		DebitAccount account = new DebitAccount();
-		account.setAccountNumber(123456);
-		Optional<DebitAccount> optionalAccount = Optional.of(account);
 
-		// Mock behavior
+		// Arrange
+		optionalAccount = Optional.of(account);
 		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
 				.thenReturn(optionalAccount);
 
-		// Call method
+		// Act
 		debitAccountService.createAccount(account);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
 		Mockito.verify(customerRepository, never()).findById(1);
 
@@ -64,24 +77,18 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("2. Test that createAccount does not create a new account if customer does not exist")
 	public void testCreateAccount_CustomerNotFound() {
-		// Mock data
-		DebitAccount account = new DebitAccount();
-		account.setAccountNumber(123456);
-		Customer customer = new Customer();
-		customer.setUser_id(1);
-		account.setCustomer(customer);
-		Optional<DebitAccount> optionalAccount = Optional.empty();
-		Optional<Customer> optionalCustomer = Optional.empty();
 
-		// Mock behavior
+		// Arrange
+		optionalAccount = Optional.empty();
+		optionalCustomer = Optional.empty();
 		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
 				.thenReturn(optionalAccount);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
-		// Call method
+		// Act
 		debitAccountService.createAccount(account);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
 		Mockito.verify(debitAccountRepository, never()).save(account);
@@ -100,29 +107,22 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("3. Test that createAccount does not create a new account if max accounts are reached")
 	public void testCreateAccount_MaxAccountsReached() {
-		// Mock data
-		DebitAccount account = new DebitAccount();
-		account.setAccountNumber(123456);
-		Customer customer = new Customer();
-		customer.setUser_id(1);
+		// Arrange
 		List<DebitAccount> accountList = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
 			accountList.add(new DebitAccount());
 		}
 		customer.setDebitAccounts(accountList);
-		account.setCustomer(customer);
-		Optional<DebitAccount> optionalAccount = Optional.empty();
-		Optional<Customer> optionalCustomer = Optional.of(customer);
-
-		// Mock behavior
+		optionalAccount = Optional.empty();
+		optionalCustomer = Optional.of(customer);
 		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
 				.thenReturn(optionalAccount);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
-		// Call method
+		// Act
 		debitAccountService.createAccount(account);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
 		Mockito.verify(debitAccountRepository, never()).save(account);
@@ -139,19 +139,15 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("4. Test that updateAccount updates existing account")
 	public void testUpdateAccount_AccountExists() {
-		// Mock data
-		DebitAccount account = new DebitAccount();
-		account.setAccountNumber(123456);
-		Optional<DebitAccount> optionalAccount = Optional.of(account);
-
-		// Mock behavior
+		// Arrange
+		optionalAccount = Optional.of(account);
 		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
 				.thenReturn(optionalAccount);
 
-		// Call method
+		// Act
 		debitAccountService.updateAccount(account);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository, Mockito.times(1)).findByAccountNumber(account.getAccountNumber());
 		Mockito.verify(debitAccountRepository, Mockito.times(1)).save(account);
 
@@ -166,19 +162,15 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("5. Test that updateAccount does not update when account is not found")
 	public void testUpdateAccount_AccountNotFound() {
-		// Mock data
-		DebitAccount account = new DebitAccount();
-		account.setAccountNumber(123456);
-		Optional<DebitAccount> optionalAccount = Optional.empty();
-
-		// Mock behavior
+		// Arrange
+		optionalAccount = Optional.empty();
 		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
 				.thenReturn(optionalAccount);
 
-		// Call method
+		// Act
 		debitAccountService.updateAccount(account);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
 		Mockito.verify(debitAccountRepository, never()).save(account);
 
@@ -193,28 +185,22 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("6. Test that closeDebitAccount closes an existing account with zero balance")
 	public void testCloseDebitAccount_AccountExists_BalanceZero() {
-		// Mock data
-		DebitAccount account = new DebitAccount();
-		account.setAccountNumber(123456);
+		// Arrange
 		account.setAccountBalance(0.0);
-		Customer customer = new Customer();
-		customer.setUser_id(1);
-		account.setCustomer(customer);
 		List<DebitAccount> accountList = new ArrayList<>();
 		accountList.add(account);
 		customer.setDebitAccounts(accountList);
-		Optional<DebitAccount> optionalAccount = Optional.of(account);
-		Optional<Customer> optionalCustomer = Optional.of(customer);
+		optionalAccount = Optional.of(account);
+		optionalCustomer = Optional.of(customer);
 
-		// Mock behavior
 		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
 				.thenReturn(optionalAccount);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
-		// Call method
+		// Act
 		debitAccountService.closeDebitAccount(account);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
 		Mockito.verify(debitAccountRepository).delete(account);
@@ -234,14 +220,10 @@ public class DebitAccountServiceTest {
 	@DisplayName("7. Test that closeDebitAccount does not close existing account with non-zero balance")
 	public void testCloseDebitAccount_AccountExists_BalanceNotZero() {
 		// Mock data
-		DebitAccount account = new DebitAccount();
-		account.setAccountNumber(123456);
+
 		account.setAccountBalance(100.0);
-		Customer customer = new Customer();
-		customer.setUser_id(1);
-		account.setCustomer(customer);
-		Optional<DebitAccount> optionalAccount = Optional.of(account);
-		Optional<Customer> optionalCustomer = Optional.of(customer);
+		optionalAccount = Optional.of(account);
+		optionalCustomer = Optional.of(customer);
 
 		// Mock behavior
 		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
@@ -268,19 +250,15 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("8. Test that closeDebitAccount does not close an account which does not exist")
 	public void testCloseDebitAccount_AccountNotFound() {
-		// Mock data
-		DebitAccount account = new DebitAccount();
-		account.setAccountNumber(123456);
-		Optional<DebitAccount> optionalAccount = Optional.empty();
-
-		// Mock behavior
+		// Arrange
+		optionalAccount = Optional.empty();
 		Mockito.when(debitAccountRepository.findByAccountNumber(account.getAccountNumber()))
 				.thenReturn(optionalAccount);
 
-		// Call method
+		// Act
 		debitAccountService.closeDebitAccount(account);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findByAccountNumber(account.getAccountNumber());
 		Mockito.verify(debitAccountRepository, never()).delete(account);
 
@@ -294,22 +272,18 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("9. Test that findDebitAccountByAccountNumber returns the account with the right number")
 	public void testFindDebitAccountByAccountNumber_AccountExists() {
-		// Mock data
+		// Arrange
 		long accountNumber = 123456L;
 		DebitAccount account = new DebitAccount();
 		account.setAccountNumber(accountNumber);
 		Optional<DebitAccount> optionalAccount = Optional.of(account);
-
-		// Mock behavior
 		Mockito.when(debitAccountRepository.findByAccountNumber(accountNumber)).thenReturn(optionalAccount);
 
-		// Call method
+		// Act
 		Optional<DebitAccount> returnedAccount = debitAccountService.findDebitAccountByAccountNumber(accountNumber);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findByAccountNumber(accountNumber);
-
-		// Assert returned value
 		assertEquals(optionalAccount, returnedAccount);
 
 		// Explanation: This test case simulates a scenario where an account with the
@@ -323,20 +297,16 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("10. Test that findDebitAccountByAccountNumber does not return an account that does not exist")
 	public void testFindDebitAccountByAccountNumber_AccountNotFound() {
-		// Mock data
+		// Arrange
 		long accountNumber = 123456L;
 		Optional<DebitAccount> optionalAccount = Optional.empty();
-
-		// Mock behavior
 		Mockito.when(debitAccountRepository.findByAccountNumber(accountNumber)).thenReturn(optionalAccount);
 
-		// Call method
+		// Act
 		Optional<DebitAccount> returnedAccount = debitAccountService.findDebitAccountByAccountNumber(accountNumber);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findByAccountNumber(accountNumber);
-
-		// Assert returned value
 		assertEquals(Optional.empty(), returnedAccount);
 
 		// Explanation: This test case simulates a scenario where no account with the
@@ -350,7 +320,7 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("11. Test that findAllDebitAccountsForCustomer returns all customer accounts of an existing customer")
 	public void testFindAllDebitAccountsForCustomer_CustomerExists_AccountsFound() {
-		// Mock data
+		// Arrange
 		Customer customer = new Customer();
 		customer.setUser_id(1);
 		List<DebitAccount> allAccounts = new ArrayList<>();
@@ -367,18 +337,15 @@ public class DebitAccountServiceTest {
 		expectedAccounts.add(account2);
 		Optional<Customer> optionalCustomer = Optional.of(customer);
 
-		// Mock behavior
 		Mockito.when(debitAccountRepository.findAll()).thenReturn(allAccounts);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
-		// Call method
+		// Act
 		List<DebitAccount> returnedAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findAll();
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
-
-		// Assert returned value
 		assertEquals(expectedAccounts, returnedAccounts);
 
 		// Explanation: This test simulates a scenario where the customer exists and has
@@ -393,9 +360,8 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("12. Test that findAllDebitAccountsForCustomer returns no accounts if a customer does not have an account")
 	public void testFindAllDebitAccountsForCustomer_CustomerExists_NoAccountsFound() {
-		// Mock data
-		Customer customer = new Customer();
-		customer.setUser_id(1);
+
+		// Arrange
 		List<DebitAccount> allAccounts = new ArrayList<>();
 		DebitAccount account1 = new DebitAccount();
 		account1.setAccountNumber(123456L);
@@ -405,20 +371,18 @@ public class DebitAccountServiceTest {
 		account2.setCustomer(new Customer()); // Different customer
 		allAccounts.add(account1);
 		allAccounts.add(account2);
-		Optional<Customer> optionalCustomer = Optional.of(customer);
+		optionalCustomer = Optional.of(customer);
 
-		// Mock behavior
 		Mockito.when(debitAccountRepository.findAll()).thenReturn(allAccounts);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
-		// Call method
+		// Act
 		List<DebitAccount> returnedAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository).findAll();
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
 
-		// Assert returned value
 		assertEquals(new ArrayList<>(), returnedAccounts);
 
 		// Explanation: This test simulates a scenario where the customer exists but
@@ -433,36 +397,20 @@ public class DebitAccountServiceTest {
 	@Test
 	@DisplayName("13. Test that findAllDebitAccountsForCustomer returns no accounts if a customer is not found")
 	public void testFindAllDebitAccountsForCustomer_CustomerNotFound() {
-		// Mock data
-		Customer customer = new Customer();
-		customer.setUser_id(1);
+		// Arrange
 		List<DebitAccount> allAccounts = new ArrayList<>();
-		Optional<Customer> optionalCustomer = Optional.empty();
+		optionalCustomer = Optional.empty();
 
-		// Mock behavior
 		Mockito.when(debitAccountRepository.findAll()).thenReturn(allAccounts);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
-		// Call method
+		// Act
 		List<DebitAccount> returnedAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
 
-		// Verify interaction
+		// Assert
 		Mockito.verify(debitAccountRepository, Mockito.times(1)).findAll();
 		Mockito.verify(customerRepository, Mockito.times(1)).findById(customer.getUser_id());
-
-		// Assert no accounts are returned
 		assertEquals(allAccounts, returnedAccounts);
 	}
-//
-//	@Test
-//	@DisplayName("4. Test findAllDebitAccountsForCustomer returns a list of accounts when customer exists")
-//	public void testFindAllDebitAccountsForCustomer() {
-//
-//		when(userRepository.findById(customer.getUser_id())).thenReturn(Optional.of(customer));
-//		when(debitAccountRepository.findAll()).thenReturn(List.of(account));
-//		List<DebitAccount> result = debitAccountService.findAllDebitAccountsForCustomer(customer);
-//		assertTrue(result.contains(account));
-//	}
-//
 
 }
