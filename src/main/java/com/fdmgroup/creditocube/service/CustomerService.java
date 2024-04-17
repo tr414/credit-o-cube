@@ -126,6 +126,7 @@ public class CustomerService {
 		customer.setSalary(salary);
 		customer.setGender(gender);
 		customer.setDob(dob);
+		System.out.println("customer saved into database");
 		return customerRepo.save(customer);
 
 	}
