@@ -98,6 +98,10 @@ public class CustomerService {
 
 		Optional<Customer> optionalCustomer = customerRepo.findCustomerByUsername(username);
 
+		if (optionalCustomer.isPresent()) {
+			return optionalCustomer.get();
+		}
+
 		// if customer doesn't exist, create
 		Customer customer = new Customer();
 
