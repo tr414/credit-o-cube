@@ -20,16 +20,15 @@
         <li><strong>Birthday:</strong> <span th:text="${dob}"></span></li>
     </ul>
 
-<!-- updating user details -->
+
   <div class="main-container">
     <div class="mandatory-and-back">
-      <div class="back-to-login">
-        <a href="/login">Back to Login</a>
-      </div>
       <div class="mandatory-statement">All fields are mandatory.</div>
     </div>
+    
+    <!-- updating user details -->
     <div class="registration-container">
-      <form id="registration-form" th:action="@{/updateCustomerDetails}" method="post">
+      <form id="registration-form" th:action="@{/customer-details}" method="post">
         
         <div class="form-row">
           <div class="form-group">
@@ -95,10 +94,16 @@
             <input type="email" id="email" name="email" required>
           </div>
         </div>
-        <button type="submit">Register</button>
+        <button id="update-button" onclick="displayPopup()" type="submit">Update</button>
       </form>
+      
+      <div class="back-to-login">
+        <a href="/home">Back to Home</a>
+      </div>
     </div>
+
   </div>
+  <script src="../js/customer-details.js"></script>
 </body>
 
 </html>
