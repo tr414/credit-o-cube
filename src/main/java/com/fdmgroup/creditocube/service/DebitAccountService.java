@@ -163,10 +163,11 @@ public class DebitAccountService {
 		}
 
 		// Get the customer who owns the account
+
 		Customer accountHolder = optionalCustomer.get();
 
-		if (targetAccount.getAccountBalance() <= 0) {
-			System.out.println("Account balance is not positive, please deposit");
+		if (targetAccount.getAccountBalance() != 0) {
+			System.out.println("Account balance is not equal to zero, please deposit");
 			return;
 		}
 
