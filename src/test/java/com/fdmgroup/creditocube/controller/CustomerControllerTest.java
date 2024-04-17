@@ -62,7 +62,7 @@ public class CustomerControllerTest {
 	
     @Test
     public void testSlashLogin_ShouldReturnLoginView() throws Exception {
-        mockMvc.perform(get("/login"))
+        mockMvc.perform(get  ("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
     }
