@@ -55,9 +55,9 @@ public class DebitAccountController {
 		return ("account-dashboard");
 	}
 
-	@GetMapping("/createDebitAccount")
+	@GetMapping("/go-to-create-debit-account")
 	public String goToCreateDebitAccountPage() {
-		return ("createDebitAccount");
+		return ("create-debit-account");
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class DebitAccountController {
 	 * @return A redirect to the dashboard page after creating the new debit
 	 *         account.
 	 */
-	@PostMapping("/createDebitAccount")
+	@PostMapping("/create-debit-account")
 	public String createDebitAccount(Principal principal, HttpServletRequest request) {
 
 		// Get request parameters

@@ -44,7 +44,7 @@ public class DebitAccountService {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isPresent()) {
-			System.out.println("Account already exists: ");
+			System.out.println("Account already exists: " + optionalAccount.get().getAccountId());
 			return;
 		}
 
