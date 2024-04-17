@@ -69,7 +69,7 @@ public class CustomerController {
 	 */
 	@PostMapping("/register")
 	public String registerUser(String username, String password, String firstName, String lastName, String email,
-			Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
+			String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
 		customerService.registerNewCustomer(username, password, firstName, lastName, email, phoneNumber, nric, address,
 				salary, gender, dob);
 		return "redirect:/login"; // Redirects to the login page after successful registration
@@ -110,7 +110,7 @@ public class CustomerController {
 	// actually updating their details
 	@PostMapping("/updateCustomerDetails")
 	public String updateCustomerDetails(String username, String password, String firstName, String lastName,
-			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
+			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			Principal principal) {
 		String oldUsername = principal.getName();
 		System.out.println("Old Username in updateCustomerDetails postMapping: " + principal.getName());
@@ -131,13 +131,13 @@ public class CustomerController {
 		}
 
 		Customer customer = optionalCustomer.get();
-
-		customerService.deleteCustomer(customer);
-
+		
 		if (customer.getDebitAccounts().size() > 0) {
 			System.out.println("Customer has debit accounts");
 			return "redirect:/home";
 		}
+
+		customerService.deleteCustomer(customer);
 
 		System.out.println("Deleted customer account");
 		return "redirect:/login";

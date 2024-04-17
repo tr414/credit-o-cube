@@ -21,7 +21,7 @@ public abstract class User {
 	private String email;
 
 	@Column(name = "phone_number")
-	private Integer phoneNumber;
+	private String phoneNumber;
 
 	@Column(nullable = false, unique = true)
 	private String username;
@@ -78,7 +78,7 @@ public abstract class User {
 	 * 
 	 * @return The phone number of the user.
 	 */
-	public long getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
@@ -87,7 +87,7 @@ public abstract class User {
 	 * 
 	 * @param phoneNumber The new phone number of the user.
 	 */
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
