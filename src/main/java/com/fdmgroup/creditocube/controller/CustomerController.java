@@ -17,6 +17,9 @@ import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 /**
  * The CustomerController class handles web requests related to customer
  * operations. It utilizes services to interact with user, debit account, and
@@ -25,6 +28,9 @@ import com.fdmgroup.creditocube.service.UserService;
 @Controller
 @SessionAttributes("firstName")
 public class CustomerController {
+
+	@Autowired
+	private HttpSession session;
 
 	@Autowired
 	UserService userService; // Service for user-related operations
@@ -90,10 +96,19 @@ public class CustomerController {
 	// home is the customer dashboard
 
 	// viewing the update details page
-	@GetMapping("/updateCustomerDetails")
-	public String updateCustomerDetails(Model model, Principal principal) {
-		System.out.println("Username: " + principal.getName());
+	@GetMapping("/customer-details")
+	public String updateCustomerDetails(Principal principal, Model model) {
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
+		session.setAttribute("username", customer.getUsername());
+		session.setAttribute("firstName", customer.getFirstName());
+		session.setAttribute("lastName", customer.getLastName());
+		session.setAttribute("email", customer.getEmail());
+		session.setAttribute("phoneNumber", customer.getPhoneNumber());
+		session.setAttribute("nric", customer.getNric());
+		session.setAttribute("address", customer.getAddress());
+		session.setAttribute("salary", customer.getSalary());
+		session.setAttribute("gender", customer.getGender());
+		session.setAttribute("dob", customer.getDob());
 		model.addAttribute("username", customer.getUsername());
 		model.addAttribute("firstName", customer.getFirstName());
 		model.addAttribute("lastName", customer.getLastName());
@@ -104,16 +119,27 @@ public class CustomerController {
 		model.addAttribute("salary", customer.getSalary());
 		model.addAttribute("gender", customer.getGender());
 		model.addAttribute("dob", customer.getDob());
+
 		return "customer-details";
 	}
 
 	// actually updating their details
-	@PostMapping("/updateCustomerDetails")
-	public String updateCustomerDetails(String username, String password, String firstName, String lastName,
-			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
-			Principal principal) {
+	@PostMapping("/customer-details")
+	public String updateCustomerDetails(Principal principal, HttpServletRequest request) {
+
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String email = request.getParameter("email");
+		String phoneNumber = request.getParameter("phoneNumber");
+		String nric = request.getParameter("nric");
+		String address = request.getParameter("address");
+		Double salary = Double.parseDouble(request.getParameter("salary"));
+		String gender = request.getParameter("gender");
+		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
+
 		String oldUsername = principal.getName();
-		System.out.println("Old Username in updateCustomerDetails postMapping: " + principal.getName());
 
 		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
 				address, salary, gender, dob, oldUsername);
@@ -131,7 +157,7 @@ public class CustomerController {
 		}
 
 		Customer customer = optionalCustomer.get();
-		
+
 		if (customer.getDebitAccounts().size() > 0) {
 			System.out.println("Customer has debit accounts");
 			return "redirect:/home";
