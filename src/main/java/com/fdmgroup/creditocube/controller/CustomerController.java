@@ -2,6 +2,7 @@ package com.fdmgroup.creditocube.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,20 +76,32 @@ public class CustomerController {
 	 */
 	@PostMapping("/register")
 	public String registerUser(HttpServletRequest request) {
+
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("confirm-password");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
-		String email = request.getParameter("email");
-		String phoneNumber = request.getParameter("phoneNumber");
 		String nric = request.getParameter("nric");
-		String address = request.getParameter("address");
-		Double salary = Double.parseDouble(request.getParameter("salary"));
-		String gender = request.getParameter("gender");
 		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
-		customerService.registerNewCustomer(username, password, firstName, lastName, email, phoneNumber, nric, address,
-				salary, gender, dob);
-		return "redirect:/login"; // Redirects to the login page after successful registration
+		boolean result = customerService.detailVerificationRegistration(username, password, firstName, lastName, nric,
+				dob);
+
+		ArrayList<Customer> customerWithNric = customerService.findCustomerByNric(nric);
+		System.out.println("customerWithNric size: " + customerWithNric.size());
+		System.out.println("Password: " + password);
+		System.out.println("Confirmed password: " + confirmPassword);
+
+		if (customerWithNric.size() >= 1 || !password.equals(confirmPassword) || !result
+				|| customerService.findCustomerByUsername(username).isPresent()) {
+			// cannot register
+			return ("register");
+
+		} else {
+			customerService.registerNewCustomer(username, password, firstName, lastName, nric, dob);
+			return "redirect:/login"; // Redirects to the login page after successful registration
+		}
+
 	}
 
 	/**
