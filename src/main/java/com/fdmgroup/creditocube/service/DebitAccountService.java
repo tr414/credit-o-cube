@@ -3,6 +3,7 @@ package com.fdmgroup.creditocube.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,7 +104,7 @@ public class DebitAccountService {
 	 * @return an optional debit account, or an empty optional if no account was
 	 *         found
 	 */
-	public Optional<DebitAccount> findDebitAccountByAccountNumber(long accountNumber) {
+	public Optional<DebitAccount> findDebitAccountByAccountNumber(String accountNumber) {
 
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
 
@@ -187,6 +188,16 @@ public class DebitAccountService {
 
 		// Save the updated customer to the database
 		customerRepository.save(accountHolder);
+	}
+
+	public String generateUniqueDebitAccountNumber() {
+		String accountNumber;
+		final Random random = new Random();
+		do {
+			long number = (long) (100000000 + random.nextInt(900000000));
+			accountNumber = String.format("%09d", number);
+		} while (debitAccountRepository.findByAccountNumber(accountNumber));
+		return accountNumber;
 	}
 
 }
