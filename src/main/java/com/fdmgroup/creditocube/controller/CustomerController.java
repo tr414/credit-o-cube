@@ -18,7 +18,7 @@ import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+//import jakarta.servlet.http.HttpSession;
 
 /**
  * The CustomerController class handles web requests related to customer
@@ -29,8 +29,8 @@ import jakarta.servlet.http.HttpSession;
 @SessionAttributes("firstName")
 public class CustomerController {
 
-	@Autowired
-	private HttpSession session;
+//	@Autowired
+//	private HttpSession session;
 
 	@Autowired
 	UserService userService; // Service for user-related operations
