@@ -147,7 +147,7 @@ public class CustomerController {
 	}
 
 	// Delete customer account
-	@PostMapping("/deleteCustomerAccount")
+	@GetMapping("/deleteCustomerAccount")
 	public String deleteCustomerAccount(Principal principal) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 
