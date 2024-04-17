@@ -10,6 +10,6 @@ import com.fdmgroup.creditocube.model.DebitAccount;
 @Repository
 public interface DebitAccountRepository extends JpaRepository<DebitAccount, Long> {
 
-	public Optional<DebitAccount> findByAccountNumber(long accountNumber);
+	public Optional<DebitAccount> findByAccountNumber(String accountNumber);
 
 }

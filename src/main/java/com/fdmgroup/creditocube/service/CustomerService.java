@@ -78,6 +78,10 @@ public class CustomerService {
 		return (Optional<Customer>) customerRepo.findCustomerByUsername(username);
 	}
 
+	public ArrayList<Customer> findCustomerByNric(String nric) {
+		return customerRepo.findCustomerByNric(nric);
+	}
+
 	/**
 	 * Registers a new user with the provided username and password. The password is
 	 * encoded before saving to ensure the security of user data.
@@ -90,23 +94,18 @@ public class CustomerService {
 	 */
 
 	public Customer registerNewCustomer(String username, String rawPassword, String firstName, String lastName,
-			String email, String phoneNumber, String nric, String address, Double salary, String gender,
-			LocalDate dob) {
+			String nric, LocalDate dob) {
 
 		Optional<Customer> optionalCustomer = customerRepo.findCustomerByUsername(username);
 
 		// if customer doesn't exist, create
 		Customer customer = new Customer();
+
 		customer.setUsername(username);
 		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
 		customer.setFirstName(firstName);
 		customer.setLastName(lastName);
-		customer.setEmail(email);
-		customer.setPhoneNumber(phoneNumber);
 		customer.setNric(nric);
-		customer.setAddress(address);
-		customer.setSalary(salary);
-		customer.setGender(gender);
 		customer.setDob(dob);
 		return customerRepo.save(customer);
 
@@ -178,6 +177,27 @@ public class CustomerService {
 
 		// Check that birth year is after 1900, and user is at least 18 years old
 		if (dob.isBefore(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean detailVerificationRegistration(String username, String rawPassword, String firstName,
+			String lastName, String nric, LocalDate dob) {
+
+		if (rawPassword.length() < 8) {
+			System.out.println("password is too short");
+			return false;
+		}
+
+		if (nricVerification(nric) == false) {
+			System.out.println("NRIC does not follow proper format");
+			return false;
+		}
+
+		if (dob.isAfter(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+			System.out.println("Year is ass");
 			return false;
 		}
 

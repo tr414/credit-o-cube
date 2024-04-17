@@ -40,7 +40,7 @@ public class DebitAccountService {
 	public void createAccount(DebitAccount account) {
 
 		// determine if account exists in database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getId());
 
 		if (optionalAccount.isPresent()) {
 			System.out.println("Account already exists: ");
@@ -88,7 +88,7 @@ public class DebitAccountService {
 	public void updateAccount(DebitAccount account) {
 
 		// determine if account exists in database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getId());
 
 		// if account exists, persist
 		if (optionalAccount.isPresent()) {
@@ -103,7 +103,7 @@ public class DebitAccountService {
 	 * @return an optional debit account, or an empty optional if no account was
 	 *         found
 	 */
-	public Optional<DebitAccount> findDebitAccountByAccountNumber(long accountNumber) {
+	public Optional<DebitAccount> findDebitAccountByAccountNumber(String accountNumber) {
 
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
 
@@ -153,7 +153,7 @@ public class DebitAccountService {
 	 */
 	public void closeDebitAccount(DebitAccount account) {
 		// Check if the account exists in the database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getId());
 
 		if (optionalAccount.isEmpty()) {
 			return;
@@ -189,38 +189,49 @@ public class DebitAccountService {
 		customerRepository.save(accountHolder);
 	}
 
-	public void depositIntoAccount(DebitAccount account, double amount) {
-		// Check if the account exists in the database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
-
-		if (optionalAccount.isEmpty()) {
-			return;
-		}
-
-		DebitAccount targetAccount = optionalAccount.get();
-		Customer targetCustomer = account.getCustomer();
-
-		// Check if account holder is present in database
-		Optional<Customer> optionalAccountHolder = customerRepository.findById(targetCustomer.getUser_id());
-
-		if (optionalAccountHolder.isEmpty()) {
-			System.out.println("Customer not found");
-			return;
-		}
-
-		// Get the account holder
-		Customer accountHolder = optionalAccountHolder.get();
-
-		if (amount <= 0) {
-			return;
-		}
-
-		double newBalance = targetAccount.getAccountBalance() + amount;
-		targetAccount.setAccountBalance(newBalance);
-
-		debitAccountRepository.save(targetAccount);
-		customerRepository.save(accountHolder);
-
-	}
+//<<<<<<< HEAD
+//	public void depositIntoAccount(DebitAccount account, double amount) {
+//		// Check if the account exists in the database
+//		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+//
+//		if (optionalAccount.isEmpty()) {
+//			return;
+//		}
+//
+//		DebitAccount targetAccount = optionalAccount.get();
+//		Customer targetCustomer = account.getCustomer();
+//
+//		// Check if account holder is present in database
+//		Optional<Customer> optionalAccountHolder = customerRepository.findById(targetCustomer.getUser_id());
+//
+//		if (optionalAccountHolder.isEmpty()) {
+//			System.out.println("Customer not found");
+//			return;
+//		}
+//
+//		// Get the account holder
+//		Customer accountHolder = optionalAccountHolder.get();
+//
+//		if (amount <= 0) {
+//			return;
+//		}
+//
+//		double newBalance = targetAccount.getAccountBalance() + amount;
+//		targetAccount.setAccountBalance(newBalance);
+//
+//		debitAccountRepository.save(targetAccount);
+//		customerRepository.save(accountHolder);
+//
+//=======
+//	public String generateUniqueDebitAccountNumber() {
+//		String accountNumber;
+//		final Random random = new Random();
+//		do {
+//			long number = (long) (100000000 + random.nextInt(900000000));
+//			accountNumber = String.format("%09d", number);
+//		} while (debitAccountRepository.findByAccountNumber(accountNumber));
+//		return accountNumber;
+//>>>>>>> 158431d39da75a21d3d4b38bd91bc043acf874de
+//	}
 
 }
