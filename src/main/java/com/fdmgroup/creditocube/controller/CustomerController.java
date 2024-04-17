@@ -129,6 +129,7 @@ public class CustomerController {
 		model.addAttribute("salary", customer.getSalary());
 		model.addAttribute("gender", customer.getGender());
 		model.addAttribute("dob", customer.getDob());
+		model.addAttribute("customer", customer);
 
 		return "customer-details";
 	}
@@ -136,7 +137,9 @@ public class CustomerController {
 	// actually updating their details
 	@PostMapping("/customer-details")
 	public String updateCustomerDetails(Principal principal, HttpServletRequest request) {
-
+		System.out.println(request.getParameter("dob"));
+		System.out.println(request.getParameter("firstName"));
+		System.out.println(request.getParameter("lastName"));
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String firstName = request.getParameter("firstName");

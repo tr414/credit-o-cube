@@ -6,12 +6,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.repository.CustomerRepository;
 
-@Repository
+@Service
 public class CustomerService {
 
 	@Autowired
@@ -93,6 +93,8 @@ public class CustomerService {
 			String email, String phoneNumber, String nric, String address, Double salary, String gender,
 			LocalDate dob) {
 
+		Optional<Customer> optionalCustomer = customerRepo.findCustomerByUsername(username);
+
 		// if customer doesn't exist, create
 		Customer customer = new Customer();
 		customer.setUsername(username);
@@ -115,6 +117,14 @@ public class CustomerService {
 			String oldUsername) {
 
 		Customer customer = customerRepo.findCustomerByUsername(oldUsername).get();
+
+		boolean result = detailVerification(username, rawPassword, firstName, lastName, email, phoneNumber, nric,
+				address, salary, gender, dob, oldUsername);
+
+		if (result == false) {
+			return customer;
+		}
+
 		customer.setUsername(username);
 		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
 		customer.setFirstName(firstName);
@@ -129,6 +139,74 @@ public class CustomerService {
 		System.out.println("customer saved into database");
 		return customerRepo.save(customer);
 
+	}
+
+	public boolean detailVerification(String username, String rawPassword, String firstName, String lastName,
+			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
+			String oldUsername) {
+
+		if (rawPassword.length() < 8) {
+			System.out.println("password is too short");
+			return false;
+		}
+
+		if (!email.contains("@")) {
+			System.out.println("invalid email format");
+			return false;
+		}
+
+		if (phoneNumberVerification(phoneNumber)) {
+			System.out.println("phone number does not follow typical format");
+			return false;
+		}
+
+		if (nricVerification(nric) == false) {
+			System.out.println("NRIC does not follow proper format");
+			return false;
+		}
+
+		if (salary <= 0) {
+			System.out.println("Salary is not positive");
+			return false;
+		}
+
+		if (dob.isBefore(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean nricVerification(String nric) {
+		if (nric.length() != 9) // Checking if the length is exactly 9
+			return false;
+
+		char startChar = nric.charAt(0);
+		char endChar = nric.charAt(8);
+
+		if (!Character.isLetter(startChar) || !Character.isLetter(endChar)) // Checking if start and end are letters
+			return false;
+
+		if (!Character.isDigit(nric.charAt(1)) || !Character.isDigit(nric.charAt(7))) // Checking if second and second
+																						// last are digits
+			return false;
+
+		for (int i = 2; i < 8; i++) {
+			if (!Character.isDigit(nric.charAt(i))) // Checking if characters from 3rd to 7th are digits
+				return false;
+		}
+
+		return true;
+	}
+
+	private boolean phoneNumberVerification(String phoneNumber) {
+		if (phoneNumber.length() != 8) // Checking if the length is exactly 8
+			return false;
+		for (int i = 0; i < 8; i++) {
+			if (!Character.isDigit(phoneNumber.charAt(i))) // Checking if all characters are digits
+				return false;
+		}
+		return true;
 	}
 
 }
