@@ -2,6 +2,7 @@ package com.fdmgroup.creditocube.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -115,8 +116,22 @@ public class CustomerController {
 	// Delete customer account
 	@PostMapping("/deleteCustomerAccount")
 	public String deleteCustomerAccount(Principal principal) {
-		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
-		customerService.deleteCustomer(customer.getUser_id());
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+
+		if (optionalCustomer.isEmpty()) {
+			System.out.println("Customer not found in database");
+			return "redirect:/login";
+		}
+
+		Customer customer = optionalCustomer.get();
+
+		customerService.deleteCustomer(customer);
+
+		if (customer.getDebitAccounts().size() > 0) {
+			System.out.println("Customer has debit accounts");
+			return "redirect:/home";
+		}
+
 		System.out.println("Deleted customer account");
 		return "redirect:/login";
 	}
