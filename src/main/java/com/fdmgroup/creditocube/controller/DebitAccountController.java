@@ -132,4 +132,17 @@ public class DebitAccountController {
 		return "redirect:/account-dashboard";
 	}
 
+	@GetMapping("/deposit-withdraw")
+	public String goToDepositWithdrawPage(@RequestParam int accountNumber) {
+		return ("deposit-withdraw");
+	}
+
+	@PostMapping("/deposit-into-account")
+	public String depositIntoAccount(@SessionAttribute Customer customer, @RequestParam int accountNumber,
+			@RequestParam double amount) {
+
+		// Return a redirect to the dashboard page.
+		return "redirect:/account-dashboard";
+	}
+
 }

@@ -189,4 +189,38 @@ public class DebitAccountService {
 		customerRepository.save(accountHolder);
 	}
 
+	public void depositIntoAccount(DebitAccount account, double amount) {
+		// Check if the account exists in the database
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+
+		if (optionalAccount.isEmpty()) {
+			return;
+		}
+
+		DebitAccount targetAccount = optionalAccount.get();
+		Customer targetCustomer = account.getCustomer();
+
+		// Check if account holder is present in database
+		Optional<Customer> optionalAccountHolder = customerRepository.findById(targetCustomer.getUser_id());
+
+		if (optionalAccountHolder.isEmpty()) {
+			System.out.println("Customer not found");
+			return;
+		}
+
+		// Get the account holder
+		Customer accountHolder = optionalAccountHolder.get();
+
+		if (amount <= 0) {
+			return;
+		}
+
+		double newBalance = targetAccount.getAccountBalance() + amount;
+		targetAccount.setAccountBalance(newBalance);
+
+		debitAccountRepository.save(targetAccount);
+		customerRepository.save(accountHolder);
+
+	}
+
 }
