@@ -6,32 +6,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Customer Dashboard</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
+<link rel="stylesheet" href="../css/customer-dashboard.css">
 </head>
 
 <body>
 
-	<div class="top-bar">
-		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
-		<div class="logo-container">
-			<img src="path_to_logo.png" alt="FDM Logo" class="center-logo">
-		</div>
-	</div>
+    <div class="top-bar">
+        <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
+        <div class="logo-container">
+            <img src="../img/CreditOCubeLogo.png" alt="CreditOCube Logo" class="center-logo">
+        </div>
+    </div>
 
-	<div class="side-menu" id="sideMenu">
-		<div class="user-greeting">
-			Welcome, <span th:text="${firstName}">FirstName</span>
-			<!-- Dynamic content -->
-		</div>
-		<a href="/customer-details">View / change user particulars</a> 
-		<a href="account-dashboard">Account dashboard</a> 
-			<a href="creditcard-dashboard">Credit card dashboard</a> 
-			<a href="login" class="logout-button">Logout</a>
-			<a href="deleteCustomerAccount" class="logout-button">Delete Customer Account</a>
-		<!-- Logout button styled as a link -->
-		<!-- Add other menu items here -->
-	</div>
+    <div class="side-menu" id="sideMenu">
+        <div class="user-greeting">
+            Welcome, <span th:text="${firstName}">FirstName</span>
+        </div>
+        <a href="/customer-details">View / change user particulars</a> 
+        <a href="account-dashboard">Account dashboard</a> 
+        <a href="creditcard-dashboard">Credit card dashboard</a> 
+        <a href="login" class="logout-button">Logout</a>
+        <a href="deleteCustomerAccount" class="logout-button">Delete Customer Account</a>
+    </div>
+    
+    <!-- Main content area -->
+    <div class="main-content">
+        <div class="sub-container">
+            <h2>Welcome to Your Dashboard, <span th:text="${firstName}">FirstName</span></h2>
+            <p>
+                Here you can find a quick overview of your account, manage your details, and review recent transactions. If you need assistance, our customer support is just a click away.
+            </p>
+        </div>
 
-	<script src="../js/sidebar.js"></script>
+        <div class="sub-container">
+            <h2>Account Overview</h2>
+            <p>
+                Check the status of your account, view your current balance, and more.
+            </p>
+        </div>
+
+        <div class="sub-container">
+            <h2>Recent Transactions</h2>
+            <p>
+                A list of recent transactions for your account and credit cards.
+            </p>
+        </div>
+
+        <div class="sub-container">
+            <h2>Manage Your Account</h2>
+            <p>
+                Update your personal information, manage your credit cards, or secure your account settings.
+            </p>
+            <a href="/customer-details">Personal Details</a>
+            <a href="creditcard-dashboard">Credit Cards</a>
+            <a href="security-settings">Security Settings</a>
+        </div>
+    </div>
+
+    <script src="../js/sidebar.js"></script>
 
 </body>
 

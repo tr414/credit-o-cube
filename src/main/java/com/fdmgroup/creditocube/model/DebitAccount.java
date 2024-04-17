@@ -27,8 +27,10 @@ public class DebitAccount {
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+	
 	@Column(name = "account_number")
-	private long accountNumber;
+	private String accountNumber;
 
 	/**
 	 * The name of the debit account.
@@ -62,22 +64,20 @@ public class DebitAccount {
 		this.customer = customer;
 	}
 
-	/**
-	 * Gets the account number of this debit account.
-	 *
-	 * @return the account number
-	 */
-	public long getAccountNumber() {
-		return accountNumber;
+	public long getId() {
+		return id;
 	}
 
-	/**
-	 * Sets the account number of this debit account.
-	 *
-	 * @param accountNumber the new account number
-	 */
-	public void setAccountNumber(long accountNumber) {
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
+	}
+	
+	public String getAccountNumber() {
+		return accountNumber;
 	}
 
 	/**

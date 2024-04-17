@@ -6,12 +6,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.repository.CustomerRepository;
 
-@Repository
+@Service
 public class CustomerService {
 
 	@Autowired
@@ -95,6 +95,8 @@ public class CustomerService {
 
 	public Customer registerNewCustomer(String username, String rawPassword, String firstName, String lastName,
 			String nric, LocalDate dob) {
+
+		Optional<Customer> optionalCustomer = customerRepo.findCustomerByUsername(username);
 
 		// if customer doesn't exist, create
 		Customer customer = new Customer();
