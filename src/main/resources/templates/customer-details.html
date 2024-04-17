@@ -6,19 +6,7 @@
 </head>
 <body>
 <!-- show user details -->
-    <h1>User Details</h1>
-    <ul>
-        <li><strong>Username:</strong> <span th:text="${username}"></span></li>
-        <li><strong>First Name:</strong> <span th:text="${firstName}"></span></li>
-        <li><strong>Last Name:</strong> <span th:text="${lastName}"></span></li>
-        <li><strong>Email:</strong> <span th:text="${email}"></span></li>
-        <li><strong>Phone Number:</strong> <span th:text="${phoneNumber}"></span></li>
-        <li><strong>NRIC:</strong> <span th:text="${nric}"></span></li>
-        <li><strong>Address:</strong> <span th:text="${address}"></span></li>
-        <li><strong>Salary:</strong> <span th:text="${salary}"></span></li>
-        <li><strong>Gender:</strong> <span th:text="${gender}"></span></li>
-        <li><strong>Birthday:</strong> <span th:text="${dob}"></span></li>
-    </ul>
+    
 
 
   <div class="main-container">
@@ -33,38 +21,38 @@
         <div class="form-row">
           <div class="form-group">
             <label for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" required>
+            <input type="text" id="firstName" name="firstName" th:value="${firstName}" disabled required>
           </div>
           <div class="form-group">
             <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" required>
+            <input type="text" id="lastName" name="lastName" th:value="${lastName}" disabled required>
           </div>
         </div>
         
         <div class="form-row">
           <div class="form-group">
             <label for="dob">Date of Birth</label>
-            <input type="date" id="dob" name="dob" required>
+            <input type="date" id="dob" name="dob" th:value="${dob}" disabled required>
           </div>
           <div class="form-group">
             <label for="phoneNumber">Mobile Number</label>
-            <input type="tel" id="mobile" name="phoneNumber" required>
+            <input type="tel" id="mobile" name="phoneNumber" th:value="${phoneNumber}" required>
           </div>
           <div class="form-group">
             <label for="nric">NRIC</label>
-            <input type="text" id="nric" name="nric" required>
+            <input type="text" id="nric" name="nric" th:value="${nric}" disabled>
           </div>
           <div class="form-group">
             <label for="address">Address</label>
-            <input type="text" id="address" name="address" required>
+            <input type="text" id="address" name="address" th:value="${address}" required>
           </div>
           <div class="form-group">
             <label for="salary">Salary</label>
-            <input type="text" id="salary" name="salary" required>
+            <input type="text" id="salary" name="salary" th:value="${salary}" required>
           </div>
           <div class="form-group">
             <label for="username">New Username</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" th:value="${username}" disabled>
           </div>
 
         </div>
@@ -91,7 +79,7 @@
           </div>
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" th:value="${email}" required>
           </div>
         </div>
         <button id="update-button" onclick="displayPopup()" type="submit">Update</button>

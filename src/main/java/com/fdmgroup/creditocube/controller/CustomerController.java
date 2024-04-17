@@ -129,6 +129,7 @@ public class CustomerController {
 		model.addAttribute("salary", customer.getSalary());
 		model.addAttribute("gender", customer.getGender());
 		model.addAttribute("dob", customer.getDob());
+		model.addAttribute("customer", customer);
 
 		return "customer-details";
 	}
