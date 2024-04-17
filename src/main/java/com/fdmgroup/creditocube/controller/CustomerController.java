@@ -113,7 +113,7 @@ public class CustomerController {
 			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			Principal principal) {
 		String oldUsername = principal.getName();
-		System.out.println("Old Username in updateCustomerDetails postMapping: " + principal.getName());
+//		System.out.println("Old Username in updateCustomerDetails postMapping: " + principal.getName());
 
 		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
 				address, salary, gender, dob, oldUsername);
@@ -121,7 +121,7 @@ public class CustomerController {
 	}
 
 	// Delete customer account
-	@PostMapping("/deleteCustomerAccount")
+	@GetMapping("/deleteCustomerAccount")
 	public String deleteCustomerAccount(Principal principal) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 
@@ -131,7 +131,7 @@ public class CustomerController {
 		}
 
 		Customer customer = optionalCustomer.get();
-		
+
 		if (customer.getDebitAccounts().size() > 0) {
 			System.out.println("Customer has debit accounts");
 			return "redirect:/home";
