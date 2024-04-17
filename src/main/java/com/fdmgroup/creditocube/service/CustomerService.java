@@ -49,9 +49,23 @@ public class CustomerService {
 		return customerRepo.findCustomerByLastName(customerLastName);
 	}
 
-	public void deleteCustomer(int id) {
+	public void deleteCustomer(Customer customer) {
 
-		customerRepo.deleteById(id);
+		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getUser_id());
+		if (optionalCustomer.isEmpty()) {
+			System.out.println("Customer not found in database");
+			return;
+		}
+		Customer targetCustomer = optionalCustomer.get();
+		System.out.println("Customer info obtained from database");
+
+		if (targetCustomer.getDebitAccounts().size() > 0) {
+			System.out.println("Customer has existing debit accounts - do not delete");
+			return;
+		} else {
+			customerRepo.delete(targetCustomer);
+		}
+
 	}
 
 	public ArrayList<Customer> getAllCustomers() {
@@ -76,7 +90,7 @@ public class CustomerService {
 	 */
 
 	public Customer registerNewCustomer(String username, String rawPassword, String firstName, String lastName,
-			String email, Integer phoneNumber, String nric, String address, Double salary, String gender,
+			String email, String phoneNumber, String nric, String address, Double salary, String gender,
 			LocalDate dob) {
 
 		// if customer doesn't exist, create
@@ -97,7 +111,7 @@ public class CustomerService {
 	}
 
 	public Customer updateCustomerDetails(String username, String rawPassword, String firstName, String lastName,
-			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
+			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			String oldUsername) {
 
 		Customer customer = customerRepo.findCustomerByUsername(oldUsername).get();

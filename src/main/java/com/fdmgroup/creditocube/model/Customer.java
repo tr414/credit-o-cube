@@ -30,10 +30,6 @@ public class Customer extends User {
 		this.dob = dob;
 	}
 
-	public void setSalary(Double salary) {
-		this.salary = salary;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -113,7 +109,7 @@ public class Customer extends User {
 	 * 
 	 * @return A double value representing the customer's salary.
 	 */
-	public double getSalary() {
+	public Double getSalary() {
 		return salary;
 	}
 
@@ -122,7 +118,7 @@ public class Customer extends User {
 	 * 
 	 * @param salary The new salary to be set for the customer.
 	 */
-	public void setSalary(double salary) {
+	public void setSalary(Double salary) {
 		this.salary = salary;
 	}
 

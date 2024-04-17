@@ -2,12 +2,15 @@ package com.fdmgroup.creditocube.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.service.CustomerService;
@@ -20,6 +23,7 @@ import com.fdmgroup.creditocube.service.UserService;
  * customer data.
  */
 @Controller
+@SessionAttributes("firstName")
 public class CustomerController {
 
 	@Autowired
@@ -65,7 +69,7 @@ public class CustomerController {
 	 */
 	@PostMapping("/register")
 	public String registerUser(String username, String password, String firstName, String lastName, String email,
-			Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
+			String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
 		customerService.registerNewCustomer(username, password, firstName, lastName, email, phoneNumber, nric, address,
 				salary, gender, dob);
 		return "redirect:/login"; // Redirects to the login page after successful registration
@@ -77,15 +81,18 @@ public class CustomerController {
 	 *
 	 * @return the name of the Thymeleaf template that renders the home page
 	 */
-	@GetMapping("/home")
-	public String home() {
-		return "home";
+	@GetMapping("/customer-dashboard")
+	public String home(Model model, Principal principal, SessionStatus status) {
+		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
+		model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
+		return "customer-dashboard";
 	}
 	// home is the customer dashboard
 
 	// viewing the update details page
-	@GetMapping("/customer-details")
-	public String customerDetails(Model model, Principal principal) {
+	@GetMapping("/updateCustomerDetails")
+	public String updateCustomerDetails(Model model, Principal principal) {
+		System.out.println("Username: " + principal.getName());
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
 		model.addAttribute("username", customer.getUsername());
 		model.addAttribute("firstName", customer.getFirstName());
@@ -101,11 +108,12 @@ public class CustomerController {
 	}
 
 	// actually updating their details
-	@PostMapping("/customer-details")
+	@PostMapping("/updateCustomerDetails")
 	public String updateCustomerDetails(String username, String password, String firstName, String lastName,
-			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
+			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			Principal principal) {
 		String oldUsername = principal.getName();
+		System.out.println("Old Username in updateCustomerDetails postMapping: " + principal.getName());
 
 		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
 				address, salary, gender, dob, oldUsername);
@@ -115,8 +123,22 @@ public class CustomerController {
 	// Delete customer account
 	@PostMapping("/deleteCustomerAccount")
 	public String deleteCustomerAccount(Principal principal) {
-		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
-		customerService.deleteCustomer(customer.getUser_id());
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+
+		if (optionalCustomer.isEmpty()) {
+			System.out.println("Customer not found in database");
+			return "redirect:/login";
+		}
+
+		Customer customer = optionalCustomer.get();
+		
+		if (customer.getDebitAccounts().size() > 0) {
+			System.out.println("Customer has debit accounts");
+			return "redirect:/home";
+		}
+
+		customerService.deleteCustomer(customer);
+
 		System.out.println("Deleted customer account");
 		return "redirect:/login";
 	}
