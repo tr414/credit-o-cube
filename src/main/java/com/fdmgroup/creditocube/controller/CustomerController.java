@@ -74,8 +74,18 @@ public class CustomerController {
 	 * @return a redirect URL to the login page after successful registration
 	 */
 	@PostMapping("/register")
-	public String registerUser(String username, String password, String firstName, String lastName, String email,
-			String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
+	public String registerUser(HttpServletRequest request) {
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String email = request.getParameter("email");
+		String phoneNumber = request.getParameter("phoneNumber");
+		String nric = request.getParameter("nric");
+		String address = request.getParameter("address");
+		Double salary = Double.parseDouble(request.getParameter("salary"));
+		String gender = request.getParameter("gender");
+		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
 		customerService.registerNewCustomer(username, password, firstName, lastName, email, phoneNumber, nric, address,
 				salary, gender, dob);
 		return "redirect:/login"; // Redirects to the login page after successful registration
@@ -99,16 +109,16 @@ public class CustomerController {
 	@GetMapping("/customer-details")
 	public String updateCustomerDetails(Principal principal, Model model) {
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
-		session.setAttribute("username", customer.getUsername());
-		session.setAttribute("firstName", customer.getFirstName());
-		session.setAttribute("lastName", customer.getLastName());
-		session.setAttribute("email", customer.getEmail());
-		session.setAttribute("phoneNumber", customer.getPhoneNumber());
-		session.setAttribute("nric", customer.getNric());
-		session.setAttribute("address", customer.getAddress());
-		session.setAttribute("salary", customer.getSalary());
-		session.setAttribute("gender", customer.getGender());
-		session.setAttribute("dob", customer.getDob());
+//		session.setAttribute("username", customer.getUsername());
+//		session.setAttribute("firstName", customer.getFirstName());
+//		session.setAttribute("lastName", customer.getLastName());
+//		session.setAttribute("email", customer.getEmail());
+//		session.setAttribute("phoneNumber", customer.getPhoneNumber());
+//		session.setAttribute("nric", customer.getNric());
+//		session.setAttribute("address", customer.getAddress());
+//		session.setAttribute("salary", customer.getSalary());
+//		session.setAttribute("gender", customer.getGender());
+//		session.setAttribute("dob", customer.getDob());
 		model.addAttribute("username", customer.getUsername());
 		model.addAttribute("firstName", customer.getFirstName());
 		model.addAttribute("lastName", customer.getLastName());
