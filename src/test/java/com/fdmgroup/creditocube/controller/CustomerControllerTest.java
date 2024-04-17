@@ -1,14 +1,13 @@
 package com.fdmgroup.creditocube.controller;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,28 +22,25 @@ import com.fdmgroup.creditocube.service.UserService;
 public class CustomerControllerTest {
 
 	@Autowired
-    private WebApplicationContext context;
-	
-    private MockMvc mockMvc;
+	private WebApplicationContext context;
 
-    // Mock the services used in CustomerController
-    @MockBean
-    private UserService userService;
+	private MockMvc mockMvc;
 
-    @MockBean
-    private DebitAccountService debitAccountService;
+	// Mock the services used in CustomerController
+	@MockBean
+	private UserService userService;
 
-    @MockBean
-    private CustomerService customerService;
-    
-    @BeforeEach
+	@MockBean
+	private DebitAccountService debitAccountService;
+
+	@BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
     }
-
+	
     @Test
     public void testSlashLogin_ShouldReturnLoginView() throws Exception {
         mockMvc.perform(get("/login"))
@@ -58,4 +54,5 @@ public class CustomerControllerTest {
 	        .andExpect(status().isOk())
 	        .andExpect(view().name("landing"));
     }
+
 }

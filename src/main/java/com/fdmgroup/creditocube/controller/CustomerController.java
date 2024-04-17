@@ -84,9 +84,8 @@ public class CustomerController {
 	// home is the customer dashboard
 
 	// viewing the update details page
-	@GetMapping("/updateCustomerDetails")
-	public String updateCustomerDetails(Model model, Principal principal) {
-		System.out.println("Username: " + principal.getName());
+	@GetMapping("/customer-details")
+	public String customerDetails(Model model, Principal principal) {
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
 		model.addAttribute("username", customer.getUsername());
 		model.addAttribute("firstName", customer.getFirstName());
@@ -98,22 +97,21 @@ public class CustomerController {
 		model.addAttribute("salary", customer.getSalary());
 		model.addAttribute("gender", customer.getGender());
 		model.addAttribute("dob", customer.getDob());
-		return "updateCustomerDetails";
+		return "customer-details";
 	}
 
 	// actually updating their details
-	@PostMapping("/updateCustomerDetails")
+	@PostMapping("/customer-details")
 	public String updateCustomerDetails(String username, String password, String firstName, String lastName,
 			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			Principal principal) {
 		String oldUsername = principal.getName();
-		System.out.println("Old Username in updateCustomerDetails postMapping: " + principal.getName());
 
 		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
 				address, salary, gender, dob, oldUsername);
 		return "redirect:/login"; // Redirects to the login page after successful update
 	}
-	
+
 	// Delete customer account
 	@PostMapping("/deleteCustomerAccount")
 	public String deleteCustomerAccount(Principal principal) {
