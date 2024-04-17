@@ -41,7 +41,7 @@ public class DebitAccountService {
 	public void createAccount(DebitAccount account) {
 
 		// determine if account exists in database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getId());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isPresent()) {
 			System.out.println("Account already exists: ");
@@ -89,7 +89,7 @@ public class DebitAccountService {
 	public void updateAccount(DebitAccount account) {
 
 		// determine if account exists in database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getId());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		// if account exists, persist
 		if (optionalAccount.isPresent()) {
@@ -165,7 +165,7 @@ public class DebitAccountService {
 	 */
 	public void closeDebitAccount(DebitAccount account) {
 		// Check if the account exists in the database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getId());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isEmpty()) {
 			return;
@@ -201,7 +201,7 @@ public class DebitAccountService {
 		customerRepository.save(accountHolder);
 	}
 
-	public void depositIntoAccount(DebitAccount account, double amount) {
+	public void changeAccountBalance(DebitAccount account, double amount, boolean isDeposit) {
 		// Check if the account exists in the database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
 
@@ -227,7 +227,15 @@ public class DebitAccountService {
 			return;
 		}
 
-		double newBalance = targetAccount.getAccountBalance() + amount;
+		double newBalance;
+		double currentBalance = targetAccount.getAccountBalance();
+
+		if (isDeposit) {
+			newBalance = currentBalance + amount;
+		} else {
+			newBalance = (amount >= currentBalance) ? 0 : currentBalance - amount;
+		}
+
 		targetAccount.setAccountBalance(newBalance);
 
 		debitAccountRepository.save(targetAccount);

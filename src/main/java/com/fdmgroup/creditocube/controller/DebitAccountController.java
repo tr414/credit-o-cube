@@ -132,14 +132,47 @@ public class DebitAccountController {
 		return "redirect:/account-dashboard";
 	}
 
-	@GetMapping("/deposit-withdraw")
-	public String goToDepositWithdrawPage(@RequestParam int accountNumber) {
+	@PostMapping("/deposit-withdraw")
+	public String goToDepositWithdrawPage(@RequestParam int accountId) {
+		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(accountId);
+
+		if (optionalAccount.isEmpty()) {
+			System.out.println("Account not found: " + accountId);
+			return "redirect:/account-dashboard";
+		}
+
+		DebitAccount sessionAccount = optionalAccount.get();
+		session.setAttribute("account", sessionAccount);
+
 		return ("deposit-withdraw");
 	}
 
-	@PostMapping("/deposit-into-account")
-	public String depositIntoAccount(@SessionAttribute Customer customer, @RequestParam int accountNumber,
-			@RequestParam double amount) {
+	@PostMapping("/update-account-balance")
+	public String depositIntoAccount(@SessionAttribute Customer customer, @RequestParam long accountId,
+			@RequestParam double amount, @RequestParam(value = "transaction") String transactionType) {
+
+		boolean isDeposit = transactionType.equals("deposit");
+
+		// Find the user associated with the provided customer ID.
+		Optional<Customer> optionalCustomer = customerService.findCustomerById(customer.getUser_id());
+
+		// If the user is not found, redirect to the login page.
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
+
+		// Find the debit account associated with the provided account number.
+		Optional<DebitAccount> optionalDebitAccount = debitAccountService.findDebitAccountByAccountId(accountId);
+
+		// If the debit account is not found, redirect to the login page.
+		if (optionalDebitAccount.isEmpty()) {
+			return "redirect:/login";
+		}
+
+		DebitAccount targetDebitAccount = optionalDebitAccount.get();
+
+		debitAccountService.changeAccountBalance(targetDebitAccount, amount, isDeposit);
+		debitAccountService.updateAccount(targetDebitAccount);
 
 		// Return a redirect to the dashboard page.
 		return "redirect:/account-dashboard";

@@ -30,14 +30,14 @@
 					<td th:text="${account.accountName}"></td>
 					<td th:text="${account.accountBalance}"></td>
 					<td>
-						<form th:action="@{/deposit-withdraw}" method="GET">
-							<input type="hidden" th:value="${account.accountNumber}" name="accountNumber">
+						<form th:action="@{/deposit-withdraw}" method="POST">
+							<input type="hidden" th:value="${account.accountId}" name="accountId">
 							<button type="submit">Deposit/Withdraw</button>
 						</form>
 					</td>
 					<td>
 						<form th:action="@{/deleteDebitAccount}" method="POST">
-							<input type="hidden" th:value="${account.id}" name="accountId">
+							<input type="hidden" th:value="${account.accountId}" name="accountId">
 							<button type="submit">Close Account</button>
 						</form>
 					</td>

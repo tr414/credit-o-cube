@@ -2,33 +2,44 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Deposit / Withdraw</title>
-	<link rel="stylesheet" href="../css/header-sidebar.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deposit / Withdraw</title>
+<link rel="stylesheet" href="../css/header-sidebar.css">
 </head>
 <body>
 
-<div>
-	<form th:action="deposit-into-account" method="POST">
-		<h2>Deposit into Account</h2>
-		<input type="hidden" th:value="${account.accountNumber}" name="accountNumber">
-		<button type="submit">Deposit/Withdraw</button>
-	</form>
+	<div>
+		<h2 th:text="'Account Name: '+${session.account.accountName}"></h2>
+		<p th:text="'Account Number: '+${session.account.accountNumber}"></p>
+		<p th:text="'Current Balance: $'+${session.account.accountBalance}"></p>
+		<form th:action="update-account-balance" method="POST">
+			<h4>Deposit into Account</h4>
+			<input type="hidden" th:value="${session.account.accountId}" name="accountId"> 
+			<input type="number" step="0.01" name="amount">
+			<button type="submit" name="transaction" value="deposit">Deposit</button>
+			<button type="submit" name="transaction" value="withdraw">Withdraw</button>
+		</form>
+		<!-- <form th:action="withdraw-from-account" method="POST">
+			<h4>Withdraw From Account</h4>
+			<input type="hidden" th:value="${session.account.accountId}"
+				name="accountId"> <input type="number" step="0.01"
+				name="amount">
+			<button type="submit">Withdraw</button>
+		</form> -->
 
-</div>
+	</div>
 
 
-<div class="side-menu" id="sideMenu">
-	<a href="#">Transaction history</a> 
-	<a href="#">Transfer money</a> 
-	<a href="deposit-withdraw">Deposit / Withdraw</a> 
-	<a href="creditcard-dashboard">Credit card dashboard</a> 
-	<a href="account-dashboard">Account dashboard</a>
-	<a href="customer-dashboard">Main dashboard</a>
+	<div class="side-menu" id="sideMenu">
+		<a href="#">Transaction history</a> <a href="#">Transfer money</a> <a
+			href="deposit-withdraw">Deposit / Withdraw</a> <a
+			href="creditcard-dashboard">Credit card dashboard</a> <a
+			href="account-dashboard">Account dashboard</a> <a
+			href="customer-dashboard">Main dashboard</a>
 		<!-- Add other menu items here -->
-</div>
+	</div>
 
-<script src="../js/sidebar.js"></script>
+	<script src="../js/sidebar.js"></script>
 </body>
 </html>

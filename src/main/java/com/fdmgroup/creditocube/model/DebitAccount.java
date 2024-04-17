@@ -27,8 +27,9 @@ public class DebitAccount {
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
-	
+	@Column(name = "account_id")
+	private long accountId;
+
 	@Column(name = "account_number")
 	private String accountNumber;
 
@@ -64,18 +65,18 @@ public class DebitAccount {
 		this.customer = customer;
 	}
 
-	public long getId() {
-		return id;
+	public long getAccountId() {
+		return accountId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setAccountId(long id) {
+		this.accountId = id;
 	}
 
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
-	
+
 	public String getAccountNumber() {
 		return accountNumber;
 	}
