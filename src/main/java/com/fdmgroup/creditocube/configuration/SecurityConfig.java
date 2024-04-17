@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()) // Require authentication for all other requests
             .formLogin(form -> form
                 .loginPage("/login") // Custom login page URL
-                .defaultSuccessUrl("/home", true) // Redirect to the home page upon successful login
+                .defaultSuccessUrl("/customer-dashboard", true) // Redirect to the home page upon successful login
                 .failureUrl("/login?error")
                 .permitAll()) // Allow all users to access the login page
             .logout(logout -> logout
