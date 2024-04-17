@@ -131,13 +131,13 @@ public class CustomerController {
 		}
 
 		Customer customer = optionalCustomer.get();
-
-		customerService.deleteCustomer(customer);
-
+		
 		if (customer.getDebitAccounts().size() > 0) {
 			System.out.println("Customer has debit accounts");
 			return "redirect:/home";
 		}
+
+		customerService.deleteCustomer(customer);
 
 		System.out.println("Deleted customer account");
 		return "redirect:/login";
