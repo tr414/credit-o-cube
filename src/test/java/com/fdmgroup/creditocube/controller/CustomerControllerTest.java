@@ -33,16 +33,26 @@ public class CustomerControllerTest {
 	@MockBean
 	private DebitAccountService debitAccountService;
 
-	@MockBean
-	private CustomerService customerService;
-
 	@BeforeEach
-	public void setup() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
-	}
+    public void setup() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
+	
+    @Test
+    public void testSlashLogin_ShouldReturnLoginView() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"));
+    }
+    
+    @Test
+    public void testSlashIndexReturnsLandingView() throws Exception {
+    	mockMvc.perform(get("/"))
+	        .andExpect(status().isOk())
+	        .andExpect(view().name("landing"));
+    }
 
-	@Test
-	public void testSlashLogin_ShouldReturnLoginView() throws Exception {
-		mockMvc.perform(get("/login")).andExpect(status().isOk()).andExpect(view().name("login"));
-	}
 }

@@ -12,7 +12,7 @@
 	<div th:if="${param.continue}">You have been logged out.</div>
 	<div class="container">
 		<img src="logo.png" alt="Logo" class="logo">
-		<form>
+		<form th:action="@{/login}" method="post">
 			<div class="form-group">
 				<label for="username">User ID</label> <input type="text"
 					id="username" name="username" required>
