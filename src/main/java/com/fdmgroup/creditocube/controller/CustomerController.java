@@ -80,13 +80,13 @@ public class CustomerController {
 	 * page after a user has logged in successfully.
 	 *
 	 * @return the name of the Thymeleaf template that renders the home page
-	 */	
-	@GetMapping("/home")
-    public String home(Model model, Principal principal, SessionStatus status) {
-        Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
-        model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
-        return "customer-dashboard";
-    }
+	 */
+	@GetMapping("/customer-dashboard")
+	public String home(Model model, Principal principal, SessionStatus status) {
+		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
+		model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
+		return "customer-dashboard";
+	}
 	// home is the customer dashboard
 
 	// viewing the update details page
@@ -104,7 +104,7 @@ public class CustomerController {
 		model.addAttribute("salary", customer.getSalary());
 		model.addAttribute("gender", customer.getGender());
 		model.addAttribute("dob", customer.getDob());
-		return "updateCustomerDetails";
+		return "customer-details";
 	}
 
 	// actually updating their details
@@ -119,7 +119,7 @@ public class CustomerController {
 				address, salary, gender, dob, oldUsername);
 		return "redirect:/login"; // Redirects to the login page after successful update
 	}
-	
+
 	// Delete customer account
 	@PostMapping("/deleteCustomerAccount")
 	public String deleteCustomerAccount(Principal principal) {
