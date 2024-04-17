@@ -1,147 +1,147 @@
-/* Reset default margin and padding */
+/* Basic Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Global styles */
 body {
   font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
 }
 
 .container {
-  width: 100%;
-  /* Ensure container takes full width */
-  max-width: 1200px;
-  /* Maximum width of container */
-  margin: 0 auto;
-  /* Center container on page */
-  padding: 0 20px;
-  /* Padding on sides */
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
 }
 
-/* Header styles */
+/* Header */
 header {
-  background: #f5f5f5;
-  padding: 40px 0;
-  display: flex;
-  justify-content: center; /* Center items horizontally */
-  align-items: center;
-  position: relative; /* Set position relative for absolute child positioning */
+  background: #0051ba;
+  color: #fff;
+  padding-top: 30px;
+  min-height: 70px;
+  border-bottom: #0077cc 3px solid;
 }
+
+.header .logo {
+  float: left;
+}
+
+.header .logo img {
+  display: block;
+  max-width: 50px; /* ensures it does not exceed 150px */
+  width: 100%; /* makes it responsive within the confines of its container */
+  height: auto; /* maintains aspect ratio */
+}
+
 
 .links {
-  position: absolute;
-  right: 20px; /* Align links to the right */
-  display: flex;
+  float: right;
+  margin-top: 10px;
 }
 
 .links a {
+  color: #ffffff;
   text-decoration: none;
-  color: #333;
-  margin-left: 30px; /* Increase spacing between links */
-  padding: 8px 16px; /* Add padding for a button-like appearance */
-  border: 1px solid transparent; /* Add a transparent border for a button-like appearance */
-  border-radius: 4px; /* Slightly rounded corners for the buttons */
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transitions for hover effects */
+  padding: 10px 20px;
+  font-size: 16px;
 }
 
 .links a:hover {
-  background-color: #333; /* Change background color on hover */
-  color: #fff; /* Change text color on hover */
-  border-color: #333; /* Add border color on hover for emphasis */
+  background: #0077cc;
 }
 
-.logo, .links {
-  position: absolute; /* Position them absolutely within the header */
-}
-
-.logo {
-  left: 50%; /* Center logo */
-  transform: translateX(-50%); /* Align center of logo with center of header */
-}
-
-/* Hero section styles */
+/* Hero Section */
 .hero {
-  background-image: url('../images/tech.jpg');
-  /* Adjust path as needed */
-  background-size: cover;
-  color: #fff;
+  background: #e2e2e2;
+  padding: 50px 0;
   text-align: center;
-  padding: 100px 0;
 }
 
 .hero h1 {
-  font-size: 36px;
+  font-size: 40px;
+  color: #333;
 }
 
-/* Section styles */
+/* Sections */
 .section {
-  padding: 80px 0;
+  padding: 20px 0;
+  background: #fff;
+}
+
+.section:nth-of-type(odd) {
+  background: #e2e2e2;
+}
+
+.section-header h2 {
+  text-align: center;
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
 .section-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  /* Align items to the top */
-  text-align: center;
-}
-
-.section h2 {
-  margin-bottom: 30px;
+  align-items: center;
+  padding: 20px;
 }
 
 .section .text {
   flex: 1;
   margin-right: 20px;
-  /* Separate text and image */
-  text-align: left;
-  /* Align text to the left */
 }
 
 .section .text p {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.6;
-  /* Space between lines */
 }
 
-.section .image {
-  flex: 1;
-  margin-left: 20px;
-  /* Separate text and image */
-  text-align: center;
-  /* Center image */
-}
-
-.section img {
-  max-width: 100%;
+.section .image img {
+  width: 100%;
+  max-width: 400px;
   height: auto;
 }
 
-.section-header {
-  text-align: center; /* Center the text within the header */
-  margin-bottom: 30px; /* Space below the header */
-}
-
-/* Alternate section styles */
-.section.alternate {
-  background: #f5f5f5;
-}
-
-/* Footer styles */
+/* Footer */
 footer {
   background: #333;
   color: #fff;
-  padding: 20px 0;
   text-align: center;
+  padding: 20px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
-footer a {
-  color: #fff;
+.footer-contact, .footer-social {
+  text-align: left;
 }
 
-footer a:hover {
-  text-decoration: underline;
+.footer-contact h3, .footer-social h3 {
+  margin-bottom: 10px;
 }
+
+.footer-contact p {
+  margin: 5px 0;
+}
+
+.footer-social a {
+  margin: 0 10px;
+  display: inline-block;
+}
+
+.footer-social img {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+.footer-social img:hover {
+  transform: scale(1.2);
+}
+

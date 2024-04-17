@@ -1,136 +1,116 @@
-:root {
-  --dark-bg: #1f1f1f;
-  --dark-color: #333;
-  --light-color: #fff;
-  --bright-color: #00aaff;
-  --yellow: #FFD700;
-  --dark-yellow: #FFA500;
-  --footer-color: #ddd;
-  --error-color: #ff0000;
-}
-
+/* Basic Reset */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: var(--dark-bg);
-  color: var(--light-color);
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+.header {
+    background-color: #f4f4f4; /* Light background for the header */
+    padding: 10px 20px; /* Padding for aesthetic spacing */
+    text-align: left;
+}
+
+.logo-link {
+    display: inline-block; /* Ensures the logo is clickable */
+    text-decoration: none; /* Removes underline from the link */
+}
+
+.header-logo {
+    height: 100px; /* Sets a fixed height for the logo */
+    width: auto; /* Maintains the aspect ratio */
 }
 
 .main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative; /* Ensures it's positioned correctly relative to the header */
+    top: 20px; /* Adds some space between the header and the form */
 }
 
 .mandatory-and-back {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  max-width: 800px;
-  margin-bottom: 20px;
-}
-
-.back-to-login a {
-  color: var(--bright-color);
-  font-size: 16px;
-  text-decoration: none;
-}
-
-.back-to-landing a {
-  color: var(--bright-color);
-  font-size: 16px;
-  text-decoration: none;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .mandatory-statement {
-  font-style: italic;
-  font-size: 14px;
+    font-style: italic;
+    color: #555;
+}
+
+.back-to-login a {
+    color: #0051ba;
+    text-decoration: none;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.back-to-login a:hover {
+    text-decoration: underline;
 }
 
 .registration-container {
-  background-color: var(--dark-color);
-  padding: 40px;
-  border-radius: 10px;
-  width: 90%;
-  min-width: 400px;
-  max-width: 800px;
-  text-align: center;
-  position: relative;
+    margin-top: 10px;
 }
 
 .form-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .form-group {
-  flex: 0 0 48%;
+    flex: 1;
+    margin-right: 20px;
 }
 
-.form-group.full-width {
-  flex: 0 0 100%;
+.form-group:last-child {
+    margin-right: 0;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 5px;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"],
 .form-group input[type="password"],
-.form-group input[type="date"] {
-  width: 100%;
-  padding: 8px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  outline: none;
-  margin-bottom: 10px;
+.form-group input[type="date"],
+.form-group input[type="tel"],
+.form-group input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.form-group label {
-  display: inline-block;
-  margin-right: 15px;
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #0051ba;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+button[type="submit"]:hover {
+    background-color: #0077cc;
 }
 
 .gender {
-  margin-top: 15px;
-}
-
-button {
-  width: calc(100% - 20px);
-  /* Adjust the width with gap */
-  margin-bottom: 10px;
-  /* Add some gap between buttons */
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-decoration: none;
-  /* Remove underline */
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-.error-message {
-  color: var(--error-color);
-  font-size: 14px;
-  margin-top: 5px;
+    margin-right: 5px;
 }
