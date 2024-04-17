@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.service.CustomerService;
@@ -21,6 +23,7 @@ import com.fdmgroup.creditocube.service.UserService;
  * customer data.
  */
 @Controller
+@SessionAttributes("firstName")
 public class CustomerController {
 
 	@Autowired
@@ -77,16 +80,19 @@ public class CustomerController {
 	 * page after a user has logged in successfully.
 	 *
 	 * @return the name of the Thymeleaf template that renders the home page
-	 */
+	 */	
 	@GetMapping("/home")
-	public String home() {
-		return "home";
-	}
+    public String home(Model model, Principal principal, SessionStatus status) {
+        Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
+        model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
+        return "customer-dashboard";
+    }
 	// home is the customer dashboard
 
 	// viewing the update details page
-	@GetMapping("/customer-details")
-	public String customerDetails(Model model, Principal principal) {
+	@GetMapping("/updateCustomerDetails")
+	public String updateCustomerDetails(Model model, Principal principal) {
+		System.out.println("Username: " + principal.getName());
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
 		model.addAttribute("username", customer.getUsername());
 		model.addAttribute("firstName", customer.getFirstName());
@@ -98,21 +104,22 @@ public class CustomerController {
 		model.addAttribute("salary", customer.getSalary());
 		model.addAttribute("gender", customer.getGender());
 		model.addAttribute("dob", customer.getDob());
-		return "customer-details";
+		return "updateCustomerDetails";
 	}
 
 	// actually updating their details
-	@PostMapping("/customer-details")
+	@PostMapping("/updateCustomerDetails")
 	public String updateCustomerDetails(String username, String password, String firstName, String lastName,
 			String email, Integer phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			Principal principal) {
 		String oldUsername = principal.getName();
+		System.out.println("Old Username in updateCustomerDetails postMapping: " + principal.getName());
 
 		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
 				address, salary, gender, dob, oldUsername);
 		return "redirect:/login"; // Redirects to the login page after successful update
 	}
-
+	
 	// Delete customer account
 	@PostMapping("/deleteCustomerAccount")
 	public String deleteCustomerAccount(Principal principal) {
