@@ -55,9 +55,9 @@ public class DebitAccountController {
 		return ("account-dashboard");
 	}
 
-	@GetMapping("/createDebitAccount")
+	@GetMapping("/go-to-create-debit-account")
 	public String goToCreateDebitAccountPage() {
-		return ("createDebitAccount");
+		return ("create-debit-account");
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class DebitAccountController {
 	 * @return A redirect to the dashboard page after creating the new debit
 	 *         account.
 	 */
-	@PostMapping("/createDebitAccount")
+	@PostMapping("/create-debit-account")
 	public String createDebitAccount(Principal principal, HttpServletRequest request) {
 
 		// Get request parameters
@@ -90,6 +90,7 @@ public class DebitAccountController {
 		DebitAccount newAccount = new DebitAccount(sessionCustomer);
 		newAccount.setAccountName(accountName);
 		newAccount.setAccountBalance(balance);
+		newAccount.setAccountNumber(debitAccountService.generateUniqueDebitAccountNumber());
 
 		debitAccountService.createAccount(newAccount);
 
@@ -105,7 +106,7 @@ public class DebitAccountController {
 	 * @return A redirect to the dashboard page after closing the debit account.
 	 */
 	@PostMapping("/deleteDebitAccount")
-	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam int accountNumber) {
+	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam long accountId) {
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerById(customer.getUser_id());
@@ -116,8 +117,7 @@ public class DebitAccountController {
 		}
 
 		// Find the debit account associated with the provided account number.
-		Optional<DebitAccount> optionalDebitAccount = debitAccountService
-				.findDebitAccountByAccountNumber(accountNumber);
+		Optional<DebitAccount> optionalDebitAccount = debitAccountService.findDebitAccountByAccountId(accountId);
 
 		// If the debit account is not found, redirect to the login page.
 		if (optionalDebitAccount.isEmpty()) {
@@ -127,6 +127,52 @@ public class DebitAccountController {
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
 
 		debitAccountService.closeDebitAccount(targetDebitAccount);
+
+		// Return a redirect to the dashboard page.
+		return "redirect:/account-dashboard";
+	}
+
+	@PostMapping("/deposit-withdraw")
+	public String goToDepositWithdrawPage(@RequestParam int accountId) {
+		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(accountId);
+
+		if (optionalAccount.isEmpty()) {
+			System.out.println("Account not found: " + accountId);
+			return "redirect:/account-dashboard";
+		}
+
+		DebitAccount sessionAccount = optionalAccount.get();
+		session.setAttribute("account", sessionAccount);
+
+		return ("deposit-withdraw");
+	}
+
+	@PostMapping("/update-account-balance")
+	public String depositIntoAccount(@SessionAttribute Customer customer, @RequestParam long accountId,
+			@RequestParam double amount, @RequestParam(value = "transaction") String transactionType) {
+
+		boolean isDeposit = transactionType.equals("deposit");
+
+		// Find the user associated with the provided customer ID.
+		Optional<Customer> optionalCustomer = customerService.findCustomerById(customer.getUser_id());
+
+		// If the user is not found, redirect to the login page.
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
+
+		// Find the debit account associated with the provided account number.
+		Optional<DebitAccount> optionalDebitAccount = debitAccountService.findDebitAccountByAccountId(accountId);
+
+		// If the debit account is not found, redirect to the login page.
+		if (optionalDebitAccount.isEmpty()) {
+			return "redirect:/login";
+		}
+
+		DebitAccount targetDebitAccount = optionalDebitAccount.get();
+
+		debitAccountService.changeAccountBalance(targetDebitAccount, amount, isDeposit);
+		debitAccountService.updateAccount(targetDebitAccount);
 
 		// Return a redirect to the dashboard page.
 		return "redirect:/account-dashboard";

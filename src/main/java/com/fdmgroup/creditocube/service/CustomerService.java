@@ -78,6 +78,10 @@ public class CustomerService {
 		return (Optional<Customer>) customerRepo.findCustomerByUsername(username);
 	}
 
+	public ArrayList<Customer> findCustomerByNric(String nric) {
+		return customerRepo.findCustomerByNric(nric);
+	}
+
 	/**
 	 * Registers a new user with the provided username and password. The password is
 	 * encoded before saving to ensure the security of user data.
@@ -90,23 +94,22 @@ public class CustomerService {
 	 */
 
 	public Customer registerNewCustomer(String username, String rawPassword, String firstName, String lastName,
-			String email, String phoneNumber, String nric, String address, Double salary, String gender,
-			LocalDate dob) {
+			String nric, LocalDate dob) {
 
 		Optional<Customer> optionalCustomer = customerRepo.findCustomerByUsername(username);
 
+		if (optionalCustomer.isPresent()) {
+			return optionalCustomer.get();
+		}
+
 		// if customer doesn't exist, create
 		Customer customer = new Customer();
+
 		customer.setUsername(username);
 		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
 		customer.setFirstName(firstName);
 		customer.setLastName(lastName);
-		customer.setEmail(email);
-		customer.setPhoneNumber(phoneNumber);
 		customer.setNric(nric);
-		customer.setAddress(address);
-		customer.setSalary(salary);
-		customer.setGender(gender);
 		customer.setDob(dob);
 		return customerRepo.save(customer);
 
@@ -145,18 +148,50 @@ public class CustomerService {
 			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
 			String oldUsername) {
 
+		// Check if new password is more than or equal to 8 characters long
 		if (rawPassword.length() < 8) {
 			System.out.println("password is too short");
 			return false;
 		}
 
+		// Check if new email address contains an '@' character
 		if (!email.contains("@")) {
 			System.out.println("invalid email format");
 			return false;
 		}
 
-		if (phoneNumberVerification(phoneNumber)) {
+		// Check if new phone number is exactly 8 digits long
+		if (!phoneNumberVerification(phoneNumber)) {
 			System.out.println("phone number does not follow typical format");
+			return false;
+		}
+
+		// Check if NRIC follows the correct format (start with letter, end with letter,
+		// has 7 digits between)
+		if (nricVerification(nric) == false) {
+			System.out.println("NRIC does not follow proper format");
+			return false;
+		}
+
+		// Check that salary is positive
+		if (salary <= 0) {
+			System.out.println("Salary is not positive");
+			return false;
+		}
+
+		// Check that birth year is after 1900, and user is at least 18 years old
+		if (dob.isBefore(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean detailVerificationRegistration(String username, String rawPassword, String firstName,
+			String lastName, String nric, LocalDate dob) {
+
+		if (rawPassword.length() < 8) {
+			System.out.println("password is too short");
 			return false;
 		}
 
@@ -165,12 +200,8 @@ public class CustomerService {
 			return false;
 		}
 
-		if (salary <= 0) {
-			System.out.println("Salary is not positive");
-			return false;
-		}
-
-		if (dob.isBefore(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+		if (dob.isAfter(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+			System.out.println("Year is ass");
 			return false;
 		}
 
@@ -187,11 +218,7 @@ public class CustomerService {
 		if (!Character.isLetter(startChar) || !Character.isLetter(endChar)) // Checking if start and end are letters
 			return false;
 
-		if (!Character.isDigit(nric.charAt(1)) || !Character.isDigit(nric.charAt(7))) // Checking if second and second
-																						// last are digits
-			return false;
-
-		for (int i = 2; i < 8; i++) {
+		for (int i = 1; i < 8; i++) {
 			if (!Character.isDigit(nric.charAt(i))) // Checking if characters from 3rd to 7th are digits
 				return false;
 		}
