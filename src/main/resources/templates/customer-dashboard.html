@@ -1,29 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Wireframe</title>
-  <link rel="stylesheet" href="../css/header-sidebar.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Dashboard</title>
+<link rel="stylesheet" href="../css/header-sidebar.css">
 </head>
 
 <body>
 
-  <div class="top-bar">
-    <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
-    <img src="path_to_logo.png" alt="FDM Logo">
-    <button class="logout-button" onclick="window.location.href='login.html'">Logout</button>
-  </div>
+	<div class="top-bar">
+		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
+		<div class="logo-container">
+			<img src="path_to_logo.png" alt="FDM Logo" class="center-logo">
+		</div>
+	</div>
 
-  <div class="side-menu" id="sideMenu">
-    <a href="#">View / change user particulars</a>
-    <a href="account-dashboard.html">Account dashboard</a>
-    <a href="creditcard-dashboard.html">Credit card dashboard</a>
-    <!-- Add other menu items here -->
-  </div>
+	<div class="side-menu" id="sideMenu">
+		<div class="user-greeting">
+			Welcome, <span th:text="${firstName}">FirstName</span>
+			<!-- Dynamic content -->
+		</div>
+		<a href="#">View / change user particulars</a> <a
+			href="account-dashboard.html">Account dashboard</a> <a
+			href="creditcard-dashboard.html">Credit card dashboard</a> <a
+			href="login.html" class="logout-button">Logout</a>
+		<!-- Logout button styled as a link -->
+		<!-- Add other menu items here -->
+	</div>
 
-  <script src="../js/sidebar.js"></script>
+	<script src="../js/sidebar.js"></script>
 
 </body>
 

@@ -24,6 +24,14 @@ public class DebitAccountService {
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	public DebitAccountService() {
+	}
+
+	public DebitAccountService(DebitAccountRepository debitAccountRepository, CustomerRepository customerRepository) {
+		this.debitAccountRepository = debitAccountRepository;
+		this.customerRepository = customerRepository;
+	}
+
 	/**
 	 * Creates a new debit account in the system.
 	 * 
@@ -163,10 +171,11 @@ public class DebitAccountService {
 		}
 
 		// Get the customer who owns the account
+
 		Customer accountHolder = optionalCustomer.get();
 
-		if (targetAccount.getAccountBalance() <= 0) {
-			System.out.println("Account balance is not positive, please deposit");
+		if (targetAccount.getAccountBalance() != 0) {
+			System.out.println("Account balance is not equal to zero, please deposit");
 			return;
 		}
 

@@ -49,9 +49,23 @@ public class CustomerService {
 		return customerRepo.findCustomerByLastName(customerLastName);
 	}
 
-	public void deleteCustomer(int id) {
+	public void deleteCustomer(Customer customer) {
 
-		customerRepo.deleteById(id);
+		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getUser_id());
+		if (optionalCustomer.isEmpty()) {
+			System.out.println("Customer not found in database");
+			return;
+		}
+		Customer targetCustomer = optionalCustomer.get();
+		System.out.println("Customer info obtained from database");
+
+		if (targetCustomer.getDebitAccounts().size() > 0) {
+			System.out.println("Customer has existing debit accounts - do not delete");
+			return;
+		} else {
+			customerRepo.delete(targetCustomer);
+		}
+
 	}
 
 	public ArrayList<Customer> getAllCustomers() {
