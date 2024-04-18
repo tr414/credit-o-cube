@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
+import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
@@ -177,13 +178,41 @@ public class DebitAccountController {
 
 		debitAccountService.changeAccountBalance(targetDebitAccount, amount, isDeposit);
 
-//		DebitAccountTransaction newTransaction = new DebitAccountTransaction();
-//		debitAccountTransactionService.createDebitAccountTransaction(null)
+		DebitAccountTransaction newTransaction = new DebitAccountTransaction();
+		newTransaction.setDebitAccountTransactionAmount(amount);
+
+		if (isDeposit) {
+			newTransaction.setDebitAccountTransactionType("deposit");
+			newTransaction.setToAccount(targetDebitAccount);
+		} else {
+			newTransaction.setDebitAccountTransactionType("withdraw");
+			newTransaction.setFromAccount(targetDebitAccount);
+		}
+
+		debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
 
 		debitAccountService.updateAccount(targetDebitAccount);
 
 		// Return a redirect to the dashboard page.
 		return "redirect:/account-dashboard";
+	}
+
+	@PostMapping("/view-transaction-history")
+	public String goToViewTransactionHistoryPage(@RequestParam int accountId) {
+		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(accountId);
+
+		if (optionalAccount.isEmpty()) {
+			System.out.println("Account not found: " + accountId);
+			return "redirect:/account-dashboard";
+		}
+
+		DebitAccount sessionAccount = optionalAccount.get();
+		session.setAttribute("account", sessionAccount);
+		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
+				.findTransactionsOfAccount(sessionAccount);
+		session.setAttribute("accountTransactions", accountTransactions);
+
+		return ("view-transaction-history");
 	}
 
 }
