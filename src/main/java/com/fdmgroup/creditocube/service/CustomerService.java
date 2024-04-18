@@ -244,4 +244,12 @@ public class CustomerService {
 		return true;
 	}
 
+	public boolean existsByUsername(String username) {
+        return customerRepo.findCustomerByUsername(username).isPresent();
+    }
+	
+	public boolean existsByNRIC(String nric) {
+	    return customerRepo.findCustomerByNric(nric).size() > 0;
+	}
+
 }
