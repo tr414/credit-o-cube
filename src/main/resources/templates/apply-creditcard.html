@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Wireframe</title>
+  <title>Apply for Credit Card</title>
   <link rel="stylesheet" href="../css/header-sidebar.css">
+  <link rel="stylesheet" href="../css/customer-dashboard.css">
 </head>
-
 <body>
-
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
     <img src="path_to_logo.png" alt="FDM Logo">
@@ -25,8 +23,15 @@
     <!-- Add other menu items here -->
   </div>
 
+  <div class="content">
+    <h1>Apply for a New Credit Card</h1>
+    <form id="creditCardApplication">
+      <label for="name">Credit Card Limit:</label>
+      <input type="text" id="name" name="name" required><br><br>
+      <button type="submit">Submit Application</button>
+    </form>
+  </div>
+
   <script src="../js/sidebar.js"></script>
-
 </body>
-
 </html>
