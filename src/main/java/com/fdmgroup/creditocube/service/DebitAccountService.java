@@ -223,7 +223,8 @@ public class DebitAccountService {
 		// Get the account holder
 		Customer accountHolder = optionalAccountHolder.get();
 
-		if (amount <= 0) {
+		if (amount <= 0.00) {
+			System.out.println("deposit/withdraw amount must be positive");
 			return;
 		}
 
@@ -233,11 +234,12 @@ public class DebitAccountService {
 		if (isDeposit) {
 			newBalance = currentBalance + amount;
 		} else {
-			newBalance = (amount >= currentBalance) ? 0 : currentBalance - amount;
+			newBalance = (amount > currentBalance) ? 0 : currentBalance - amount;
+
 		}
 
 		targetAccount.setAccountBalance(newBalance);
-
+		System.out.println("target account balance: " + targetAccount.getAccountBalance());
 		debitAccountRepository.save(targetAccount);
 		customerRepository.save(accountHolder);
 	}
