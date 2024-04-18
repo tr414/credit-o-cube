@@ -2606,3 +2606,94 @@ Caused by: java.sql.SQLException: Failed to add the foreign key constraint. Miss
 2024-04-18 14:32:56 | INFO  | [http-nio-8080-exec-1] | logging.DirectJDKLog (DirectJDKLog.java:173) - Initializing Spring DispatcherServlet 'dispatcherServlet'
 2024-04-18 14:32:56 | INFO  | [http-nio-8080-exec-1] | servlet.FrameworkServlet (FrameworkServlet.java:532) - Initializing Servlet 'dispatcherServlet'
 2024-04-18 14:32:56 | INFO  | [http-nio-8080-exec-1] | servlet.FrameworkServlet (FrameworkServlet.java:554) - Completed initialization in 0 ms
+2024-04-18 15:49:31 | INFO  | [background-preinit] | util.Version (Version.java:21) - HV000001: Hibernate Validator 8.0.1.Final
+2024-04-18 15:49:31 | INFO  | [restartedMain] | boot.StartupInfoLogger (StartupInfoLogger.java:50) - Starting CreditCardAppApplication using Java 17.0.9 with PID 35632 (C:\Users\mpaci\OneDrive\Work\FDM\Week12_APM\credit-o-cube\target\classes started by mpaci in C:\Users\mpaci\OneDrive\Work\FDM\Week12_APM\credit-o-cube)
+2024-04-18 15:49:31 | DEBUG | [restartedMain] | boot.StartupInfoLogger (StartupInfoLogger.java:51) - Running with Spring Boot v3.2.4, Spring v6.1.5
+2024-04-18 15:49:31 | INFO  | [restartedMain] | boot.SpringApplication (SpringApplication.java:654) - No active profile set, falling back to 1 default profile: "default"
+2024-04-18 15:49:31 | INFO  | [restartedMain] | logging.DeferredLog (DeferredLog.java:252) - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-04-18 15:49:31 | INFO  | [restartedMain] | logging.DeferredLog (DeferredLog.java:252) - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-04-18 15:49:32 | INFO  | [restartedMain] | config.RepositoryConfigurationDelegate (RepositoryConfigurationDelegate.java:139) - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-04-18 15:49:32 | INFO  | [restartedMain] | config.RepositoryConfigurationDelegate (RepositoryConfigurationDelegate.java:208) - Finished Spring Data repository scanning in 57 ms. Found 6 JPA repository interfaces.
+2024-04-18 15:49:33 | INFO  | [restartedMain] | tomcat.TomcatWebServer (TomcatWebServer.java:109) - Tomcat initialized with port 8080 (http)
+2024-04-18 15:49:33 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Initializing ProtocolHandler ["http-nio-8080"]
+2024-04-18 15:49:33 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Starting service [Tomcat]
+2024-04-18 15:49:33 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-04-18 15:49:33 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Initializing Spring embedded WebApplicationContext
+2024-04-18 15:49:33 | INFO  | [restartedMain] | context.ServletWebServerApplicationContext (ServletWebServerApplicationContext.java:296) - Root WebApplicationContext: initialization completed in 1658 ms
+2024-04-18 15:49:33 | INFO  | [restartedMain] | util.LogHelper (LogHelper.java:31) - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-04-18 15:49:33 | INFO  | [restartedMain] | hibernate.Version (Version.java:44) - HHH000412: Hibernate ORM core version 6.4.4.Final
+2024-04-18 15:49:33 | INFO  | [restartedMain] | internal.RegionFactoryInitiator (RegionFactoryInitiator.java:50) - HHH000026: Second-level cache disabled
+2024-04-18 15:49:34 | INFO  | [restartedMain] | persistenceunit.SpringPersistenceUnitInfo (SpringPersistenceUnitInfo.java:87) - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-04-18 15:49:34 | INFO  | [restartedMain] | hikari.HikariDataSource (HikariDataSource.java:110) - HikariPool-1 - Starting...
+2024-04-18 15:49:34 | INFO  | [restartedMain] | pool.HikariPool (HikariPool.java:565) - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1399330f
+2024-04-18 15:49:34 | INFO  | [restartedMain] | hikari.HikariDataSource (HikariDataSource.java:123) - HikariPool-1 - Start completed.
+2024-04-18 15:49:34 | WARN  | [restartedMain] | internal.DialectFactoryImpl (DialectFactoryImpl.java:153) - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-04-18 15:49:35 | INFO  | [restartedMain] | internal.JtaPlatformInitiator (JtaPlatformInitiator.java:58) - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-04-18 15:49:36 | INFO  | [restartedMain] | jpa.AbstractEntityManagerFactoryBean (AbstractEntityManagerFactoryBean.java:437) - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-04-18 15:49:37 | INFO  | [restartedMain] | query.QueryEnhancerFactory (QueryEnhancerFactory.java:49) - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-04-18 15:49:37 | INFO  | [restartedMain] | service.MerchantService (MerchantService.java:50) - Starting database initialization from CSV file
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 3000
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 3001
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 3002
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 4812
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 4813
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 4814
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 5099
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 5111
+2024-04-18 15:49:37 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 5122
+2024-04-18 15:49:37 | INFO  | [restartedMain] | service.MerchantService (MerchantService.java:85) - Successfully loaded merchant data from CSV.
+2024-04-18 15:49:37 | WARN  | [restartedMain] | jpa.JpaBaseConfiguration$JpaWebConfiguration (JpaBaseConfiguration.java:232) - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-04-18 15:49:38 | INFO  | [restartedMain] | web.DefaultSecurityFilterChain (DefaultSecurityFilterChain.java:54) - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@26b2de6c, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@53563b3f, org.springframework.security.web.context.SecurityContextHolderFilter@15af45c2, org.springframework.security.web.header.HeaderWriterFilter@48c542c, org.springframework.web.filter.CorsFilter@4f7b31a4, org.springframework.security.web.csrf.CsrfFilter@2287d14f, org.springframework.security.web.authentication.logout.LogoutFilter@44184960, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@163b739a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@118947a5, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@91051dd, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@62b7fec2, org.springframework.security.web.access.ExceptionTranslationFilter@7a910053, org.springframework.security.web.access.intercept.AuthorizationFilter@1d56637a]
+2024-04-18 15:49:38 | INFO  | [restartedMain] | autoconfigure.OptionalLiveReloadServer (OptionalLiveReloadServer.java:59) - LiveReload server is running on port 35729
+2024-04-18 15:49:38 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Starting ProtocolHandler ["http-nio-8080"]
+2024-04-18 15:49:38 | INFO  | [restartedMain] | tomcat.TomcatWebServer (TomcatWebServer.java:241) - Tomcat started on port 8080 (http) with context path ''
+2024-04-18 15:49:38 | INFO  | [restartedMain] | boot.StartupInfoLogger (StartupInfoLogger.java:56) - Started CreditCardAppApplication in 7.03 seconds (process running for 7.938)
+2024-04-18 15:49:42 | INFO  | [http-nio-8080-exec-1] | logging.DirectJDKLog (DirectJDKLog.java:173) - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-18 15:49:42 | INFO  | [http-nio-8080-exec-1] | servlet.FrameworkServlet (FrameworkServlet.java:532) - Initializing Servlet 'dispatcherServlet'
+2024-04-18 15:49:42 | INFO  | [http-nio-8080-exec-1] | servlet.FrameworkServlet (FrameworkServlet.java:554) - Completed initialization in 0 ms
+2024-04-18 15:51:23 | INFO  | [File Watcher] | autoconfigure.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener (LocalDevToolsAutoConfiguration.java:211) - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-04-18 15:51:23 | INFO  | [Thread-5] | logging.DirectJDKLog (DirectJDKLog.java:173) - Stopping ProtocolHandler ["http-nio-8080"]
+2024-04-18 15:51:23 | INFO  | [Thread-5] | jpa.AbstractEntityManagerFactoryBean (AbstractEntityManagerFactoryBean.java:650) - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-04-18 15:51:23 | INFO  | [Thread-5] | hikari.HikariDataSource (HikariDataSource.java:350) - HikariPool-1 - Shutdown initiated...
+2024-04-18 15:51:23 | INFO  | [Thread-5] | hikari.HikariDataSource (HikariDataSource.java:352) - HikariPool-1 - Shutdown completed.
+2024-04-18 15:51:24 | INFO  | [restartedMain] | boot.StartupInfoLogger (StartupInfoLogger.java:50) - Starting CreditCardAppApplication using Java 17.0.9 with PID 35632 (C:\Users\mpaci\OneDrive\Work\FDM\Week12_APM\credit-o-cube\target\classes started by mpaci in C:\Users\mpaci\OneDrive\Work\FDM\Week12_APM\credit-o-cube)
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | boot.StartupInfoLogger (StartupInfoLogger.java:51) - Running with Spring Boot v3.2.4, Spring v6.1.5
+2024-04-18 15:51:24 | INFO  | [restartedMain] | boot.SpringApplication (SpringApplication.java:654) - No active profile set, falling back to 1 default profile: "default"
+2024-04-18 15:51:24 | INFO  | [restartedMain] | config.RepositoryConfigurationDelegate (RepositoryConfigurationDelegate.java:139) - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-04-18 15:51:24 | INFO  | [restartedMain] | config.RepositoryConfigurationDelegate (RepositoryConfigurationDelegate.java:208) - Finished Spring Data repository scanning in 25 ms. Found 6 JPA repository interfaces.
+2024-04-18 15:51:24 | INFO  | [restartedMain] | tomcat.TomcatWebServer (TomcatWebServer.java:109) - Tomcat initialized with port 8080 (http)
+2024-04-18 15:51:24 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Initializing ProtocolHandler ["http-nio-8080"]
+2024-04-18 15:51:24 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Starting service [Tomcat]
+2024-04-18 15:51:24 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-04-18 15:51:24 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Initializing Spring embedded WebApplicationContext
+2024-04-18 15:51:24 | INFO  | [restartedMain] | context.ServletWebServerApplicationContext (ServletWebServerApplicationContext.java:296) - Root WebApplicationContext: initialization completed in 407 ms
+2024-04-18 15:51:24 | INFO  | [restartedMain] | util.LogHelper (LogHelper.java:31) - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-04-18 15:51:24 | INFO  | [restartedMain] | internal.RegionFactoryInitiator (RegionFactoryInitiator.java:50) - HHH000026: Second-level cache disabled
+2024-04-18 15:51:24 | INFO  | [restartedMain] | persistenceunit.SpringPersistenceUnitInfo (SpringPersistenceUnitInfo.java:87) - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-04-18 15:51:24 | INFO  | [restartedMain] | hikari.HikariDataSource (HikariDataSource.java:110) - HikariPool-2 - Starting...
+2024-04-18 15:51:24 | INFO  | [restartedMain] | pool.HikariPool (HikariPool.java:565) - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2740f049
+2024-04-18 15:51:24 | INFO  | [restartedMain] | hikari.HikariDataSource (HikariDataSource.java:123) - HikariPool-2 - Start completed.
+2024-04-18 15:51:24 | WARN  | [restartedMain] | internal.DialectFactoryImpl (DialectFactoryImpl.java:153) - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-04-18 15:51:24 | INFO  | [restartedMain] | internal.JtaPlatformInitiator (JtaPlatformInitiator.java:58) - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-04-18 15:51:24 | INFO  | [restartedMain] | jpa.AbstractEntityManagerFactoryBean (AbstractEntityManagerFactoryBean.java:437) - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-04-18 15:51:24 | INFO  | [restartedMain] | service.MerchantService (MerchantService.java:50) - Starting database initialization from CSV file
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 3000
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 3001
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 3002
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 4812
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 4813
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 4814
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 5099
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 5111
+2024-04-18 15:51:24 | DEBUG | [restartedMain] | service.MerchantService (MerchantService.java:82) - Saved or updated merchant with code: 5122
+2024-04-18 15:51:24 | INFO  | [restartedMain] | service.MerchantService (MerchantService.java:85) - Successfully loaded merchant data from CSV.
+2024-04-18 15:51:24 | WARN  | [restartedMain] | jpa.JpaBaseConfiguration$JpaWebConfiguration (JpaBaseConfiguration.java:232) - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-04-18 15:51:24 | INFO  | [restartedMain] | web.DefaultSecurityFilterChain (DefaultSecurityFilterChain.java:54) - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@28330822, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@329e005a, org.springframework.security.web.context.SecurityContextHolderFilter@58d7b67d, org.springframework.security.web.header.HeaderWriterFilter@5fe48908, org.springframework.web.filter.CorsFilter@7e8fc888, org.springframework.security.web.csrf.CsrfFilter@280b6736, org.springframework.security.web.authentication.logout.LogoutFilter@2b2e25cf, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@72695bfd, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2b965886, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@35787557, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4601c217, org.springframework.security.web.access.ExceptionTranslationFilter@227780fb, org.springframework.security.web.access.intercept.AuthorizationFilter@44411382]
+2024-04-18 15:51:25 | INFO  | [restartedMain] | autoconfigure.OptionalLiveReloadServer (OptionalLiveReloadServer.java:59) - LiveReload server is running on port 35729
+2024-04-18 15:51:25 | INFO  | [restartedMain] | logging.DirectJDKLog (DirectJDKLog.java:173) - Starting ProtocolHandler ["http-nio-8080"]
+2024-04-18 15:51:25 | INFO  | [restartedMain] | tomcat.TomcatWebServer (TomcatWebServer.java:241) - Tomcat started on port 8080 (http) with context path ''
+2024-04-18 15:51:25 | INFO  | [restartedMain] | boot.StartupInfoLogger (StartupInfoLogger.java:56) - Started CreditCardAppApplication in 1.092 seconds (process running for 114.548)
+2024-04-18 15:51:25 | INFO  | [restartedMain] | autoconfigure.ConditionEvaluationDeltaLoggingListener (ConditionEvaluationDeltaLoggingListener.java:63) - Condition evaluation unchanged
+2024-04-18 15:51:28 | INFO  | [http-nio-8080-exec-1] | logging.DirectJDKLog (DirectJDKLog.java:173) - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-18 15:51:28 | INFO  | [http-nio-8080-exec-1] | servlet.FrameworkServlet (FrameworkServlet.java:532) - Initializing Servlet 'dispatcherServlet'
+2024-04-18 15:51:28 | INFO  | [http-nio-8080-exec-1] | servlet.FrameworkServlet (FrameworkServlet.java:554) - Completed initialization in 1 ms

@@ -135,12 +135,12 @@ public class Customer extends User {
 		this.debitAccounts = debitAccounts;
 	}
 
-//	public List<CreditCard> getCreditCards() {
-//		return creditCards;
-//	}
-//
-//	public void setCreditCards(List<CreditCard> creditCards) {
-//		this.creditCards = creditCards;
-//	}
+	public List<CreditCard> getCreditCards() {
+		return creditCards;
+	}
+
+	public void setCreditCards(List<CreditCard> creditCards) {
+		this.creditCards = creditCards;
+	}
 
 }
