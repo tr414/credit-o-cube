@@ -180,7 +180,7 @@ public class CustomerService {
 		}
 
 		// Check that birth year is after 1900, and user is at least 18 years old
-		if (dob.isBefore(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+		if (dob.isAfter(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
 			return false;
 		}
 
