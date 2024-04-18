@@ -110,7 +110,6 @@ public class CustomerService {
 		customer.setFirstName(firstName);
 		customer.setLastName(lastName);
 		customer.setNric(nric);
-
 		customer.setDob(dob);
 		return customerRepo.save(customer);
 
@@ -164,6 +163,8 @@ public class CustomerService {
 
 		// Check if new phone number is exactly 8 digits long
 		if (!phoneNumberVerification(phoneNumber)) {
+			System.out.println("Phone number: " + phoneNumber);
+			System.out.println(phoneNumberVerification(phoneNumber));
 			System.out.println("phone number does not follow typical format");
 			return false;
 		}
@@ -235,9 +236,10 @@ public class CustomerService {
 			return false;
 		}
 		for (int i = 0; i < 8; i++) {
-			if (!Character.isDigit(phoneNumber.charAt(i))) // Checking if all characters are digits
+			if (!Character.isDigit(phoneNumber.charAt(i))) {// Checking if all characters are digits
 				System.out.println("Phone number not all digits");
-			return false;
+				return false;
+			}
 		}
 		return true;
 	}

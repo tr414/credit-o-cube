@@ -39,6 +39,15 @@ public class DebitAccountTransaction {
 		this.debitAccountTransactionDate = new Date();
 	}
 
+	public DebitAccountTransaction(DebitAccount fromAccount, DebitAccount toAccount,
+			double debitAccountTransactionAmount, String debitAccountTransaction) {
+		this();
+		setFromAccount(fromAccount);
+		setToAccount(toAccount);
+		setDebitAccountTransactionAmount(debitAccountTransactionAmount);
+		setDebitAccountTransactionType(debitAccountTransaction);
+	}
+
 	public Long getDebitAccountTransactionId() {
 		return debitAccountTransactionId;
 	}
