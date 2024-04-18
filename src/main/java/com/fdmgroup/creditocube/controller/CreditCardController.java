@@ -1,6 +1,7 @@
 package com.fdmgroup.creditocube.controller;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,11 @@ public class CreditCardController {
 	// Apply for credit card
 	@GetMapping("/apply-creditcard")
 	public String applyForCreditCard(Principal principal, Model model) {
-		return "apply-creditcard";
+
+		List<CardType> cardTypes = cardTypeService.findAllCardTypes();
+		model.addAttribute("cardTypes", cardTypes);
+		return "apply-creditcard"; // Name of your Thymeleaf template
+
 	}
 
 	// post mapping for registering for a credit card
@@ -69,12 +74,12 @@ public class CreditCardController {
 
 		// other credit card attributes
 		String cardNumber = creditCardService.generateCreditCardNumber();
-		String cardLimitAsString = request.getParameter("credit-card-limit");
+		String cardLimitAsString = request.getParameter("creditCardLimit");
 		int balance = 0; // start off with no transactions yet, so no money to owe the bank
 
 		// validation for card limit - must be all numbers
 		// check if what they've entered are all digits
-		for (int i = 1; i <= cardLimitAsString.length(); i++) {
+		for (int i = 0; i < cardLimitAsString.length(); i++) {
 			if (!Character.isDigit(cardLimitAsString.charAt(i))) {
 				System.out.println("Card Number is not all digits");
 				return ("apply-creditcard");
@@ -83,13 +88,14 @@ public class CreditCardController {
 
 		// validation for card limit - must be larger than their salary
 		int cardLimit = Integer.parseInt(cardLimitAsString); // request this
-		if (cardLimit < sessionCustomer.getSalary()) {
-			System.out.println("Card Limit is too low");
+		if (cardLimit > sessionCustomer.getSalary()) {
+			System.out.println("Salary is too low");
 			return ("apply-creditcard");
 		}
 
 		// validation for cardtype
-		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("card-type"));
+		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
+		System.out.println(request.getParameter("cardType"));
 		if (optionalCardType.isEmpty()) {
 			// no card type of such name
 			System.out.println("No such credit card type");

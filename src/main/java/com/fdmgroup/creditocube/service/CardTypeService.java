@@ -1,5 +1,6 @@
 package com.fdmgroup.creditocube.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class CardTypeService {
 	public Optional<CardType> findCardTypeByName(String name) {
 		return cardTypeRepository.findByCardTypeByName(name);
 
+	}
+
+	public List<CardType> findAllCardTypes() {
+		// TODO Auto-generated method stub
+		return cardTypeRepository.findAll();
 	}
 
 }
