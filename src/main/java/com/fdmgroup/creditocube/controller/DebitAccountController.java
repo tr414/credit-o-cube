@@ -50,11 +50,11 @@ public class DebitAccountController {
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
 		}
+
+		// set customer and their accounts as session attributes to retrieve in view
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
-
 		List<DebitAccount> accounts = debitAccountService.findAllDebitAccountsForCustomer(sessionCustomer);
-
 		session.setAttribute("accounts", accounts);
 
 		return ("account-dashboard");
@@ -137,23 +137,53 @@ public class DebitAccountController {
 		return "redirect:/account-dashboard";
 	}
 
-	@PostMapping("/deposit-withdraw")
-	public String goToDepositWithdrawPage(@RequestParam int accountId) {
-		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(accountId);
+	/**
+	 * Redirects to the deposit-withdraw page for a specific debit account.
+	 *
+	 * @param accountId The unique identifier of the debit account to be accessed.
+	 * @return A redirect to the deposit-withdraw page for the specified debit
+	 *         account.
+	 */
+	@GetMapping("/deposit-withdraw")
+	public String goToDepositWithdrawPage() {
 
-		if (optionalAccount.isEmpty()) {
-			System.out.println("Account not found: " + accountId);
-			return "redirect:/account-dashboard";
-		}
-
-		DebitAccount sessionAccount = optionalAccount.get();
-		session.setAttribute("account", sessionAccount);
-
-		return ("deposit-withdraw");
+		return "deposit-withdraw";
 	}
 
+	@PostMapping("/deposit-withdraw")
+	public String reloadDepositWithdrawPageWithInfo(@RequestParam long selectedAccountId) {
+
+		// Find the debit account associated with the provided account number.
+		Optional<DebitAccount> optionalDebitAccount = debitAccountService
+				.findDebitAccountByAccountId(selectedAccountId);
+
+		// If the debit account is not found, redirect to the login page.
+		if (optionalDebitAccount.isEmpty()) {
+			return "account-dashboard";
+		}
+
+		DebitAccount targetDebitAccount = optionalDebitAccount.get();
+
+		session.setAttribute("selectedAccount", targetDebitAccount);
+
+		return "deposit-withdraw";
+	}
+
+	/**
+	 * Updates the balance of a debit account.
+	 *
+	 * @param customer        The authenticated customer object.
+	 * @param accountId       The unique identifier of the debit account to be
+	 *                        updated.
+	 * @param amount          The amount to be deposited or withdrawn.
+	 * @param transactionType The type of transaction, either "deposit" or
+	 *                        "withdraw".
+	 *
+	 * @return A redirect to the dashboard page after updating the debit account
+	 *         balance.
+	 */
 	@PostMapping("/update-account-balance")
-	public String depositIntoAccount(@SessionAttribute Customer customer, @RequestParam long accountId,
+	public String updateAccountBalance(@SessionAttribute Customer customer, @RequestParam long accountId,
 			@RequestParam double amount, @RequestParam(value = "transaction") String transactionType) {
 
 		boolean isDeposit = transactionType.equals("deposit");
@@ -176,11 +206,15 @@ public class DebitAccountController {
 
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
 
+		// Call debitAccountService to deposit into / withdraw from debit account
+		// balance.
 		debitAccountService.changeAccountBalance(targetDebitAccount, amount, isDeposit);
 
+		// Create a new DebitAccountTransaction for persistence.
 		DebitAccountTransaction newTransaction = new DebitAccountTransaction();
 		newTransaction.setDebitAccountTransactionAmount(amount);
 
+		// if transaction is a deposit, set debitAccount as toAccount.
 		if (isDeposit) {
 			newTransaction.setDebitAccountTransactionType("deposit");
 			newTransaction.setToAccount(targetDebitAccount);
@@ -189,30 +223,46 @@ public class DebitAccountController {
 			newTransaction.setFromAccount(targetDebitAccount);
 		}
 
+		// persist onto database.
 		debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
 
+		// save.
 		debitAccountService.updateAccount(targetDebitAccount);
 
 		// Return a redirect to the dashboard page.
 		return "redirect:/account-dashboard";
 	}
 
+	@GetMapping("/view-transaction-history")
+	public String goToViewTransactionHistoryPage() {
+
+		return "view-transaction-history";
+	}
+
+	/**
+	 * Redirects to the view-transaction-history page for a specific debit account.
+	 *
+	 * @param accountId The unique identifier of the debit account to be accessed.
+	 * @return A redirect to the view-transaction-history page for the specified
+	 *         debit account.
+	 */
 	@PostMapping("/view-transaction-history")
-	public String goToViewTransactionHistoryPage(@RequestParam int accountId) {
-		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(accountId);
+	public String reloadviewTransactionHistoryPage(@RequestParam long selectedAccountId) {
+		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 
 		if (optionalAccount.isEmpty()) {
-			System.out.println("Account not found: " + accountId);
+			System.out.println("Account not found: " + selectedAccountId);
 			return "redirect:/account-dashboard";
 		}
 
 		DebitAccount sessionAccount = optionalAccount.get();
-		session.setAttribute("account", sessionAccount);
+
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
 				.findTransactionsOfAccount(sessionAccount);
+		session.setAttribute("selectedAccount", sessionAccount);
 		session.setAttribute("accountTransactions", accountTransactions);
 
-		return ("view-transaction-history");
+		return "view-transaction-history";
 	}
 
 }

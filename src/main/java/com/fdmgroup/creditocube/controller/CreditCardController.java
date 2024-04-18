@@ -30,6 +30,12 @@ public class CreditCardController {
 	public String creditCardDashboard(Principal principal, Model model) {
 		return "creditcard-dashboard";
 	}
+	
+	// Apply for credit card
+    @GetMapping("/apply-creditcard")
+    public String applyForCreditCard(Principal principal, Model model) {
+        return "apply-creditcard";
+    }
 
 	// post mapping for registering for a credit card
 	@PostMapping("/credit-card-registration")

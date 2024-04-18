@@ -15,19 +15,36 @@ import com.fdmgroup.creditocube.repository.DebitAccountRepository;
 
 /**
  * This class provides services for managing debit accounts.
+ * 
+ * @author - timothy.chai
  */
 @Service
 public class DebitAccountService {
 
+	/**
+	 * Autowired DebitAccountRepository.
+	 */
 	@Autowired
 	private DebitAccountRepository debitAccountRepository;
 
+	/**
+	 * Autowired CustomerRepository.
+	 */
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	/**
+	 * Constructor with no parameters.
+	 */
 	public DebitAccountService() {
 	}
 
+	/**
+	 * Constructor with DebitAccountRepository and CustomerRepository as parameters.
+	 *
+	 * @param debitAccountRepository the debit account repository
+	 * @param customerRepository     the customer repository
+	 */
 	public DebitAccountService(DebitAccountRepository debitAccountRepository, CustomerRepository customerRepository) {
 		this.debitAccountRepository = debitAccountRepository;
 		this.customerRepository = customerRepository;
@@ -115,8 +132,14 @@ public class DebitAccountService {
 		}
 	}
 
+	/**
+	 * Finds a debit account in the system based on the account id.
+	 *
+	 * @param id the unique identifier of the debit account to be found
+	 * @return an optional debit account, or an empty optional if no account was
+	 *         found
+	 */
 	public Optional<DebitAccount> findDebitAccountByAccountId(long id) {
-
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(id);
 
 		if (optionalAccount.isEmpty()) {
@@ -201,6 +224,17 @@ public class DebitAccountService {
 		customerRepository.save(accountHolder);
 	}
 
+	/**
+	 * Changes the balance of a debit account. Typically called along with creating
+	 * a DebitAccountTransaction
+	 *
+	 * @param account   the debit account whose balance is to be changed
+	 * @param amount    the amount to be deposited or withdrawn
+	 * @param isDeposit a boolean value indicating whether the operation is a
+	 *                  deposit or withdrawal
+	 * 
+	 * @see DebitAccountTransactionService#createDebitAccountTransaction(com.fdmgroup.creditocube.model.DebitAccountTransaction)
+	 */
 	public void changeAccountBalance(DebitAccount account, double amount, boolean isDeposit) {
 		// Check if the account exists in the database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
@@ -235,15 +269,20 @@ public class DebitAccountService {
 			newBalance = currentBalance + amount;
 		} else {
 			newBalance = (amount > currentBalance) ? 0 : currentBalance - amount;
-
 		}
 
 		targetAccount.setAccountBalance(newBalance);
-//		System.out.println("target account balance: " + targetAccount.getAccountBalance());
+		// System.out.println("target account balance: " +
+		// targetAccount.getAccountBalance());
 		debitAccountRepository.save(targetAccount);
 		customerRepository.save(accountHolder);
 	}
 
+	/**
+	 * Generates a unique debit account number.
+	 *
+	 * @return a unique debit account number
+	 */
 	public String generateUniqueDebitAccountNumber() {
 		String accountNumber;
 		final Random random = new Random();
@@ -252,12 +291,16 @@ public class DebitAccountService {
 			accountNumber = String.format("%09d", number);
 		} while (accountNumberExists(accountNumber));
 		return accountNumber;
-
 	}
 
+	/**
+	 * Checks if a debit account number already exists in the database.
+	 *
+	 * @param accountNumber the debit account number to check
+	 * @return true if the account number exists, false otherwise
+	 */
 	private boolean accountNumberExists(String accountNumber) {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
-
 		return optionalAccount.isPresent();
 	}
 
