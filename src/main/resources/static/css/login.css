@@ -26,6 +26,8 @@ body, html {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 300px; /* Adjust width as necessary */
+    position: relative; /* Establish a positioning context */
+    min-height: 500px; /* Adjust min-height as necessary to fit content */
 }
 
 .logo {
@@ -47,14 +49,27 @@ body, html {
 .form-group input {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
+.error-message {
+    min-height: 20px; /* Reserve space for one line of text */
+    color: #ff0000;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.buttons {
+    position: absolute;
+    bottom: 25px; /* Adjust as needed, this is the distance from the bottom of the container */
+    left: 105px; /* Align left with the padding of container */
+}
+
 .login-button, .signup-button {
-    width: 100%;
+    width: calc(100% - 80px); /* Button width taking into account the padding */
     padding: 10px 20px;
+    margin-bottom: 10px; /* For spacing between buttons if needed */
     background-color: #0051ba;
     color: white;
     border: none;
@@ -66,14 +81,9 @@ body, html {
     background-color: #0077cc;
 }
 
-.error-message, .logout-message {
-    color: #ff0000;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
 .signup-button {
     background-color: #4CAF50;
+    width: calc(100% - 80px); /* Match the login button width */
 }
 
 .signup-button:hover {
