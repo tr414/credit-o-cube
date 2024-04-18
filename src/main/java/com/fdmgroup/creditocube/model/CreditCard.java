@@ -1,5 +1,7 @@
 package com.fdmgroup.creditocube.model;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -16,8 +19,11 @@ public class CreditCard {
 	private long cardId;
 
 	@ManyToOne
-	@JoinColumn(name = "fk_user_id")
+	@JoinColumn(name = "FK_USER_ID")
 	private Customer customer;
+
+	@OneToMany(mappedBy = "transactionCard")
+	private List<CreditCardTransaction> creditCardTransactions;
 
 	private String cardNumber;
 
@@ -28,13 +34,13 @@ public class CreditCard {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_card_type_id")
 	private CardType cardType;
-	
+
 	public CreditCard() {
-		
+
 	}
 
 	public CreditCard(Customer customer, String cardNumber, int balance, int cardLimit, CardType cardType) {
-		
+
 		this.customer = customer;
 		this.cardNumber = cardNumber;
 		this.balance = balance;
