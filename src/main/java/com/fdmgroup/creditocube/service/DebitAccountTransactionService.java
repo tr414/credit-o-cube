@@ -13,6 +13,11 @@ import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 import com.fdmgroup.creditocube.repository.DebitAccountRepository;
 import com.fdmgroup.creditocube.repository.DebitAccountTransactionRepository;
 
+/**
+ * Service class for managing debit account transactions
+ *
+ * @author timothy.chai
+ */
 @Service
 public class DebitAccountTransactionService {
 
@@ -22,24 +27,47 @@ public class DebitAccountTransactionService {
 	@Autowired
 	private DebitAccountRepository debitAccountRepository;
 
+	/**
+	 * Constructor for DebitAccountTransactionService.
+	 *
+	 * @param debitAccountTransactionRepository the repository for debit account
+	 *                                          transactions
+	 */
 	public DebitAccountTransactionService(DebitAccountTransactionRepository debitAccountTransactionRepository) {
 		this.debitAccountTransactionRepository = debitAccountTransactionRepository;
 	}
 
+	/**
+	 * Creates a new debit account transaction and saves it to the repository.
+	 *
+	 * @param debitAccountTransaction the debit account transaction to be created
+	 */
 	public void createDebitAccountTransaction(DebitAccountTransaction debitAccountTransaction) {
-
 		debitAccountTransactionRepository.save(debitAccountTransaction);
 	}
 
+	/**
+	 * Updates an existing debit account transaction and saves it to the repository.
+	 *
+	 * @param debitAccountTransaction the debit account transaction to be updated
+	 */
 	public void updateDebitAccountTransaction(DebitAccountTransaction debitAccountTransaction) {
 
+		// Save the updated debit account transaction to the repository
 		debitAccountTransactionRepository.save(debitAccountTransaction);
 	}
 
+	/**
+	 * Finds all transactions related to the given debit account.
+	 *
+	 * @param account the debit account for which to find transactions
+	 * @return a list of debit account transactions related to the given account
+	 */
 	public List<DebitAccountTransaction> findTransactionsOfAccount(DebitAccount account) {
 
 		List<DebitAccountTransaction> relatedTransactions = new ArrayList<>();
 
+		// check if account exists in database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isEmpty()) {
@@ -48,14 +76,12 @@ public class DebitAccountTransactionService {
 
 		DebitAccount targetAccount = optionalAccount.get();
 
+		// get transactions where account is toAccount or fromAccount
 		relatedTransactions.addAll(debitAccountTransactionRepository.findByToAccount(targetAccount.getAccountId()));
 		relatedTransactions.addAll(debitAccountTransactionRepository.findByFromAccount(targetAccount.getAccountId()));
 
-		Comparator<DebitAccountTransaction> byDate = (DebitAccountTransaction transaction1,
-				DebitAccountTransaction transaction2) -> {
-			return transaction1.getDebitAccountTransactionDate()
-					.compareTo(transaction2.getDebitAccountTransactionDate());
-		};
+		// Sort the transactions by their transaction date
+		relatedTransactions.sort(Comparator.comparing(DebitAccountTransaction::getDebitAccountTransactionDate));
 
 		return relatedTransactions;
 	}
