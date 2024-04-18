@@ -114,7 +114,7 @@ public class DebitAccount {
 	 * @param accountBalance the new current balance
 	 */
 	public void setAccountBalance(double accountBalance) {
-		if (accountBalance <= 0) {
+		if (accountBalance < 0) {
 			return;
 		} else {
 			this.accountBalance = accountBalance;

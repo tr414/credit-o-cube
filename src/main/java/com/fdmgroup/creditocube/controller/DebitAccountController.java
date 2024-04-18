@@ -15,6 +15,7 @@ import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
+import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +30,9 @@ public class DebitAccountController {
 
 	@Autowired
 	private DebitAccountService debitAccountService;
+
+	@Autowired
+	private DebitAccountTransactionService debitAccountTransactionService;
 
 	@Autowired
 	private CustomerService customerService;
