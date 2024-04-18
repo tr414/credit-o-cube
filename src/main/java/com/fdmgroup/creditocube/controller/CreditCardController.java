@@ -9,8 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.fdmgroup.creditocube.model.CardType;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.Customer;
+import com.fdmgroup.creditocube.service.CardTypeService;
 import com.fdmgroup.creditocube.service.CreditCardService;
 import com.fdmgroup.creditocube.service.CustomerService;
 
@@ -24,6 +26,9 @@ public class CreditCardController {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private CardTypeService cardTypeService;
 
 	// credit card dashboard
 	@GetMapping("/creditcard-dashboard")
@@ -40,17 +45,6 @@ public class CreditCardController {
 	// post mapping for registering for a credit card
 	@PostMapping("/apply-creditcard")
 	public String registerCreditCard(Principal principal, HttpServletRequest request) {
-		// this method takes in the params that they fill in from the form
-		// I save those parameters using creditCardService
-
-		// validation
-		/*
-		 * 1. cannot create a card if they already have 3 or more cards 2. cannot create
-		 * a card if their salary is below $3000 3. Cannot create a card if they haven't
-		 * filled up all of their customer details 4. cannot ask for a limit that's
-		 * above their salary
-		 * 
-		 */
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
@@ -60,16 +54,51 @@ public class CreditCardController {
 			return "redirect:/login";
 		}
 
-		// things i need to make a new credit cad: String cardNumber, int balance, int
-		// cardLimit, CardType cardType
-		String creditCardNumber = creditCardService.generateCreditCardNumber();
-		int balance = 0; // start off with no transactions yet, so no money to owe the bank
-		int cardLimit = Integer.parseInt(request.getParameter("credit-card-limit")); // request this
-		String cardTypeName = request.getParameter("card-type");
-
 		// Get the authenticated customer session object.
 		Customer sessionCustomer = optionalCustomer.get();
-		CreditCard newCard = new CreditCard();
+
+		// validation for customer - must have all their details filled up
+		if (sessionCustomer.getFirstName() == null || sessionCustomer.getLastName() == null
+				|| sessionCustomer.getEmail() == null || sessionCustomer.getPhoneNumber() == null
+				|| sessionCustomer.getNric() == null || sessionCustomer.getAddress() == null
+				|| sessionCustomer.getSalary() == null || sessionCustomer.getGender() == null
+				|| sessionCustomer.getDob() == null) {
+			System.out.println("Customer details are not filled up");
+			return ("apply-creditcard");
+		}
+
+		// other credit card attributes
+		String cardNumber = creditCardService.generateCreditCardNumber();
+		String cardLimitAsString = request.getParameter("credit-card-limit");
+		int balance = 0; // start off with no transactions yet, so no money to owe the bank
+
+		// validation for card limit - must be all numbers
+		// check if what they've entered are all digits
+		for (int i = 1; i <= cardLimitAsString.length(); i++) {
+			if (!Character.isDigit(cardLimitAsString.charAt(i))) {
+				System.out.println("Card Number is not all digits");
+				return ("apply-creditcard");
+			}
+		}
+
+		// validation for card limit - must be larger than their salary
+		int cardLimit = Integer.parseInt(cardLimitAsString); // request this
+		if (cardLimit < sessionCustomer.getSalary()) {
+			System.out.println("Card Limit is too low");
+			return ("apply-creditcard");
+		}
+
+		// validation for cardtype
+		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("card-type"));
+		if (optionalCardType.isEmpty()) {
+			// no card type of such name
+			System.out.println("No such credit card type");
+			return ("apply-creditcard");
+		}
+
+		CardType cardType = optionalCardType.get();
+
+		CreditCard newCard = new CreditCard(sessionCustomer, cardNumber, balance, cardLimit, cardType);
 		newCard.setCustomer(sessionCustomer);
 		creditCardService.createCreditCard(newCard);
 		System.out.println("Successfully created a new ccredit card");
