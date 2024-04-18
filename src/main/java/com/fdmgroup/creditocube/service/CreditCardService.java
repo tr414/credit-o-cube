@@ -27,6 +27,7 @@ public class CreditCardService {
 		// determine if card exists in database
 		Optional<CreditCard> optionalCard = creditCardRepository.findById(card.getCardId());
 
+		// if the credit card is already present in the database, just return that
 		if (optionalCard.isPresent()) {
 			System.out.println("Card already exists: " + optionalCard.get().getCardId());
 			return;
@@ -37,21 +38,23 @@ public class CreditCardService {
 
 		Optional<Customer> optionalCustomer = customerRepository.findById(target.getUser_id());
 
+		// if that card does not belong to a customer
 		if (optionalCustomer.isEmpty()) {
 			System.out.println("Customer not found");
 			return;
 		}
 
 		// determine if customer has 3 or more credit cards
-		Customer cardHolder = optionalCustomer.get();
+		Customer cardHolder = optionalCustomer.get(); // get the customer who wants to apply for a card
 		List<CreditCard> cardList = cardHolder.getCreditCards();
 
+		// if they already hold 3 or more cards, cannot make new ones
 		if (cardList.size() >= 3) {
-			System.out.println("You cannot have 3 or more cred it cards per customer.");
+			System.out.println("You cannot have 3 or more credit cards per customer.");
 			return;
 		}
 
-		// otherwise, add account
+		// otherwise, add card
 		cardList.add(card);
 		cardHolder.setCreditCards(cardList);
 		creditCardRepository.save(card);
