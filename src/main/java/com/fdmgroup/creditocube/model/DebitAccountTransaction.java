@@ -1,6 +1,8 @@
 package com.fdmgroup.creditocube.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -61,7 +63,18 @@ public class DebitAccountTransaction {
 	}
 
 	public void setDebitAccountTransactionType(String debitAccountTransactionType) {
-		this.debitAccountTransactionType = debitAccountTransactionType;
+
+		List<String> availableTypes = new ArrayList<String>();
+		availableTypes.add("deposit");
+		availableTypes.add("withdraw");
+		availableTypes.add("transfer");
+
+		if (!availableTypes.contains(debitAccountTransactionType)) {
+			return;
+		} else {
+			this.debitAccountTransactionType = debitAccountTransactionType;
+		}
+
 	}
 
 	public DebitAccount getFromAccount() {

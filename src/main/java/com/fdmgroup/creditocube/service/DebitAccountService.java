@@ -239,7 +239,7 @@ public class DebitAccountService {
 		}
 
 		targetAccount.setAccountBalance(newBalance);
-		System.out.println("target account balance: " + targetAccount.getAccountBalance());
+//		System.out.println("target account balance: " + targetAccount.getAccountBalance());
 		debitAccountRepository.save(targetAccount);
 		customerRepository.save(accountHolder);
 	}
