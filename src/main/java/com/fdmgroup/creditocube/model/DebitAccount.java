@@ -65,18 +65,38 @@ public class DebitAccount {
 		this.customer = customer;
 	}
 
+	/**
+	 * Gets the account ID of this debit account.
+	 *
+	 * @return the account ID
+	 */
 	public long getAccountId() {
 		return accountId;
 	}
 
+	/**
+	 * Sets the account ID of this debit account.
+	 *
+	 * @param id the new account ID
+	 */
 	public void setAccountId(long id) {
 		this.accountId = id;
 	}
 
+	/**
+	 * Sets the account number of this debit account.
+	 *
+	 * @param accountNumber the new account number
+	 */
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
 
+	/**
+	 * Gets the account number of this debit account.
+	 *
+	 * @return the account number
+	 */
 	public String getAccountNumber() {
 		return accountNumber;
 	}

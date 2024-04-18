@@ -9,13 +9,33 @@ import org.springframework.stereotype.Repository;
 
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 
+/**
+ * Repository for managing DebitAccountTransaction entities.
+ *
+ * @author timothy.chai
+ */
 @Repository
 public interface DebitAccountTransactionRepository extends JpaRepository<DebitAccountTransaction, Long> {
 
+	/**
+	 * Finds all DebitAccountTransactions where the toAccount's accountId matches
+	 * the provided accountId.
+	 *
+	 * @param accountId the id of the account to filter by
+	 * @return a list of DebitAccountTransactions where the toAccount's accountId
+	 *         matches the provided accountId
+	 */
 	@Query("SELECT d FROM DebitAccountTransaction d WHERE d.toAccount.accountId = :account_Id")
 	public List<DebitAccountTransaction> findByToAccount(@Param("account_Id") long accountId);
 
+	/**
+	 * Finds all DebitAccountTransactions where the fromAccount's accountId matches
+	 * the provided accountId.
+	 *
+	 * @param accountId the id of the account to filter by
+	 * @return a list of DebitAccountTransactions where the fromAccount's accountId
+	 *         matches the provided accountId
+	 */
 	@Query("SELECT d FROM DebitAccountTransaction d WHERE d.fromAccount.accountId = :account_Id")
 	public List<DebitAccountTransaction> findByFromAccount(@Param("account_Id") long accountId);
-
 }

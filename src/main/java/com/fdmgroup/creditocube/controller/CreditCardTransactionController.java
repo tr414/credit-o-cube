@@ -20,21 +20,19 @@ public class CreditCardTransactionController {
 
 	@Autowired
 	CreditCardTransactionService transactionService;
-	
+
 	@Autowired
 	CreditCardService cardService;
-	
+
 	@PostMapping("/card-transactions")
 	public String getAllCardTransactions(Model model, HttpServletRequest request) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
-		
+
 		CreditCard card = cardService.findCardByCardId(cardId.longValue()).orElse(null);
-		// CreditCard card = new CreditCard();
-		
+
 		List<CreditCardTransaction> cardTransactions = transactionService.findAllCreditCardTransactions(card);
 		model.addAttribute("transactions", cardTransactions);
-		return("card-transactions");
+		return ("card-transactions");
 	}
-	
 
 }
