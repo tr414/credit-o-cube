@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registration Page</title>
 <link rel="stylesheet" href="../css/register.css">
 </head>
-
 <body>
 	<div class="header">
-		<!-- Logo linked back to the landing page -->
 		<a href="/" class="logo-link"> <img
 			src="../img/CreditOCubeLogo.png" alt="Credit-O-Cube Logo"
 			class="header-logo">
@@ -28,43 +25,61 @@
 				<div class="form-row">
 					<div class="form-group">
 						<label for="firstName">First Name</label> <input type="text"
-							id="firstName" name="firstName" required>
+							id="firstName" name="firstName" required> <span
+							th:if="${firstNameError}" th:text="${firstNameError}"
+							class="error-message"
+							th:style="${firstNameError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="lastName">Last Name</label> <input type="text"
-							id="lastName" name="lastName" required>
+							id="lastName" name="lastName" required> <span
+							th:if="${lastNameError}" th:text="${lastNameError}"
+							class="error-message"
+							th:style="${lastNameError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 				</div>
 				<div class="form-row">
 					<div class="form-group">
 						<label for="username">Username</label> <input type="text"
-							id="username" name="username" required>
+							id="username" name="username" required> <span
+							th:if="${usernameError}" th:text="${usernameError}"
+							class="error-message"
+							th:style="${usernameError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="nric">NRIC</label> <input type="text" id="nric"
-							name="nric" required>
+							name="nric" required> <span th:if="${nricError}"
+							th:text="${nricError}" class="error-message"
+							th:style="${nricError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="dob">Date of Birth</label> <input type="date" id="dob"
-							name="dob" required>
+							name="dob" required
+							th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+						<span th:if="${dobError}" th:text="${dobError}"
+							class="error-message"
+							th:style="${dobError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 				</div>
 				<div class="form-row">
 					<div class="form-group">
 						<label for="password">Password</label> <input type="password"
-							id="password" name="password" required>
+							id="password" name="password" required> <span
+							th:if="${passwordError}" th:text="${passwordError}"
+							class="error-message"
+							th:style="${passwordError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="confirm-password">Confirm Password</label> <input
 							type="password" id="confirm-password" name="confirm-password"
-							required>
+							required> <span th:if="${confirmPasswordError}"
+							th:text="${confirmPasswordError}" class="error-message"
+							th:style="${confirmPasswordError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 				</div>
-
 				<button type="submit">Register</button>
 			</form>
 		</div>
 	</div>
 </body>
-
 </html>

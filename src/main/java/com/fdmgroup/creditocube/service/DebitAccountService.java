@@ -255,8 +255,8 @@ public class DebitAccountService {
 	}
 
 	/**
-	 * Changes the balance of a debit account. Typically called along with creating
-	 * a DebitAccountTransaction
+	 * Changes the balance of a debit account, called for deposits and withdrawals.
+	 * Typically called along with creating a DebitAccountTransaction
 	 *
 	 * @param account   the debit account whose balance is to be changed
 	 * @param amount    the amount to be deposited or withdrawn
@@ -312,6 +312,54 @@ public class DebitAccountService {
 		debitAccountRepository.save(targetAccount);
 		customerRepository.save(accountHolder);
 		logger.debug("Customer and account information updated");
+	}
+
+	public void transferToAccountNumber(DebitAccount fromAccount, String toAccountNumber, double amount) {
+
+		// Check if fromAccount exists in the database
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(fromAccount.getAccountId());
+
+		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account is not found in database, abort transaction");
+			return;
+		}
+
+		DebitAccount targetAccount = optionalAccount.get();
+		logger.debug("Target fromAccount found in database");
+
+		// transactions are assumed to be withdrawing from fromAccount and depositing
+		// into toAccount
+
+		if (amount <= 0.00) {
+			logger.info("Transaction amount is not positive, abort transaction");
+			return;
+		}
+
+		double currentBalance = targetAccount.getAccountBalance();
+		double newBalance = (amount > currentBalance) ? 0 : currentBalance - amount;
+		logger.debug("Withdrawing " + amount + " from fromAccount + ");
+
+		targetAccount.setAccountBalance(newBalance);
+		logger.debug("New balance is updated into database");
+		debitAccountRepository.save(targetAccount);
+
+		Optional<DebitAccount> optionalToAccount = debitAccountRepository.findByAccountNumber(toAccountNumber);
+
+		if (optionalToAccount.isEmpty()) {
+			logger.debug("Target toAccount not found in database, assume toAccount is in another bank");
+			return;
+		} else {
+			DebitAccount toAccount = optionalToAccount.get();
+			logger.debug("Target toAccount found in database");
+
+			double toCurrentBalance = toAccount.getAccountBalance();
+			double toNewBalance = toCurrentBalance + amount;
+			logger.debug("Depositing " + amount + " to toAccount + ");
+
+			toAccount.setAccountBalance(toNewBalance);
+			debitAccountRepository.save(toAccount);
+		}
+
 	}
 
 	/**

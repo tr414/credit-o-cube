@@ -48,7 +48,7 @@ public class MerchantService {
 	@PostConstruct
 	public void loadDataOnStartup() {
 		logger.info("Starting database initialization from CSV file");
-		importCSV("classpath:data/merchant-codes.csv");
+		importCSV("classpath:static/data/merchant-codes.csv");
 	}
 
 	/**

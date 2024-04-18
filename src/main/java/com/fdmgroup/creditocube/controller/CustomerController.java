@@ -2,7 +2,6 @@ package com.fdmgroup.creditocube.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +18,7 @@ import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.UserService;
+import com.fdmgroup.creditocube.service.ValidationService;
 
 import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.http.HttpSession;
@@ -43,6 +43,9 @@ public class CustomerController {
 
 	@Autowired
 	CustomerService customerService; // Service for customer-related operations
+
+	@Autowired
+	ValidationService validationService;
 
 	/**
 	 * Handles the GET request for the login page. This method maps the "/login" URL
@@ -77,34 +80,73 @@ public class CustomerController {
 	 * @return a redirect URL to the login page after successful registration
 	 */
 	@PostMapping("/register")
-	public String registerUser(HttpServletRequest request) {
+	public String registerUser(HttpServletRequest request, Model model) {
 
+		// Extract parameters from the request
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("confirm-password");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String nric = request.getParameter("nric");
-
 		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
 
-		String confirmPassword = request.getParameter("confirm-password");
-		boolean result = customerService.detailVerificationRegistration(username, password, firstName, lastName, nric,
-				dob);
-		System.out.println("Result: " + result);
+		// Initialize a flag to check if there are any validation errors
+		boolean hasErrors = false;
 
-		ArrayList<Customer> customerWithNric = customerService.findCustomerByNric(nric);
-
-		if (customerWithNric.size() >= 1 || !password.equals(confirmPassword) || !result
-				|| customerService.findCustomerByUsername(username).isPresent()) {
-			// cannot register
-			return ("register");
-
-		} else {
-			customerService.registerNewCustomer(username, password, firstName, lastName, nric, dob);
-			System.out.println("New customer registered successfully");
-			return "redirect:/login"; // Redirects to the login page after successful registration
+		// Validate first name
+		if (!validationService.isValidName(firstName)) {
+			model.addAttribute("firstNameError", "First name must only contain alphabets and spaces.");
+			hasErrors = true;
 		}
 
+		// Validate last name
+		if (!validationService.isValidName(lastName)) {
+			model.addAttribute("lastNameError", "Last name must only contain alphabets and spaces.");
+			hasErrors = true;
+		}
+
+		// Validate username
+		if (!validationService.isValidUsername(username)) {
+			model.addAttribute("usernameError",
+					"Username must be at least 6 characters long and can only contain alphanumeric characters, underscores, or dashes.");
+			hasErrors = true;
+		}
+
+		// Validate NRIC
+		if (!validationService.isValidNRIC(nric)) {
+			model.addAttribute("nricError", "Enter a valid NRIC.");
+			hasErrors = true;
+		}
+
+		// Validate Date of Birth
+		if (!validationService.isValidDOB(dob)) {
+			model.addAttribute("dobError", "You must be at least 18 years old to register.");
+			hasErrors = true;
+		}
+
+		// Validate password complexity
+		if (!validationService.isPasswordComplex(password)) {
+			model.addAttribute("passwordError",
+					"Password must be at least 8 characters long with at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character.");
+			hasErrors = true;
+		}
+
+		// Validate password match
+		if (!password.equals(confirmPassword)) {
+			model.addAttribute("confirmPasswordError", "Passwords do not match.");
+			hasErrors = true;
+		}
+
+		// Check for any validation errors
+		if (hasErrors) {
+			return "register";
+		}
+
+		// If validation passes, proceed to register the new customer
+		customerService.registerNewCustomer(username, password, firstName, lastName, nric, dob);
+		System.out.println("New customer registered successfully");
+		return "redirect:/login"; // Redirects to the login page after successful registration
 	}
 
 	/**

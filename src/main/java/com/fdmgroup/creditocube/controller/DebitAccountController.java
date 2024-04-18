@@ -279,8 +279,7 @@ public class DebitAccountController {
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 
 		if (optionalAccount.isEmpty()) {
-			logger.info("Debit account not found in database, redirecting to account-dashboard, selectedAccountId: "
-					+ selectedAccountId);
+			logger.info("Debit account not found in database, redirecting to account-dashboard");
 			return "redirect:/account-dashboard";
 		}
 
@@ -295,6 +294,50 @@ public class DebitAccountController {
 
 		logger.debug("Directing to view-transaction-history.html");
 		return "view-transaction-history";
+	}
+
+	@GetMapping("/transfer-to-account-number")
+	public String goToTransferToAccountNumberPage() {
+		logger.debug("Directing to transfer-to-account-number.html");
+		return "transfer-to-account-number";
+	}
+
+	@PostMapping("/transfer-to-account-number")
+	public String transferToAccountNumber(@RequestParam long selectedAccountId, @RequestParam String toAccountNumber,
+			@RequestParam double amount) {
+		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
+
+		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account not found in database, redirecting to account-dashboard");
+			return "redirect:/account-dashboard";
+		}
+
+		DebitAccount fromAccount = optionalAccount.get();
+
+		boolean targetIsInThisBank = true;
+		Optional<DebitAccount> optionalToAccount = debitAccountService.findDebitAccountByAccountNumber(toAccountNumber);
+
+		if (optionalToAccount.isEmpty()) {
+			logger.info("toAccount not found in database, assume account is in another bank");
+			targetIsInThisBank = false;
+		}
+
+		debitAccountService.transferToAccountNumber(fromAccount, toAccountNumber, amount);
+		debitAccountService.updateAccount(fromAccount);
+
+		DebitAccountTransaction newTransaction = new DebitAccountTransaction();
+		newTransaction.setDebitAccountTransactionAmount(amount);
+		newTransaction.setDebitAccountTransactionType("transfer");
+		newTransaction.setFromAccount(fromAccount);
+
+		if (targetIsInThisBank) {
+			DebitAccount toAccount = optionalToAccount.get();
+			newTransaction.setToAccount(toAccount);
+			debitAccountService.updateAccount(toAccount);
+		}
+		debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
+
+		return "redirect:/account-dashboard";
 	}
 
 }

@@ -1,116 +1,186 @@
 /* Basic Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    line-height: 1.6;
+body, html {
+	height: 100%;
+	font-family: Arial, sans-serif;
 }
 
-.header {
-    background-color: #f4f4f4; /* Light background for the header */
-    padding: 10px 20px; /* Padding for aesthetic spacing */
-    text-align: left;
+.login-background {
+	background-image: url('../img/tech.jpg');
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
 }
 
-.logo-link {
-    display: inline-block; /* Ensures the logo is clickable */
-    text-decoration: none; /* Removes underline from the link */
+.container {
+	background: rgba(255, 255, 255, 0.9);
+	padding: 50px;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 400px; /* Adjust the width as needed */
+	position: relative;
 }
 
-.header-logo {
-    height: 100px; /* Sets a fixed height for the logo */
-    width: auto; /* Maintains the aspect ratio */
-}
-
-.main-container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    position: relative; /* Ensures it's positioned correctly relative to the header */
-    top: 20px; /* Adds some space between the header and the form */
-}
-
-.mandatory-and-back {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.mandatory-statement {
-    font-style: italic;
-    color: #555;
-}
-
-.back-to-login a {
-    color: #0051ba;
-    text-decoration: none;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.back-to-login a:hover {
-    text-decoration: underline;
-}
-
-.registration-container {
-    margin-top: 10px;
-}
-
-.form-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+.logo {
+	display: block;
+	margin: 0 auto 30px;
+	height: 100px;
+	width: auto;
 }
 
 .form-group {
-    flex: 1;
-    margin-right: 20px;
-}
-
-.form-group:last-child {
-    margin-right: 0;
+	position: relative;
+	/* Needed for absolute positioning of error messages */
+	margin-bottom: 20px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+	display: block;
+	margin-bottom: 8px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="password"],
-.form-group input[type="date"],
-.form-group input[type="tel"],
-.form-group input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.form-group input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.login-button, .signup-button {
+	width: 100%;
+	padding: 10px 20px;
+	background-color: #0051ba;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.login-button:hover, .signup-button:hover {
+	background-color: #0077cc;
+}
+
+.error-message {
+	color: #d8000c;
+	background-color: #ffd2d2;
+	padding: 5px;
+	border-radius: 5px;
+	font-size: 0.9em;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	display: none; /* Default state */
+	margin-top: 5px;
+}
+
+.header {
+	background-color: #f4f4f4;
+	padding: 10px 20px;
+	text-align: center;
+}
+
+.logo-link {
+	display: inline-block;
+}
+
+.header-logo {
+	height: 80px;
+	width: auto;
+}
+
+.main-container {
+	width: 80%;
+	max-width: 1080px;
+	margin: 2rem auto;
+	padding: 25px;
+	background-color: #fff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	position: relative;
+	max-width: 1080px;
+}
+
+.mandatory-and-back {
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.mandatory-statement, .back-to-login a {
+	font-style: italic;
+	color: #555;
+	text-decoration: none;
+}
+
+.back-to-login a {
+	font-style: italic;
+	color: #0051ba; /* Change color to resemble a hyperlink */
+	text-decoration: underline; /* Underline to indicate it's clickable */
+	cursor: pointer; /* Show pointer cursor on hover */
+}
+
+.back-to-login a:hover {
+	color: #0077cc; /* Change color on hover for emphasis */
+	text-decoration: none; /* Remove underline on hover */
+}
+
+.registration-container {
+	margin-top: 10px;
+}
+
+.form-row {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.form-group {
+	flex: 1;
+	margin-right: 20px;
+	margin-bottom: 60px;
+}
+
+.form-group:last-child {
+	margin-right: 0;
 }
 
 button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    background-color: #0051ba;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 18px;
+	width: 100%;
+	padding: 10px;
+	background-color: #0051ba;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 18px;
 }
 
 button[type="submit"]:hover {
-    background-color: #0077cc;
+	background-color: #0077cc;
 }
 
-.gender {
-    margin-right: 5px;
+@media ( max-width : 1500px) {
+	.form-group {
+		margin-bottom: 60px;
+		/* Increase space for error messages on smaller screens */
+	}
+
+	/* Adjust form layout for smaller screens */
+	.form-row {
+		flex-direction: column;
+	}
+	.form-group {
+		margin-right: 0;
+		/* Remove margin between inline elements */
+		width: 100%;
+		/* Set form input to full width */
+	}
 }
