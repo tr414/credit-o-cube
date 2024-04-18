@@ -16,38 +16,38 @@ public class ValidationService {
 	}
 
 	public boolean isValidUsername(String username) {
-        if (!username.matches("^[a-zA-Z0-9_\\-]{6,}$")) {
-            return false;
-        }
-        return !customerService.existsByUsername(username);
-    }
+		if (!username.matches("^[a-zA-Z0-9_\\-]{6,}$")) {
+			return false;
+		}
+		return !customerService.existsByUsername(username);
+	}
 
 	public boolean isValidNRIC(String nric) {
-        if (nric == null || !nric.matches("^[STFG]\\d{7}[A-Z]$")) {
-            return false;
-        }
-        return !customerService.existsByNRIC(nric);
-    }
-	
+		if (nric == null || !nric.matches("^[STFG]\\d{7}[A-Z]$")) {
+			return false;
+		}
+		return !customerService.existsByNRIC(nric);
+	}
+
 	public boolean isValidDOB(LocalDate dob) {
-	    if (dob == null) {
-	        return false;
-	    }
-	    LocalDate minDOB = LocalDate.of(1900, 1, 1);
-	    if (dob.isBefore(minDOB)) {
-	        return false;
-	    }
-	    LocalDate today = LocalDate.now();
-	    LocalDate eighteenthBirthday = dob.plusYears(18);
-	    return !eighteenthBirthday.isAfter(today);
+		if (dob == null) {
+			return false;
+		}
+		LocalDate minDOB = LocalDate.of(1900, 1, 1);
+		if (dob.isBefore(minDOB)) {
+			return false;
+		}
+		LocalDate today = LocalDate.now();
+		LocalDate eighteenthBirthday = dob.plusYears(18);
+		return !eighteenthBirthday.isAfter(today);
 	}
-	
+
 	public boolean isPasswordComplex(String password) {
-	    String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
-	    return password.matches(passwordRegex);
+		return password.length() >= 8 && password.matches(".*[A-Z].*") && password.matches(".*[a-z].*")
+				&& password.matches(".*\\d.*") && password.matches(".*[!@#$%^&*()].*");
 	}
-	
+
 	public boolean isSamePassword(String password, String confirmPassword) {
-	    return password.equals(confirmPassword);
+		return password.equals(confirmPassword);
 	}
 }
