@@ -106,6 +106,7 @@ public class CustomerService {
 		customer.setFirstName(firstName);
 		customer.setLastName(lastName);
 		customer.setNric(nric);
+
 		customer.setDob(dob);
 		return customerRepo.save(customer);
 
@@ -121,6 +122,7 @@ public class CustomerService {
 				address, salary, gender, dob, oldUsername);
 
 		if (result == false) {
+			System.out.println("Result is false");
 			return customer;
 		}
 
@@ -169,7 +171,8 @@ public class CustomerService {
 			return false;
 		}
 
-		if (dob.isBefore(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+		if (dob.isAfter(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
+			System.out.println("Age requirement not fulfilled");
 			return false;
 		}
 
@@ -190,7 +193,7 @@ public class CustomerService {
 		}
 
 		if (dob.isAfter(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
-			System.out.println("Year is ass");
+			System.out.println("Age requirement not fulfilled");
 			return false;
 		}
 
@@ -220,11 +223,14 @@ public class CustomerService {
 	}
 
 	private boolean phoneNumberVerification(String phoneNumber) {
-		if (phoneNumber.length() != 8) // Checking if the length is exactly 8
+		if (phoneNumber.length() != 8) { // Checking if the length is exactly 8
+			System.out.println("Phone number length is wrong");
 			return false;
+		}
 		for (int i = 0; i < 8; i++) {
 			if (!Character.isDigit(phoneNumber.charAt(i))) // Checking if all characters are digits
-				return false;
+				System.out.println("Phone number not all digits");
+			return false;
 		}
 		return true;
 	}

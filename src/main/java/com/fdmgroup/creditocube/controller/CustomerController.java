@@ -79,18 +79,17 @@ public class CustomerController {
 
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		String confirmPassword = request.getParameter("confirm-password");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String nric = request.getParameter("nric");
+
 		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
+
+		String confirmPassword = request.getParameter("confirm-password");
 		boolean result = customerService.detailVerificationRegistration(username, password, firstName, lastName, nric,
 				dob);
 
 		ArrayList<Customer> customerWithNric = customerService.findCustomerByNric(nric);
-		System.out.println("customerWithNric size: " + customerWithNric.size());
-		System.out.println("Password: " + password);
-		System.out.println("Confirmed password: " + confirmPassword);
 
 		if (customerWithNric.size() >= 1 || !password.equals(confirmPassword) || !result
 				|| customerService.findCustomerByUsername(username).isPresent()) {
@@ -122,16 +121,6 @@ public class CustomerController {
 	@GetMapping("/customer-details")
 	public String updateCustomerDetails(Principal principal, Model model) {
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
-//		session.setAttribute("username", customer.getUsername());
-//		session.setAttribute("firstName", customer.getFirstName());
-//		session.setAttribute("lastName", customer.getLastName());
-//		session.setAttribute("email", customer.getEmail());
-//		session.setAttribute("phoneNumber", customer.getPhoneNumber());
-//		session.setAttribute("nric", customer.getNric());
-//		session.setAttribute("address", customer.getAddress());
-//		session.setAttribute("salary", customer.getSalary());
-//		session.setAttribute("gender", customer.getGender());
-//		session.setAttribute("dob", customer.getDob());
 		model.addAttribute("username", customer.getUsername());
 		model.addAttribute("firstName", customer.getFirstName());
 		model.addAttribute("lastName", customer.getLastName());
@@ -159,6 +148,7 @@ public class CustomerController {
 		String lastName = request.getParameter("lastName");
 		String email = request.getParameter("email");
 		String phoneNumber = request.getParameter("phoneNumber");
+
 		String nric = request.getParameter("nric");
 		String address = request.getParameter("address");
 		Double salary = Double.parseDouble(request.getParameter("salary"));
