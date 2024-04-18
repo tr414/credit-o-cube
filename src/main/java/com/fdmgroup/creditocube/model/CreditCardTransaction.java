@@ -6,10 +6,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 public class CreditCardTransaction {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -28,7 +31,6 @@ public class CreditCardTransaction {
 	private LocalDateTime transactionDate;
 	
 	private double transactionAmount;
-	
 	
 
 	public CreditCardTransaction() {
@@ -91,6 +93,5 @@ public class CreditCardTransaction {
 
 	public void setTransactionAmount(double transactionAmount) {
 		this.transactionAmount = transactionAmount;
-	}
-
+	}	
 }
