@@ -30,15 +30,15 @@ public class CreditCardController {
 	public String creditCardDashboard(Principal principal, Model model) {
 		return "creditcard-dashboard";
 	}
-	
+
 	// Apply for credit card
-    @GetMapping("/apply-creditcard")
-    public String applyForCreditCard(Principal principal, Model model) {
-        return "apply-creditcard";
-    }
+	@GetMapping("/apply-creditcard")
+	public String applyForCreditCard(Principal principal, Model model) {
+		return "apply-creditcard";
+	}
 
 	// post mapping for registering for a credit card
-	@PostMapping("/credit-card-registration")
+	@PostMapping("/apply-creditcard")
 	public String registerCreditCard(Principal principal, HttpServletRequest request) {
 		// this method takes in the params that they fill in from the form
 		// I save those parameters using creditCardService
@@ -73,7 +73,7 @@ public class CreditCardController {
 		newCard.setCustomer(sessionCustomer);
 		creditCardService.createCreditCard(newCard);
 		System.out.println("Successfully created a new ccredit card");
-		return ("credit-card-registration");
+		return ("apply-creditcard");
 	}
 
 }
