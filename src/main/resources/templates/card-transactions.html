@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Card Transaction History</title>
+<link rel="stylesheet" href="../css/header-sidebar.css">
+<link rel="stylesheet" href="../css/account-dashboard.css">
+
+</head>
+<body>
+	<!-- Top Bar -->
+	<div class="top-bar">
+		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
+			src="../img/CreditOCubeLogo.png" alt="Logo" class="logo">
+		<button class="logout-button" onclick="window.location.href='login'">Logout</button>
+	</div>
+
+	<!-- Side Menu -->
+	<div class="side-menu" id="sideMenu">
+		<div class="user-greeting">What would you like to do today?</div>
+		<a href="#">Transaction history</a> <a href="#">Transfer money</a> <a
+			href="#">Deposit / Withdraw</a> <a href="creditcard-dashboard">Creditcard
+			dashboard</a> <a href="account-dashboard">Account dashboard</a> <a
+			href="customer-dashboard">Main dashboard</a>
+		<!-- Add other menu items here -->
+	</div>
+
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<td>Transaction Date</td>
+					<td>Amount</td>
+					<td>Merchant Code</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="transaction : ${transactions}">
+					<td th:text="${transaction.transactionDate}"></td>
+					<td th:text="'$ '+${transaction.transactionAmount} + ' SGD'"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+
+	<!-- JavaScript for Sidebar Toggle -->
+	<script src="../js/sidebar.js"></script>
+</body>
+</html>
