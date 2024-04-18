@@ -16,6 +16,9 @@ public class Customer extends User {
 	@OneToMany(mappedBy = "customer")
 	private List<DebitAccount> debitAccounts;
 
+	@OneToMany(mappedBy = "customer")
+	private List<CreditCard> creditCards;
+
 	private String nric;
 	private String address;
 	private Double salary;
@@ -131,5 +134,13 @@ public class Customer extends User {
 	public void setDebitAccounts(List<DebitAccount> debitAccounts) {
 		this.debitAccounts = debitAccounts;
 	}
+
+//	public List<CreditCard> getCreditCards() {
+//		return creditCards;
+//	}
+//
+//	public void setCreditCards(List<CreditCard> creditCards) {
+//		this.creditCards = creditCards;
+//	}
 
 }

@@ -114,7 +114,8 @@ public class DebitAccount {
 	 * @param accountBalance the new current balance
 	 */
 	public void setAccountBalance(double accountBalance) {
-		if (accountBalance <= 0) {
+		if (accountBalance < 0) {
+			System.out.println("account balance is negative");
 			return;
 		} else {
 			this.accountBalance = accountBalance;

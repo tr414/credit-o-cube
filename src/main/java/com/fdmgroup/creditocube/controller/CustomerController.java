@@ -90,6 +90,7 @@ public class CustomerController {
 		String confirmPassword = request.getParameter("confirm-password");
 		boolean result = customerService.detailVerificationRegistration(username, password, firstName, lastName, nric,
 				dob);
+		System.out.println("Result: " + result);
 
 		ArrayList<Customer> customerWithNric = customerService.findCustomerByNric(nric);
 
@@ -100,6 +101,7 @@ public class CustomerController {
 
 		} else {
 			customerService.registerNewCustomer(username, password, firstName, lastName, nric, dob);
+			System.out.println("New customer registered successfully");
 			return "redirect:/login"; // Redirects to the login page after successful registration
 		}
 
@@ -143,9 +145,6 @@ public class CustomerController {
 	// actually updating their details
 	@PostMapping("/customer-details")
 	public String updateCustomerDetails(Principal principal, HttpServletRequest request) {
-		System.out.println(request.getParameter("dob"));
-		System.out.println(request.getParameter("firstName"));
-		System.out.println(request.getParameter("lastName"));
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String firstName = request.getParameter("firstName");

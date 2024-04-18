@@ -176,6 +176,10 @@ public class DebitAccountController {
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
 
 		debitAccountService.changeAccountBalance(targetDebitAccount, amount, isDeposit);
+
+//		DebitAccountTransaction newTransaction = new DebitAccountTransaction();
+//		debitAccountTransactionService.createDebitAccountTransaction(null)
+
 		debitAccountService.updateAccount(targetDebitAccount);
 
 		// Return a redirect to the dashboard page.
