@@ -90,6 +90,7 @@ public class CustomerController {
 		String confirmPassword = request.getParameter("confirm-password");
 		boolean result = customerService.detailVerificationRegistration(username, password, firstName, lastName, nric,
 				dob);
+		System.out.println("Result: " + result);
 
 		ArrayList<Customer> customerWithNric = customerService.findCustomerByNric(nric);
 
@@ -100,6 +101,7 @@ public class CustomerController {
 
 		} else {
 			customerService.registerNewCustomer(username, password, firstName, lastName, nric, dob);
+			System.out.println("New customer registered successfully");
 			return "redirect:/login"; // Redirects to the login page after successful registration
 		}
 
