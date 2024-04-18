@@ -18,12 +18,11 @@
 		<button class="logout-button" onclick="window.location.href='login'">Logout</button>
 	</div>
 
-	<!-- Side Menu -->
 	<div class="side-menu" id="sideMenu">
-		<div class="user-greeting">What would you like to do today?</div>
-		<a href="#">Transaction history</a> <a href="#">Transfer money</a> <a
-			href="#">Deposit / Withdraw</a> <a href="creditcard-dashboard">Credit
-			card dashboard</a> <a href="account-dashboard">Account dashboard</a> <a
+		<a href="view-transaction-history">Transaction history</a> <a href="#">Transfer money</a> <a
+			href="deposit-withdraw">Deposit / Withdraw</a> <a
+			href="creditcard-dashboard">Credit card dashboard</a> <a
+			href="account-dashboard">Account dashboard</a> <a
 			href="customer-dashboard">Main dashboard</a>
 		<!-- Add other menu items here -->
 	</div>
@@ -47,16 +46,12 @@
 						<td th:text="${account.accountName}"></td>
 						<td th:text="'$ '+${account.accountBalance}"></td>
 						<td>
-							<form th:action="@{/deposit-withdraw}" method="POST">
-								<input type="hidden" th:value="${account.accountId}"
-									name="accountId">
+							<form th:action="@{/deposit-withdraw}" method="GET">
 								<button type="submit">Deposit/Withdraw</button>
 							</form>
 						</td>
 						<td>
-							<form th:action="@{/view-transaction-history}" method="POST">
-								<input type="hidden" th:value="${account.accountId}"
-									name="accountId">
+							<form th:action="@{/view-transaction-history}" method="GET">
 								<button type="submit">View Transaction History</button>
 							</form>
 						</td>
