@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Wireframe</title>
   <link rel="stylesheet" href="../css/header-sidebar.css">
-  <link rel="stylesheet" href="../css/account-dashboard.css">
+  <link rel="stylesheet" href="../css/account-creditcard-dashboard.css">
 </head>
 
 <body>
@@ -23,13 +23,43 @@
 		Welcome, <span th:text="${firstName}">FirstName</span>
 		What would you like to do today?
 	</div>
-    <a href="apply-creditcard">Apply credit card</a>
+    <a href="apply-creditcard">Apply for a credit card</a>
     <a href="#">Set credit limit</a>
     <a href="#">Transaction history</a>
     <a href="#">Pay bills</a>
     <a href="account-dashboard">Account dashboard</a>
+    <a href="creditcard-dashboard">Credit card dashboard</a> 
     <a href="customer-dashboard">Main dashboard</a>
     <!-- Add other menu items here -->
+  </div>
+  
+  <div class="content-area">
+    <div>
+      <table>
+        <thead>
+          <tr>
+            
+            <th>Credit Card Number</th>
+            <th>Balance you owe</th>
+            <th>Credit Limit</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="card : ${session.credit_cards}">
+            
+            <td th:text="${credit_card.card_number}"></td>
+            <td th:text="${credit_card.balance}"></td>
+            <td th:text="'$ '+${credit_card.card_limit}"></td>
+            <td>
+              <form th:action="@{/view-creditcard-transaction-history}" method="GET">
+                <button type="submit">View Transaction History</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script src="../js/sidebar.js"></script>
