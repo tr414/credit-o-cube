@@ -14,11 +14,14 @@
 	<!-- Top Bar -->
 	<div class="top-bar">
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
-			src="../img/CreditOCubeLogo.png" alt="Logo" class="logo">
+			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
 		<button class="logout-button" onclick="window.location.href='login'">Logout</button>
 	</div>
 
 	<div class="side-menu" id="sideMenu">
+		<div class="user-greeting">
+			Welcome, <span th:text="${firstName}">FirstName</span>
+		</div>
 		<a href="view-transaction-history">Transaction history</a> 
 		<a href="transfer-to-account-number">Transfer money</a> <a
 			href="deposit-withdraw">Deposit / Withdraw</a> <a

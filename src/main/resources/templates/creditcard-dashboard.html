@@ -6,17 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Wireframe</title>
   <link rel="stylesheet" href="../css/header-sidebar.css">
+  <link rel="stylesheet" href="../css/account-dashboard.css">
 </head>
 
 <body>
 
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
-    <img src="path_to_logo.png" alt="FDM Logo">
+    <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
     <button class="logout-button" onclick="window.location.href='login'">Logout</button>
+	
   </div>
 
   <div class="side-menu" id="sideMenu">
+  	<div class="user-greeting">
+		Welcome, <span th:text="${firstName}">FirstName</span>
+		What would you like to do today?
+	</div>
     <a href="apply-creditcard">Apply credit card</a>
     <a href="#">Set credit limit</a>
     <a href="#">Transaction history</a>
