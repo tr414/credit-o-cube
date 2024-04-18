@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,8 @@ public class DebitAccountService {
 	 */
 	@Autowired
 	private CustomerRepository customerRepository;
+
+	private static Logger logger = LogManager.getLogger(DebitAccountService.class);
 
 	/**
 	 * Constructor with no parameters.
@@ -61,7 +65,8 @@ public class DebitAccountService {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isPresent()) {
-			System.out.println("Account already exists: " + optionalAccount.get().getAccountId());
+			logger.info("Account already exists: " + optionalAccount.get().getAccountId()
+					+ " abort creating debit account");
 			return;
 		}
 
@@ -71,7 +76,7 @@ public class DebitAccountService {
 		Optional<Customer> optionalCustomer = customerRepository.findById(target.getUser_id());
 
 		if (optionalCustomer.isEmpty()) {
-			System.out.println("Customer not found");
+			logger.info("Customer not found, abort creating debit account");
 			return;
 		}
 
@@ -80,12 +85,14 @@ public class DebitAccountService {
 		List<DebitAccount> accountList = accountHolder.getDebitAccounts();
 
 		if (accountList.size() >= 5) {
-			System.out.println("You cannot have 5 or more debit accounts per customer.");
+			logger.info("Customer has 5 or more debit accounts, abort creating debit account");
 			return;
 		}
 
 		// check account balance is positive
 		if (account.getAccountBalance() <= 0) {
+			logger.info(
+					"Customer tried to create debit account with non-positive balance, abort creating debit account");
 			System.out.println("Account balance is not positive");
 			return;
 		}
@@ -96,6 +103,7 @@ public class DebitAccountService {
 		debitAccountRepository.save(account);
 		customerRepository.save(accountHolder);
 
+		logger.debug("Create debit account successful");
 	}
 
 	/**
@@ -111,7 +119,11 @@ public class DebitAccountService {
 		// if account exists, persist
 		if (optionalAccount.isPresent()) {
 			debitAccountRepository.save(account);
+			logger.debug("Debit account exists, persistence successful");
+			return;
 		}
+
+		logger.info("Debit account does not exist in database, persistence failed");
 	}
 
 	/**
@@ -126,8 +138,10 @@ public class DebitAccountService {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
 
 		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account not found, returning empty Optional");
 			return Optional.empty();
 		} else {
+			logger.debug("Debit account found, returning Optional-wrapped account");
 			return optionalAccount;
 		}
 	}
@@ -143,8 +157,10 @@ public class DebitAccountService {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(id);
 
 		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account not found, returning empty Optional");
 			return Optional.empty();
 		} else {
+			logger.debug("Debit account found, returning Optional-wrapped account");
 			return optionalAccount;
 		}
 	}
@@ -166,10 +182,12 @@ public class DebitAccountService {
 		// check if customer exists
 		Optional<Customer> optionalCustomer = customerRepository.findById(customer.getUser_id());
 		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database, returing empty list");
 			return accountListInCustomer;
 		}
 
 		Customer targetCustomer = optionalCustomer.get();
+		logger.debug("Customer found in database");
 
 		// retrieve acounts that belong to a customer
 		allAccountList.forEach(account -> {
@@ -177,6 +195,13 @@ public class DebitAccountService {
 				accountListInCustomer.add(account);
 			}
 		});
+
+		if (accountListInCustomer.size() == 0) {
+			logger.info("Customer does not have any debit accounts, returning empty list");
+			return accountListInCustomer;
+		}
+
+		logger.debug("Returning debit accounts of customer");
 		return accountListInCustomer;
 
 	}
@@ -191,26 +216,29 @@ public class DebitAccountService {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account is not found in database, abort deletion");
 			return;
 		}
 
 		// Get the target debit account
 		DebitAccount targetAccount = optionalAccount.get();
+		logger.debug("Debit account found in database");
 
 		// Determine if the customer exists in the database
 		Optional<Customer> optionalCustomer = customerRepository.findById(targetAccount.getCustomer().getUser_id());
 
 		if (optionalCustomer.isEmpty()) {
-			System.out.println("Customer not found");
+			logger.info("Customer not found, abort deletion");
 			return;
 		}
 
 		// Get the customer who owns the account
 
 		Customer accountHolder = optionalCustomer.get();
+		logger.debug("Customer found in database");
 
 		if (targetAccount.getAccountBalance() != 0) {
-			System.out.println("Account balance is not equal to zero, please deposit");
+			logger.info("Account balance is not equal to zero, deposit or withdraw to continue, abort deletion");
 			return;
 		}
 
@@ -219,9 +247,11 @@ public class DebitAccountService {
 
 		// Delete the target debit account from the database
 		debitAccountRepository.delete(targetAccount);
+		logger.debug("Debit account deleted");
 
 		// Save the updated customer to the database
 		customerRepository.save(accountHolder);
+		logger.debug("Customer details updated");
 	}
 
 	/**
@@ -240,25 +270,29 @@ public class DebitAccountService {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
 
 		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account is not found in database, abort transaction");
 			return;
 		}
 
 		DebitAccount targetAccount = optionalAccount.get();
+		logger.debug("Debit account found in database");
+
 		Customer targetCustomer = account.getCustomer();
 
 		// Check if account holder is present in database
 		Optional<Customer> optionalAccountHolder = customerRepository.findById(targetCustomer.getUser_id());
 
 		if (optionalAccountHolder.isEmpty()) {
-			System.out.println("Customer not found");
+			logger.info("Account holder not found in database, abort transaction");
 			return;
 		}
 
 		// Get the account holder
 		Customer accountHolder = optionalAccountHolder.get();
+		logger.debug("Account holder found in database");
 
 		if (amount <= 0.00) {
-			System.out.println("deposit/withdraw amount must be positive");
+			logger.info("Transaction amount is not positive, abort transaction");
 			return;
 		}
 
@@ -267,15 +301,17 @@ public class DebitAccountService {
 
 		if (isDeposit) {
 			newBalance = currentBalance + amount;
+			logger.debug("Customer wishes to deposit " + amount + " into account");
 		} else {
 			newBalance = (amount > currentBalance) ? 0 : currentBalance - amount;
+			logger.debug("Customer wishes to withdraw " + amount + " from account");
 		}
 
 		targetAccount.setAccountBalance(newBalance);
-		// System.out.println("target account balance: " +
-		// targetAccount.getAccountBalance());
+		logger.debug("New balance is updated into database");
 		debitAccountRepository.save(targetAccount);
 		customerRepository.save(accountHolder);
+		logger.debug("Customer and account information updated");
 	}
 
 	/**

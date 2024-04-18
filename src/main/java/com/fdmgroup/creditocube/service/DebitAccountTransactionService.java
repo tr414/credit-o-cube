@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class DebitAccountTransactionService {
 
 	@Autowired
 	private DebitAccountRepository debitAccountRepository;
+
+	private static Logger logger = LogManager.getLogger(DebitAccountTransactionService.class);
 
 	/**
 	 * Constructor for DebitAccountTransactionService.

@@ -17,17 +17,16 @@
 		<button class="logout-button" onclick="window.location.href='login'">Logout</button>
 	</div>
 
-	<!-- Side Menu -->
 	<div class="side-menu" id="sideMenu">
-		<div class="user-greeting">What would you like to do today?</div>
-		<a href="#">Transaction history</a> <a href="#">Transfer money</a> <a
-			href="#">Deposit / Withdraw</a> <a href="creditcard-dashboard">Creditcard
-			dashboard</a> <a href="account-dashboard">Account dashboard</a> <a
+		<a href="view-transaction-history">Transaction history</a> <a href="#">Transfer money</a> <a
+			href="deposit-withdraw">Deposit / Withdraw</a> <a
+			href="creditcard-dashboard">Credit card dashboard</a> <a
+			href="account-dashboard">Account dashboard</a> <a
 			href="customer-dashboard">Main dashboard</a>
 		<!-- Add other menu items here -->
 	</div>
 
-	<div>
+	<div th:if="${session.selectedAccount != null}">
 		<table>
 			<thead>
 				<tr>
@@ -42,17 +41,33 @@
 				<tr th:each="transaction : ${session.accountTransactions}">
 					<td th:text="${transaction.debitAccountTransactionDate}"></td>
 					<td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td>
-     				<td th:text="${transaction.toAccount?.accountNumber ?: '---'}"></td>
+					<td th:text="${transaction.toAccount?.accountNumber ?: '---'}"></td>
 					<td th:text="${transaction.debitAccountTransactionType}"></td>
-					<td th:text="'$ '+${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
+					<td
+						th:text="'$ '+${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 
+	<div th:if="${session.selectedAccount == null}">
+		<p>Please choose an account from the dropdown menu below.</p>
+	</div>
+	<div>
+		<form th:action="@{/view-transaction-history}" method="POST">
+			<select name="selectedAccountId">
+				<option th:each="account : ${session.accounts}"
+					th:value="${account.accountId}" th:text="${account.accountName}">
+				</option>
+			</select>
+			<button type="submit">Submit</button>
+		</form>
+	</div>
+	
+
 
 
 	<!-- JavaScript for Sidebar Toggle -->
-	<script src="../js/sidebar.js"></script>
+		<script src="../js/sidebar.js"></script>
 </body>
 </html>
