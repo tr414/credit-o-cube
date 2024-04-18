@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,8 @@ public class DebitAccountController {
 	@Autowired
 	private HttpSession session;
 
+	private static Logger logger = LogManager.getLogger(DebitAccountController.class);
+
 	@GetMapping("/account-dashboard")
 	public String goToAccountDashboard(Principal principal) {
 		// Find the user associated with the provided customer ID.
@@ -56,12 +60,14 @@ public class DebitAccountController {
 		session.setAttribute("customer", sessionCustomer);
 		List<DebitAccount> accounts = debitAccountService.findAllDebitAccountsForCustomer(sessionCustomer);
 		session.setAttribute("accounts", accounts);
-
+		logger.debug("Customer and accounts are added to session");
+		logger.debug("Directing to account-dashboard.html");
 		return ("account-dashboard");
 	}
 
 	@GetMapping("/go-to-create-debit-account")
 	public String goToCreateDebitAccountPage() {
+		logger.debug("Directing to create-debit-account.html");
 		return ("create-debit-account");
 	}
 
@@ -79,12 +85,14 @@ public class DebitAccountController {
 		String accountName = request.getParameter("account-name");
 		String stringBalance = request.getParameter("account-balance");
 		double balance = Double.parseDouble(stringBalance);
+		logger.debug("Request parameters obtained - accountName: " + accountName + ", balance: " + balance);
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database, redirect to login page");
 			return "redirect:/login";
 		}
 
@@ -98,8 +106,10 @@ public class DebitAccountController {
 		newAccount.setAccountNumber(debitAccountService.generateUniqueDebitAccountNumber());
 
 		debitAccountService.createAccount(newAccount);
+		logger.debug("New Debit Account created: " + newAccount.getAccountName());
 
 		// Return a redirect to the dashboard page.
+		logger.debug("Redirecting to account-dashboard.html");
 		return "redirect:/account-dashboard";
 	}
 
@@ -118,18 +128,23 @@ public class DebitAccountController {
 
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database, redirect to login page");
 			return "redirect:/login";
 		}
+
+		logger.debug("Customer exists, Customer details retrieved from database");
 
 		// Find the debit account associated with the provided account number.
 		Optional<DebitAccount> optionalDebitAccount = debitAccountService.findDebitAccountByAccountId(accountId);
 
 		// If the debit account is not found, redirect to the login page.
 		if (optionalDebitAccount.isEmpty()) {
-			return "redirect:/login";
+			logger.info("Debit Account not found in database, redirect to account dashboard");
+			return "redirect:/account-dashboard";
 		}
 
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
+		logger.debug("Debit Account exists, details retrieved from database");
 
 		debitAccountService.closeDebitAccount(targetDebitAccount);
 
@@ -146,7 +161,7 @@ public class DebitAccountController {
 	 */
 	@GetMapping("/deposit-withdraw")
 	public String goToDepositWithdrawPage() {
-
+		logger.debug("Directing to deposit-withdraw.html");
 		return "deposit-withdraw";
 	}
 
@@ -159,12 +174,14 @@ public class DebitAccountController {
 
 		// If the debit account is not found, redirect to the login page.
 		if (optionalDebitAccount.isEmpty()) {
-			return "account-dashboard";
+			logger.info("Debit account not found in database, redirecting to account-dashboard");
+			return "redirect:/account-dashboard";
 		}
 
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
 
 		session.setAttribute("selectedAccount", targetDebitAccount);
+		logger.debug("Debit account found, setting as session attribute and refreshing page");
 
 		return "deposit-withdraw";
 	}
@@ -193,18 +210,23 @@ public class DebitAccountController {
 
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database, redirect to login page");
 			return "redirect:/login";
 		}
+
+		logger.debug("Customer exists, Customer details retrieved from database");
 
 		// Find the debit account associated with the provided account number.
 		Optional<DebitAccount> optionalDebitAccount = debitAccountService.findDebitAccountByAccountId(accountId);
 
 		// If the debit account is not found, redirect to the login page.
 		if (optionalDebitAccount.isEmpty()) {
-			return "redirect:/login";
+			logger.info("Debit account not found in database, redirecting to account-dashboard");
+			return "redirect:/account-dashboard";
 		}
 
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
+		logger.debug("Debit Account exists, details retrieved from database");
 
 		// Call debitAccountService to deposit into / withdraw from debit account
 		// balance.
@@ -213,29 +235,35 @@ public class DebitAccountController {
 		// Create a new DebitAccountTransaction for persistence.
 		DebitAccountTransaction newTransaction = new DebitAccountTransaction();
 		newTransaction.setDebitAccountTransactionAmount(amount);
+		logger.debug("New DebitAccountTransaction created");
 
 		// if transaction is a deposit, set debitAccount as toAccount.
 		if (isDeposit) {
 			newTransaction.setDebitAccountTransactionType("deposit");
 			newTransaction.setToAccount(targetDebitAccount);
+			logger.debug("deposit transaction created");
 		} else {
 			newTransaction.setDebitAccountTransactionType("withdraw");
 			newTransaction.setFromAccount(targetDebitAccount);
+			logger.debug("withdraw transaction created");
 		}
 
 		// persist onto database.
 		debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
+		logger.debug("DebitAccountTransaction persisted to database");
 
 		// save.
 		debitAccountService.updateAccount(targetDebitAccount);
+		logger.debug("DebitAccount updated in database");
 
 		// Return a redirect to the dashboard page.
+		logger.debug("Redirecting to account dashboard");
 		return "redirect:/account-dashboard";
 	}
 
 	@GetMapping("/view-transaction-history")
 	public String goToViewTransactionHistoryPage() {
-
+		logger.debug("Directing to view-transaction-history.html");
 		return "view-transaction-history";
 	}
 
@@ -251,17 +279,21 @@ public class DebitAccountController {
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 
 		if (optionalAccount.isEmpty()) {
-			System.out.println("Account not found: " + selectedAccountId);
+			logger.info("Debit account not found in database, redirecting to account-dashboard, selectedAccountId: "
+					+ selectedAccountId);
 			return "redirect:/account-dashboard";
 		}
 
 		DebitAccount sessionAccount = optionalAccount.get();
+		logger.debug("Debit Account exists, details retrieved from database");
 
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
 				.findTransactionsOfAccount(sessionAccount);
 		session.setAttribute("selectedAccount", sessionAccount);
 		session.setAttribute("accountTransactions", accountTransactions);
+		logger.debug("Account transactions are set as session attribute");
 
+		logger.debug("Directing to view-transaction-history.html");
 		return "view-transaction-history";
 	}
 
