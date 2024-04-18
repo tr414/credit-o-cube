@@ -41,10 +41,10 @@ public class DebitAccountService {
 	public void createAccount(DebitAccount account) {
 
 		// determine if account exists in database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isPresent()) {
-			System.out.println("Account already exists: ");
+			System.out.println("Account already exists: " + optionalAccount.get().getAccountId());
 			return;
 		}
 
@@ -89,7 +89,7 @@ public class DebitAccountService {
 	public void updateAccount(DebitAccount account) {
 
 		// determine if account exists in database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		// if account exists, persist
 		if (optionalAccount.isPresent()) {
@@ -107,6 +107,17 @@ public class DebitAccountService {
 	public Optional<DebitAccount> findDebitAccountByAccountNumber(String accountNumber) {
 
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
+
+		if (optionalAccount.isEmpty()) {
+			return Optional.empty();
+		} else {
+			return optionalAccount;
+		}
+	}
+
+	public Optional<DebitAccount> findDebitAccountByAccountId(long id) {
+
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(id);
 
 		if (optionalAccount.isEmpty()) {
 			return Optional.empty();
@@ -154,7 +165,7 @@ public class DebitAccountService {
 	 */
 	public void closeDebitAccount(DebitAccount account) {
 		// Check if the account exists in the database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isEmpty()) {
 			return;
@@ -190,14 +201,62 @@ public class DebitAccountService {
 		customerRepository.save(accountHolder);
 	}
 
+	public void changeAccountBalance(DebitAccount account, double amount, boolean isDeposit) {
+		// Check if the account exists in the database
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+
+		if (optionalAccount.isEmpty()) {
+			return;
+		}
+
+		DebitAccount targetAccount = optionalAccount.get();
+		Customer targetCustomer = account.getCustomer();
+
+		// Check if account holder is present in database
+		Optional<Customer> optionalAccountHolder = customerRepository.findById(targetCustomer.getUser_id());
+
+		if (optionalAccountHolder.isEmpty()) {
+			System.out.println("Customer not found");
+			return;
+		}
+
+		// Get the account holder
+		Customer accountHolder = optionalAccountHolder.get();
+
+		if (amount <= 0) {
+			return;
+		}
+
+		double newBalance;
+		double currentBalance = targetAccount.getAccountBalance();
+
+		if (isDeposit) {
+			newBalance = currentBalance + amount;
+		} else {
+			newBalance = (amount >= currentBalance) ? 0 : currentBalance - amount;
+		}
+
+		targetAccount.setAccountBalance(newBalance);
+
+		debitAccountRepository.save(targetAccount);
+		customerRepository.save(accountHolder);
+	}
+
 	public String generateUniqueDebitAccountNumber() {
 		String accountNumber;
 		final Random random = new Random();
 		do {
 			long number = (long) (100000000 + random.nextInt(900000000));
 			accountNumber = String.format("%09d", number);
-		} while (debitAccountRepository.findByAccountNumber(accountNumber));
+		} while (accountNumberExists(accountNumber));
 		return accountNumber;
+
+	}
+
+	private boolean accountNumberExists(String accountNumber) {
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
+
+		return optionalAccount.isPresent();
 	}
 
 }
