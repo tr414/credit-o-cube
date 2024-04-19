@@ -240,7 +240,8 @@ public class DebitAccountController {
 		// if transaction is a deposit, set debitAccount as toAccount.
 		if (isDeposit) {
 			newTransaction.setDebitAccountTransactionType("deposit");
-			newTransaction.setToAccount(targetDebitAccount);
+//			newTransaction.setToAccount(targetDebitAccount);
+			newTransaction.setToAccountNumber(targetDebitAccount.getAccountNumber());
 			logger.debug("deposit transaction created");
 		} else {
 			newTransaction.setDebitAccountTransactionType("withdraw");
@@ -332,9 +333,10 @@ public class DebitAccountController {
 
 		if (targetIsInThisBank) {
 			DebitAccount toAccount = optionalToAccount.get();
-			newTransaction.setToAccount(toAccount);
 			debitAccountService.updateAccount(toAccount);
 		}
+
+		newTransaction.setToAccountNumber(toAccountNumber);
 		debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
 
 		return "redirect:/account-dashboard";

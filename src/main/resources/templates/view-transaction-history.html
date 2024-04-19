@@ -41,7 +41,7 @@
 				<tr th:each="transaction : ${session.accountTransactions}">
 					<td th:text="${transaction.debitAccountTransactionDate}"></td>
 					<td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td>
-					<td th:text="${transaction.toAccount?.accountNumber ?: '---'}"></td>
+					<td th:text="${transaction.toAccountNumber ?: '---'}"></td>
 					<td th:text="${transaction.debitAccountTransactionType}"></td>
 					<td
 						th:text="'$ '+${transaction.debitAccountTransactionAmount} + ' SGD'"></td>

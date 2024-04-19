@@ -245,13 +245,14 @@ public class DebitAccountService {
 		// Remove the target debit account from the customer's list of accounts
 		accountHolder.getDebitAccounts().remove(targetAccount);
 
+		// Save the updated customer to the database
+		customerRepository.save(accountHolder);
+		logger.debug("Customer details updated");
+
 		// Delete the target debit account from the database
 		debitAccountRepository.delete(targetAccount);
 		logger.debug("Debit account deleted");
 
-		// Save the updated customer to the database
-		customerRepository.save(accountHolder);
-		logger.debug("Customer details updated");
 	}
 
 	/**
