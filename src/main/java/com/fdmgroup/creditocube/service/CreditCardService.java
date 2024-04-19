@@ -22,6 +22,9 @@ public class CreditCardService {
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	@Autowired
+	private DebitAccountService debitAccountService;
+
 	public void createCreditCard(CreditCard card) {
 
 		// determine if card exists in database
@@ -138,4 +141,18 @@ public class CreditCardService {
 
 	// method to close the card
 
+	// method calculates how much a customer needs to pay if its not a custom amount
+	public double calculateAmountPayable(String paymentOption, double balance) {
+		if (paymentOption.equals("Pay Current Balance")) {
+			System.out.println("Paying current balance");
+			// i need to find a debit account and deduct from it
+			// what's the balance I need to pay
+			return balance;
+		} else if (paymentOption.equals("Pay minimum")) {
+			return balance * 0.03;
+		}
+		System.out.println("Invalid payment option");
+		return 0;
+
+	}
 }

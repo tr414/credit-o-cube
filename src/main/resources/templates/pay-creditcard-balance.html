@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pay Credit Card Balance</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("paymentOption").addEventListener("change", function() {
+                var paymentOption = this.value;
+                var amountInput = document.getElementById("amountInput");
+                if(paymentOption === "Pay Custom Amount") {
+                    amountInput.style.display = "";
+                } else {
+                    amountInput.style.display = "none";
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Pay Credit Card Balance</h2>
+    <form th:action="@{/pay-creditcard-balance}" method="post">
+        <div>
+            <label for="debitAccountNumber">Debit Account Number:</label>
+            <select id="debitAccountNumber" name="debitAccountNumber" required>
+                <option th:each="account : ${session.customer.debitAccounts}" th:value="${account.accountNumber}" th:text="${account.accountNumber}">Debit Account Number</option>
+            </select>
+        </div>
+        <div>
+            <label for="creditCardNumber">Credit Card Number:</label>
+            <select id="creditCardNumber" name="creditCardNumber" required>
+                <option th:each="card : ${session.customer.creditCards}" th:value="${card.cardNumber}" th:text="${card.cardNumber}">Credit Card Number</option>
+            </select>
+        </div>
+        <div>
+            <label for="paymentOption">Payment Option:</label>
+            <select id="paymentOption" name="paymentOption" required>
+                <option value="Pay Current Balance">Pay Current Balance</option>
+                <option value="Pay minimum">Pay Minimum</option>
+                <option value="Pay Custom Amount">Pay Custom Amount</option>
+            </select>
+        </div>
+        <div id="amountInput" style="display: none;">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" min="0" step="0.01">
+        </div>
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</body>
+</html>

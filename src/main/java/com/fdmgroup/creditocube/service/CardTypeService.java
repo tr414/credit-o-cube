@@ -28,4 +28,9 @@ public class CardTypeService {
 		return cardTypeRepository.findAll();
 	}
 
+	public boolean isCardTypeTableEmpty() {
+		boolean isCardTypeTableEmpty = cardTypeRepository.count() == 0;
+		System.out.println("Rewards table is empty: " + isCardTypeTableEmpty);
+		return isCardTypeTableEmpty;
+	}
 }
