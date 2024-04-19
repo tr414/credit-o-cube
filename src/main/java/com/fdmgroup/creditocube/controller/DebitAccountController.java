@@ -103,10 +103,18 @@ public class DebitAccountController {
 		DebitAccount newAccount = new DebitAccount(sessionCustomer);
 		newAccount.setAccountName(accountName);
 		newAccount.setAccountBalance(balance);
+		newAccount.setActive(true);
 		newAccount.setAccountNumber(debitAccountService.generateUniqueDebitAccountNumber());
 
 		debitAccountService.createAccount(newAccount);
 		logger.debug("New Debit Account created: " + newAccount.getAccountName());
+
+		DebitAccountTransaction firstTransaction = new DebitAccountTransaction();
+		firstTransaction.setDebitAccountTransactionAmount(balance);
+		firstTransaction.setDebitAccountTransactionType("deposit");
+		firstTransaction.setToAccountNumber(newAccount.getAccountNumber());
+		debitAccountTransactionService.createDebitAccountTransaction(firstTransaction);
+		logger.debug("Add first deposit transaction: deposit $" + balance);
 
 		// Return a redirect to the dashboard page.
 		logger.debug("Redirecting to account-dashboard.html");
@@ -240,7 +248,6 @@ public class DebitAccountController {
 		// if transaction is a deposit, set debitAccount as toAccount.
 		if (isDeposit) {
 			newTransaction.setDebitAccountTransactionType("deposit");
-//			newTransaction.setToAccount(targetDebitAccount);
 			newTransaction.setToAccountNumber(targetDebitAccount.getAccountNumber());
 			logger.debug("deposit transaction created");
 		} else {
