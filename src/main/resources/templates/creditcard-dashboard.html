@@ -30,6 +30,7 @@
     <a href="account-dashboard">Account dashboard</a>
     <a href="creditcard-dashboard">Credit card dashboard</a> 
     <a href="customer-dashboard">Main dashboard</a>
+    <a href="create-card-transaction">Create Card Transaction</a>
     <!-- Add other menu items here -->
   </div>
   
@@ -46,12 +47,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="card : ${session.credit_cards}">
+          <tr th:each="card : ${credit_cards}">
             
-            <td th:text="${credit_card.card_number}"></td>
-            <td th:text="${credit_card.balance}"></td>
-            <td th:text="'$ '+${credit_card.card_limit}"></td>
-            <td>
+            <td th:text="${card.cardNumber}"></td>
+            <td th:text="${card.balance}"></td>
+            <td th:text="'$ '+${card.cardLimit}"></td>
+            
               <form th:action="@{/view-creditcard-transaction-history}" method="GET">
                 <button type="submit">View Transaction History</button>
               </form>

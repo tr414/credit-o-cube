@@ -81,7 +81,7 @@ public class DebitAccountTransactionService {
 		DebitAccount targetAccount = optionalAccount.get();
 
 		// get transactions where account is toAccount or fromAccount
-		relatedTransactions.addAll(debitAccountTransactionRepository.findByToAccount(targetAccount.getAccountId()));
+		relatedTransactions.addAll(debitAccountTransactionRepository.findByToAccount(targetAccount.getAccountNumber()));
 		relatedTransactions.addAll(debitAccountTransactionRepository.findByFromAccount(targetAccount.getAccountId()));
 
 		// Sort the transactions by their transaction date

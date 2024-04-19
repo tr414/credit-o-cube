@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
 import com.fdmgroup.creditocube.model.Customer;
+import com.fdmgroup.creditocube.model.ForeignCurrencyCreditCardTransaction;
 import com.fdmgroup.creditocube.model.Merchant;
 import com.fdmgroup.creditocube.repository.MerchantRepository;
 import com.fdmgroup.creditocube.service.CreditCardService;
@@ -71,6 +72,10 @@ public class CreditCardTransactionController {
 		String merchantCode = request.getParameter("merchantCode");
 		Merchant merchant = merchantRepo.findByMerchantCode(merchantCode).orElse(null);
 		
+		// currency
+		String currency = request.getParameter("currency");
+		System.out.println(currency);
+		
 		//date
 		LocalDateTime transactionDate = LocalDateTime.now();
 		
@@ -86,7 +91,12 @@ public class CreditCardTransactionController {
 		
 		
 		if (valid) {
-			new CreditCardTransaction(card, merchant, cashback, transactionDate, transactionAmount);
+			if (currency.equalsIgnoreCase("sgd")) {
+				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback, transactionDate, transactionAmount));
+			} else {
+				transactionService.createCreditCardTransaction(new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate, transactionAmount, currency, 1.3));
+			}
+			
 		}
 		
 		return ("redirect:creditcard-dashboard");
