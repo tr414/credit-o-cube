@@ -47,7 +47,7 @@
 				</thead>
 				<tbody>
 					<tr th:each="account : ${session.accounts}">
-						<td th:text="${account.accountNumber}"></td>
+						<td th:text="| ${account.accountNumber.substring(0,3)}-${account.accountNumber.substring(3,6)}-${account.accountNumber.substring(6)} |"></td>
 						<td th:text="${account.accountName}"></td>
 						<td th:text="'$ '+${account.accountBalance}"></td>
 <!-- 						<td>
