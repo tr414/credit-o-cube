@@ -37,6 +37,13 @@ public class DebitAccountTransaction {
 	/**
 	 * The debit account from which the transaction originates.
 	 */
+//	@ManyToOne
+//	@Column(name = "from_accountNumber")
+//	private String fromAccountNumber;
+
+	/**
+	 * The debit account from which the transaction originates.
+	 */
 	@ManyToOne
 	@JoinColumn(name = "from_accountId")
 	private DebitAccount fromAccount;
@@ -44,9 +51,9 @@ public class DebitAccountTransaction {
 	/**
 	 * The debit account to which the transaction is directed.
 	 */
-	@ManyToOne
-	@JoinColumn(name = "to_accountId")
-	private DebitAccount toAccount;
+//	@ManyToOne
+	@Column(name = "to_accountNumber")
+	private String toAccountNumber;
 
 	/**
 	 * The date of the transaction.
@@ -67,19 +74,10 @@ public class DebitAccountTransaction {
 		this.debitAccountTransactionDate = new Date();
 	}
 
-	/**
-	 * Constructor that initializes the transaction with the specified parameters.
-	 *
-	 * @param fromAccount     the debit account from which the transaction
-	 *                        originates
-	 * @param toAccount       the debit account to which the transaction is directed
-	 * @param amount          the amount of the transaction
-	 * @param transactionType the type of the transaction
-	 */
-	public DebitAccountTransaction(DebitAccount fromAccount, DebitAccount toAccount,
+	public DebitAccountTransaction(DebitAccount fromAccount, String toAccountNumber,
 			double debitAccountTransactionAmount, String debitAccountTransactionType) {
 		this.fromAccount = fromAccount;
-		this.toAccount = toAccount;
+		this.toAccountNumber = toAccountNumber;
 		this.debitAccountTransactionAmount = debitAccountTransactionAmount;
 		this.debitAccountTransactionType = debitAccountTransactionType;
 	}
@@ -150,22 +148,20 @@ public class DebitAccountTransaction {
 		this.fromAccount = fromAccount;
 	}
 
-	/**
-	 * Get the debit account to which the transaction is directed.
-	 *
-	 * @return the debit account to which the transaction is directed
-	 */
-	public DebitAccount getToAccount() {
-		return toAccount;
+//	public String getFromAccountNumber() {
+//		return fromAccountNumber;
+//	}
+//
+//	public void setFromAccountNumber(String fromAccountNumber) {
+//		this.fromAccountNumber = fromAccountNumber;
+//	}
+
+	public String getToAccountNumber() {
+		return toAccountNumber;
 	}
 
-	/**
-	 * Set the debit account to which the transaction is directed.
-	 *
-	 * @param toAccount the debit account to which the transaction is directed
-	 */
-	public void setToAccount(DebitAccount toAccount) {
-		this.toAccount = toAccount;
+	public void setToAccountNumber(String toAccountNumber) {
+		this.toAccountNumber = toAccountNumber;
 	}
 
 	/**

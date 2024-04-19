@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Transaction History</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/account-dashboard.css">
+<link rel="stylesheet" href="../css/account-creditcard-dashboard.css">
 
 </head>
 <body>
@@ -41,7 +41,7 @@
 				<tr th:each="transaction : ${session.accountTransactions}">
 					<td th:text="${transaction.debitAccountTransactionDate}"></td>
 					<td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td>
-					<td th:text="${transaction.toAccount?.accountNumber ?: '---'}"></td>
+					<td th:text="${transaction.toAccountNumber ?: '---'}"></td>
 					<td th:text="${transaction.debitAccountTransactionType}"></td>
 					<td
 						th:text="'$ '+${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
