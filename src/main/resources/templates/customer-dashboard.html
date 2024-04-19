@@ -74,9 +74,11 @@
 					</tr>
 				</thead>
 				<tr th:each="transaction : ${recentTransactions}">
-					<td th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
+					<td
+						th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
 					<td th:text="${transaction.fromAccount?.accountName ?: '---'}"></td>
-					<td th:text="${transaction.toAccountNumber ?: '---'}"></td>
+					<td
+						th:text="| ${transaction.toAccountNumber != null ? transaction.toAccountNumber.substring(0,3) + '-' + transaction.toAccountNumber.substring(3,6) + '-' + transaction.toAccountNumber.substring(6) : '---'} |"></td>
 					<td th:text="${transaction.debitAccountTransactionType ?: '---'}"></td>
 					<td th:text="'$ '+${transaction.debitAccountTransactionAmount}"></td>
 				</tr>
