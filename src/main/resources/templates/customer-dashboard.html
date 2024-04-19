@@ -7,6 +7,7 @@
 <title>Customer Dashboard</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
 <link rel="stylesheet" href="../css/customer-dashboard.css">
+<script src="../js/sidebar.js" defer></script>
 </head>
 
 <body>
@@ -19,15 +20,15 @@
 		</div>
 	</div>
 
-	<div class="side-menu" id="sideMenu">
+	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
 			Welcome, <span th:text="${firstName}">FirstName</span>
 		</div>
 		<a href="/customer-details">View / change my particulars</a> <a
 			href="account-dashboard">Account dashboard</a> <a
-			href="creditcard-dashboard">Credit card dashboard</a> <a href="login"
-			class="logout-button">Logout</a> <a href="deleteCustomerAccount"
-			class="logout-button">Delete Customer Account</a>
+			href="creditcard-dashboard">Credit card dashboard</a> <a
+			href="deleteCustomerAccount" class="logout-button">Delete
+			Customer Account</a> <a href="login" class="logout-button">Logout</a>
 	</div>
 
 	<!-- Main content area -->
@@ -74,8 +75,6 @@
 				href="security-settings">Security Settings</a>
 		</div>
 	</div>
-
-	<script src="../js/sidebar.js"></script>
 
 </body>
 

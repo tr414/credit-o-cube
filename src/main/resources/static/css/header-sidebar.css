@@ -1,71 +1,86 @@
+/* General body styling */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+	margin: 0;
+	font-family: Arial, sans-serif;
 }
 
+/* Top navigation bar styling */
 .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #0051ba;
-    position: relative;
-    z-index: 2; /* Increased z-index */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	background-color: #0051ba;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 2; /* Increased z-index ensures the top bar stays on top */
 }
 
+/* Logo container within the top bar for centered logo */
 .logo-container {
-    flex-grow: 1;
-    text-align: center;
+	flex-grow: 1;
+	text-align: center;
 }
 
+/* Styling for the logo inside the top bar */
 .top-bar img.center-logo {
-    max-height: 50px;
+	max-height: 50px; /* Limits the size of the logo */
 }
 
+/* Side menu styling */
 .side-menu {
-    height: 100vh;
-    width: 250px;
-    position: fixed;
-    z-index: 1; /* Ensure it's less than the top-bar */
-    top: 0;
-    left: -250px; /* Start hidden */
-    background-color: #333;
-    overflow-x: hidden;
-    transition: left 0.5s; /* Animate the left value */
-    padding-top: 55px;
+	height: 100vh;
+	width: 250px;
+	position: fixed;
+	z-index: 1; /* Lower than the top bar to keep it underneath */
+	top: 0;
+	left: 0; /* Changed to make the sidebar visible by default */
+	background-color: #333;
+	overflow-x: hidden;
+	transition: left 0.5s;
+	/* Smooth transition for showing and hiding the menu */
+	padding-top: 55px; /* Spacing at the top */
 }
 
-.side-menu.menu-active {
-    left: 0; /* Show menu */
+/* Condition for hiding the sidebar when it's not active */
+.side-menu:not(.menu-active) {
+	left: -250px; /* Moves the sidebar out of view */
 }
 
+/* User greeting area styling */
 .user-greeting {
-    color: #fff; /* White text color for the greeting */
-    background: #0051ba; /* Blue background for the greeting area */
-    padding: 10px 32px; /* Padding to space out the text */
-    font-size: 18px; /* Font size for the greeting */
-    text-align: left; /* Align text to the left */
-    margin-top: 13px;
-    margin-bottom: 20px;
+	color: #fff; /* Sets text color to white */
+	background: #0051ba; /* Blue background for the greeting area */
+	padding: 10px 32px; /* Adequate padding for visual comfort */
+	font-size: 18px; /* Larger font size for better readability */
+	text-align: left; /* Aligns text to the left */
+	margin-top: 13px; /* Margin top for spacing */
+	margin-bottom: 20px; /* Margin bottom for spacing */
 }
 
+/* Styling for links and logout button in the side menu */
 .side-menu a, .side-menu .logout-button {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #ffffff;
-    display: block;
-    transition: color 0.3s;
+	padding: 8px 8px 8px 32px; /* Padding for alignment and spacing */
+	text-decoration: none; /* Removes underline from links */
+	font-size: 18px; /* Font size for readability */
+	color: #ffffff; /* Text color set to white */
+	display: block;
+	/* Makes each link/block element for better click area */
+	transition: color 0.3s; /* Transition for hover effects */
 }
 
+/* Hover effects for links and logout button */
 .side-menu a:hover, .side-menu .logout-button:hover {
-    color: #5C85D6;
+	color: #5C85D6; /* Light blue color on hover for visual feedback */
 }
 
+/* Button used to toggle the sidebar's visibility */
 .menu-btn {
-    cursor: pointer;
-    font-size: 30px;
-    color: #818181;
-    z-index: 2;
-    position: relative;
+	cursor: pointer; /* Indicates the element is clickable */
+	font-size: 30px; /* Larger font size for the menu icon */
+	color: #818181; /* Grey color for the icon/button */
+	z-index: 2; /* Ensures the button is clickable over other content */
+	position: relative; /* Needed for proper placement */
 }
