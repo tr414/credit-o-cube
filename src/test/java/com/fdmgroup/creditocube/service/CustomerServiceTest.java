@@ -37,7 +37,7 @@ public class CustomerServiceTest {
 
 		// Call method
 		boolean result = customerService.detailVerification(username, rawPassword, firstName, lastName, email,
-				phoneNumber, nric, address, salary, gender, dob, null);
+				phoneNumber, nric, address, salary, gender, dob);
 
 		// Assert outcome
 		assertFalse(result);
@@ -66,7 +66,7 @@ public class CustomerServiceTest {
 
 		// Call method
 		boolean result = customerService.detailVerification(username, rawPassword, firstName, lastName, email,
-				phoneNumber, nric, address, salary, gender, dob, null);
+				phoneNumber, nric, address, salary, gender, dob);
 
 		// Assert outcome
 		assertFalse(result);
@@ -95,7 +95,7 @@ public class CustomerServiceTest {
 
 		// Call method
 		boolean result = customerService.detailVerification(username, rawPassword, firstName, lastName, email,
-				phoneNumber, nric, address, salary, gender, dob, null);
+				phoneNumber, nric, address, salary, gender, dob);
 
 		// Assert outcome
 		assertFalse(result);
@@ -126,7 +126,7 @@ public class CustomerServiceTest {
 
 		// Call method
 		boolean result = customerService.detailVerification(username, rawPassword, firstName, lastName, email,
-				phoneNumber, nric, address, salary, gender, dob, null);
+				phoneNumber, nric, address, salary, gender, dob);
 
 		// Assert outcome
 		assertFalse(result);
@@ -149,7 +149,7 @@ public class CustomerServiceTest {
 
 		// Call method
 		boolean result = customerService.detailVerification(username, rawPassword, firstName, lastName, email,
-				phoneNumber, nric, address, salary, gender, dob, null);
+				phoneNumber, nric, address, salary, gender, dob);
 
 		// Assert outcome
 		assertFalse(result);
@@ -171,7 +171,7 @@ public class CustomerServiceTest {
 
 		// Call method
 		boolean result = customerService.detailVerification(username, rawPassword, firstName, lastName, email,
-				phoneNumber, nric, address, salary, gender, dob, null);
+				phoneNumber, nric, address, salary, gender, dob);
 
 		// Assert outcome
 		assertFalse(result);

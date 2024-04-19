@@ -1,89 +1,108 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f7fc; /* Light greyish-blue background */
-  margin: 0;
-  padding: 0;
+	font-family: Arial, sans-serif;
+	background-color: #f4f7fc; /* Light greyish-blue background */
+	margin: 0;
+	padding: 0;
 }
 
 .main-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #ffffff; /* White background for the form */
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
-}
-
-.mandatory-and-back {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.mandatory-statement {
-  color: #333;
-  font-size: 14px;
+	max-width: 800px;
+	margin: 100px auto;
+	padding: 20px;
+	background-color: #ffffff; /* White background for the form */
+	border-radius: 8px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
 }
 
 .registration-container {
-  padding: 20px;
+	padding: 20px;
 }
 
 .form-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 }
 
 .form-group {
-  flex-basis: 48%; /* Make two form groups fit in one row */
-  margin-bottom: 20px;
+	flex-basis: 48%; /* Make two form groups fit in one row */
+	margin-bottom: 20px;
+	position: relative;
 }
 
 .form-group label {
-  display: block;
-  color: #0051ba; /* Blue color to match the theme */
-  margin-bottom: 5px;
+	display: block;
+	color: #0051ba; /* Blue color to match the theme */
+	margin-bottom: 5px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="date"],
-.form-group input[type="tel"],
-.form-group input[type="email"],
-.form-group input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.form-group input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-bottom: 25px;
 }
 
+.gender-group {
+	margin-bottom: 20px;
+}
+
+.gender-group>label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+.gender-options {
+	display: flex;
+	/* This makes all child divs (gender-option) align in a row */
+	justify-content: center;
+}
+
+.gender-option {
+	margin-right: 20px; /* Adds space between the gender options */
+	margin-left: 20px;
+}
+
+/* This removes the left margin from the gender class, as it's no longer necessary */
 .gender {
-  margin-right: 5px;
+	margin-left: 0;
 }
 
 #update-button {
-  background-color: #0051ba; /* Blue background for the button */
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
+	background-color: #0051ba; /* Blue background for the button */
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 16px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #update-button:hover {
-  background-color: #003c8f; /* Darker blue on hover */
+	background-color: #003c8f; /* Darker blue on hover */
 }
 
-.back-to-login {
-  text-align: center;
-  margin-top: 20px;
+.error-message {
+	color: #d8000c;
+	background-color: #ffd2d2;
+	padding: 5px;
+	border-radius: 5px;
+	font-size: 0.9em;
+	position: absolute;
+	bottom: -5px; /* Positioning the error message below the input */
+	left: 0;
+	right: 0; /* Ensures the width matches the input field */
+	text-align: center; /* Centers the text in the error message */
+	display: none; /* Hide by default, display when there's an error */
 }
 
-.back-to-login a {
-  color: #0051ba;
-  text-decoration: none;
-}
-
-.back-to-login a:hover {
-  text-decoration: underline;
+.form-group input[readonly] {
+	background-color: #e9ecef; /* Light gray background */
+	color: #495057; /* Slightly darker text color for contrast */
+	cursor: not-allowed;
+	/* The cursor will indicate the field is not editable */
 }

@@ -56,7 +56,7 @@ public class DebitAccount {
 	private boolean isActive;
 
 	public DebitAccount() {
-
+		setActive(true);
 	}
 
 	/**
@@ -65,6 +65,7 @@ public class DebitAccount {
 	 * @param customer the customer to whom this debit account belongs
 	 */
 	public DebitAccount(Customer customer) {
+		this();
 		this.customer = customer;
 	}
 

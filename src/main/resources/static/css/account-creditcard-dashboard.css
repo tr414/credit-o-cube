@@ -67,3 +67,9 @@ form {
   border-radius: 5px;
   border: none;
 }
+
+/* Adjustments to the content-area to avoid being hidden under the top bar */
+.content-area {
+  padding-top: 70px; /* Adjust the value to match the height of your top bar */
+}
+

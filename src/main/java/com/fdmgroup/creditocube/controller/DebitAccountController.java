@@ -103,10 +103,19 @@ public class DebitAccountController {
 		DebitAccount newAccount = new DebitAccount(sessionCustomer);
 		newAccount.setAccountName(accountName);
 		newAccount.setAccountBalance(balance);
+		newAccount.setActive(true);
 		newAccount.setAccountNumber(debitAccountService.generateUniqueDebitAccountNumber());
 
 		debitAccountService.createAccount(newAccount);
 		logger.debug("New Debit Account created: " + newAccount.getAccountName());
+
+		// Add initial deposit as a first transaction
+		DebitAccountTransaction firstTransaction = new DebitAccountTransaction();
+		firstTransaction.setDebitAccountTransactionAmount(balance);
+		firstTransaction.setDebitAccountTransactionType("deposit");
+		firstTransaction.setToAccountNumber(newAccount.getAccountNumber());
+		debitAccountTransactionService.createDebitAccountTransaction(firstTransaction);
+		logger.debug("Add first deposit transaction: deposit $" + balance);
 
 		// Return a redirect to the dashboard page.
 		logger.debug("Redirecting to account-dashboard.html");
@@ -240,7 +249,6 @@ public class DebitAccountController {
 		// if transaction is a deposit, set debitAccount as toAccount.
 		if (isDeposit) {
 			newTransaction.setDebitAccountTransactionType("deposit");
-//			newTransaction.setToAccount(targetDebitAccount);
 			newTransaction.setToAccountNumber(targetDebitAccount.getAccountNumber());
 			logger.debug("deposit transaction created");
 		} else {
@@ -297,15 +305,35 @@ public class DebitAccountController {
 		return "view-transaction-history";
 	}
 
+	/**
+	 * Redirects to the transfer-to-account-number page for a specific debit
+	 * account.
+	 *
+	 * @return A redirect to the transfer-to-account-number page for the specified
+	 *         debit account.
+	 */
 	@GetMapping("/transfer-to-account-number")
 	public String goToTransferToAccountNumberPage() {
 		logger.debug("Directing to transfer-to-account-number.html");
 		return "transfer-to-account-number";
 	}
 
+	/**
+	 * Transfers a specified amount from one debit account to another debit account.
+	 *
+	 * @param selectedAccountId The unique identifier of the debit account to
+	 *                          transfer funds from.
+	 * @param toAccountNumber   The account number of the debit account to transfer
+	 *                          funds to.
+	 * @param amount            The amount to be transferred.
+	 *
+	 * @return A redirect to the account dashboard after the transfer operation.
+	 */
 	@PostMapping("/transfer-to-account-number")
 	public String transferToAccountNumber(@RequestParam long selectedAccountId, @RequestParam String toAccountNumber,
 			@RequestParam double amount) {
+
+		// Find from-account in database
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 
 		if (optionalAccount.isEmpty()) {
@@ -315,6 +343,7 @@ public class DebitAccountController {
 
 		DebitAccount fromAccount = optionalAccount.get();
 
+		// Check if to-account is in database
 		boolean targetIsInThisBank = true;
 		Optional<DebitAccount> optionalToAccount = debitAccountService.findDebitAccountByAccountNumber(toAccountNumber);
 
@@ -323,19 +352,23 @@ public class DebitAccountController {
 			targetIsInThisBank = false;
 		}
 
+		// Perform transfer for from-account
 		debitAccountService.transferToAccountNumber(fromAccount, toAccountNumber, amount);
 		debitAccountService.updateAccount(fromAccount);
 
+		// Create transaction for transfer
 		DebitAccountTransaction newTransaction = new DebitAccountTransaction();
 		newTransaction.setDebitAccountTransactionAmount(amount);
 		newTransaction.setDebitAccountTransactionType("transfer");
 		newTransaction.setFromAccount(fromAccount);
 
 		if (targetIsInThisBank) {
+			// Perform transfer for to-account
 			DebitAccount toAccount = optionalToAccount.get();
 			debitAccountService.updateAccount(toAccount);
 		}
 
+		// Update and save transaction
 		newTransaction.setToAccountNumber(toAccountNumber);
 		debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
 

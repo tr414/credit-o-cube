@@ -189,9 +189,9 @@ public class DebitAccountService {
 		Customer targetCustomer = optionalCustomer.get();
 		logger.debug("Customer found in database");
 
-		// retrieve acounts that belong to a customer
+		// retrieve acounts that belong to a customer and are not deactivated
 		allAccountList.forEach(account -> {
-			if (account.getCustomer() == targetCustomer) {
+			if (account.getCustomer() == targetCustomer && account.isActive()) {
 				accountListInCustomer.add(account);
 			}
 		});
@@ -250,8 +250,9 @@ public class DebitAccountService {
 		logger.debug("Customer details updated");
 
 		// Delete the target debit account from the database
-		debitAccountRepository.delete(targetAccount);
-		logger.debug("Debit account deleted");
+		targetAccount.setActive(false);
+		debitAccountRepository.save(targetAccount);
+		logger.debug("Debit account set as inactive");
 
 	}
 
@@ -268,7 +269,7 @@ public class DebitAccountService {
 	 */
 	public void changeAccountBalance(DebitAccount account, double amount, boolean isDeposit) {
 		// Check if the account exists in the database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account is not found in database, abort transaction");

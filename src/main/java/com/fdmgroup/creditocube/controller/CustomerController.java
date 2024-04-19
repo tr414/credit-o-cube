@@ -15,8 +15,10 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
+import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
+import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
 import com.fdmgroup.creditocube.service.UserService;
 import com.fdmgroup.creditocube.service.ValidationService;
 
@@ -40,6 +42,9 @@ public class CustomerController {
 
 	@Autowired
 	DebitAccountService debitAccountService; // Service for debit account-related operations
+
+	@Autowired
+	DebitAccountTransactionService debitAccountTransactionService; // Service for debit account transaction operations
 
 	@Autowired
 	CustomerService customerService; // Service for customer-related operations
@@ -81,7 +86,6 @@ public class CustomerController {
 	 */
 	@PostMapping("/register")
 	public String registerUser(HttpServletRequest request, Model model) {
-
 		// Extract parameters from the request
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -91,62 +95,76 @@ public class CustomerController {
 		String nric = request.getParameter("nric");
 		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
 
-		// Initialize a flag to check if there are any validation errors
 		boolean hasErrors = false;
 
-		// Validate first name
-		if (!validationService.isValidName(firstName)) {
-			model.addAttribute("firstNameError", "First name must only contain alphabets and spaces.");
+		// Validate first name and handle retention of input
+		Optional<String> firstNameError = validationService.isValidName(firstName);
+		if (firstNameError.isPresent()) {
+			model.addAttribute("firstNameError", firstNameError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("firstName", firstName);
+		}
+
+		// Validate last name and handle retention of input
+		Optional<String> lastNameError = validationService.isValidName(lastName);
+		if (lastNameError.isPresent()) {
+			model.addAttribute("lastNameError", lastNameError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("lastName", lastName);
+		}
+
+		// Validate username and handle retention of input
+		Optional<String> usernameError = validationService.isValidUsername(username);
+		if (usernameError.isPresent()) {
+			model.addAttribute("usernameError", usernameError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("username", username);
+		}
+
+		// Validate NRIC and handle retention of input
+		Optional<String> nricError = validationService.isValidNRIC(nric);
+		if (nricError.isPresent()) {
+			model.addAttribute("nricError", nricError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("nric", nric);
+		}
+
+		// Validate Date of Birth and handle retention of input
+		Optional<String> dobError = validationService.isValidDOB(dob);
+		if (dobError.isPresent()) {
+			model.addAttribute("dobError", dobError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("dob", dob.toString());
+		}
+
+		// Validate password complexity and handle retention of input
+		Optional<String> passwordError = validationService.isPasswordComplex(password);
+		if (passwordError.isPresent()) {
+			model.addAttribute("passwordError", passwordError.get());
 			hasErrors = true;
 		}
 
-		// Validate last name
-		if (!validationService.isValidName(lastName)) {
-			model.addAttribute("lastNameError", "Last name must only contain alphabets and spaces.");
+		// Validate password match and handle retention of input
+		Optional<String> confirmPasswordError = validationService.isSamePassword(password, confirmPassword);
+		if (confirmPasswordError.isPresent()) {
+			model.addAttribute("confirmPasswordError", confirmPasswordError.get());
 			hasErrors = true;
 		}
 
-		// Validate username
-		if (!validationService.isValidUsername(username)) {
-			model.addAttribute("usernameError",
-					"Username must be at least 6 characters long and can only contain alphanumeric characters, underscores, or dashes.");
-			hasErrors = true;
-		}
-
-		// Validate NRIC
-		if (!validationService.isValidNRIC(nric)) {
-			model.addAttribute("nricError", "Enter a valid NRIC.");
-			hasErrors = true;
-		}
-
-		// Validate Date of Birth
-		if (!validationService.isValidDOB(dob)) {
-			model.addAttribute("dobError", "You must be at least 18 years old to register.");
-			hasErrors = true;
-		}
-
-		// Validate password complexity
-		if (!validationService.isPasswordComplex(password)) {
-			model.addAttribute("passwordError",
-					"Password must be at least 8 characters long with at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character.");
-			hasErrors = true;
-		}
-
-		// Validate password match
-		if (!password.equals(confirmPassword)) {
-			model.addAttribute("confirmPasswordError", "Passwords do not match.");
-			hasErrors = true;
-		}
-
-		// Check for any validation errors
 		if (hasErrors) {
+			// Return to registration page if there are any errors
 			return "register";
+		} else {
+			// Proceed to register the new customer if all validations pass
+			customerService.registerNewCustomer(username, password, firstName, lastName, nric, dob);
+			System.out.println("New customer registered successfully");
+			return "redirect:/login"; // Redirects to the login page after successful registration
 		}
-
-		// If validation passes, proceed to register the new customer
-		customerService.registerNewCustomer(username, password, firstName, lastName, nric, dob);
-		System.out.println("New customer registered successfully");
-		return "redirect:/login"; // Redirects to the login page after successful registration
 	}
 
 	/**
@@ -161,6 +179,9 @@ public class CustomerController {
 		model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
 		List<DebitAccount> customerAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
 		model.addAttribute("accounts", customerAccounts);
+		List<DebitAccountTransaction> recentTransactions = debitAccountTransactionService
+				.findRecentTransactionsOfCustomer(customer);
+		model.addAttribute("recentTransactions", recentTransactions);
 		return "customer-dashboard";
 	}
 	// home is the customer dashboard
@@ -184,27 +205,77 @@ public class CustomerController {
 		return "customer-details";
 	}
 
-	// actually updating their details
 	@PostMapping("/customer-details")
-	public String updateCustomerDetails(Principal principal, HttpServletRequest request) {
+	public String updateCustomerDetails(HttpServletRequest request, Principal principal, Model model) {
+
+		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
+		model.addAttribute("username", customer.getUsername());
+		model.addAttribute("firstName", customer.getFirstName());
+		model.addAttribute("lastName", customer.getLastName());
+		model.addAttribute("email", customer.getEmail());
+		model.addAttribute("phoneNumber", customer.getPhoneNumber());
+		model.addAttribute("nric", customer.getNric());
+		model.addAttribute("address", customer.getAddress());
+		model.addAttribute("salary", customer.getSalary());
+		model.addAttribute("gender", customer.getGender());
+		model.addAttribute("dob", customer.getDob());
+		model.addAttribute("customer", customer);
+
+		// Extract parameters from the request
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("confirm-password");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
-		String email = request.getParameter("email");
-		String phoneNumber = request.getParameter("phoneNumber");
-
 		String nric = request.getParameter("nric");
-		String address = request.getParameter("address");
-		Double salary = Double.parseDouble(request.getParameter("salary"));
-		String gender = request.getParameter("gender");
 		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
 
-		String oldUsername = principal.getName();
+		String salary = request.getParameter("salary");
+		String address = request.getParameter("address");
+		String gender = request.getParameter("gender");
+		String phoneNumber = request.getParameter("phoneNumber");
+		String email = request.getParameter("email");
 
-		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
-				address, salary, gender, dob, oldUsername);
-		return "redirect:/login"; // Redirects to the login page after successful update
+		boolean hasErrors = false;
+
+		Optional<String> phoneNumberError = validationService.isMobileNumber(phoneNumber);
+		if (phoneNumberError.isPresent()) {
+			model.addAttribute("phoneNumberError", phoneNumberError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("phoneNumber", phoneNumber);
+		}
+
+		Optional<String> salaryError = validationService.isValidSalary(salary);
+		if (salaryError.isPresent()) {
+			model.addAttribute("salaryError", salaryError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("salary", salary);
+		}
+
+		// Validate password complexity and handle retention of input
+		Optional<String> passwordError = validationService.isPasswordComplex(password);
+		if (passwordError.isPresent()) {
+			model.addAttribute("passwordError", passwordError.get());
+			hasErrors = true;
+		}
+
+		// Validate password match and handle retention of input
+		Optional<String> confirmPasswordError = validationService.isSamePassword(password, confirmPassword);
+		if (confirmPasswordError.isPresent()) {
+			model.addAttribute("confirmPasswordError", confirmPasswordError.get());
+			hasErrors = true;
+		}
+
+		if (hasErrors) {
+			// Return to registration page if there are any errors
+			return "customer-details";
+		} else {
+			customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
+					address, Double.valueOf(salary), gender, dob);
+			return "redirect:/login";
+		}
 	}
 
 	// Delete customer account
