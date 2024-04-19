@@ -2,6 +2,7 @@ package com.fdmgroup.creditocube.service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +11,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
+import com.fdmgroup.creditocube.repository.CustomerRepository;
 import com.fdmgroup.creditocube.repository.DebitAccountRepository;
 import com.fdmgroup.creditocube.repository.DebitAccountTransactionRepository;
 
@@ -28,6 +31,9 @@ public class DebitAccountTransactionService {
 
 	@Autowired
 	private DebitAccountRepository debitAccountRepository;
+
+	@Autowired
+	private CustomerRepository customerRepository;
 
 	private static Logger logger = LogManager.getLogger(DebitAccountTransactionService.class);
 
@@ -88,6 +94,36 @@ public class DebitAccountTransactionService {
 		relatedTransactions.sort(Comparator.comparing(DebitAccountTransaction::getDebitAccountTransactionDate));
 
 		return relatedTransactions;
+	}
+
+	public List<DebitAccountTransaction> findRecentTransactionsOfCustomer(Customer customer) {
+		List<DebitAccountTransaction> relatedTransactions = new ArrayList<>();
+
+		// Find the customer that is logged in
+		Optional<Customer> optionalCustomer = customerRepository.findById(customer.getUser_id());
+
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database, returning empty list");
+			return relatedTransactions;
+		}
+
+		Customer targetCustomer = optionalCustomer.get();
+
+		List<DebitAccount> customerDebitAccounts = targetCustomer.getDebitAccounts();
+
+		for (DebitAccount account : customerDebitAccounts) {
+			relatedTransactions.addAll(debitAccountTransactionRepository.findByToAccount(account.getAccountNumber()));
+			relatedTransactions.addAll(debitAccountTransactionRepository.findByFromAccount(account.getAccountId()));
+		}
+
+		List<DebitAccountTransaction> relatedTransactionsNoDuplicates = new ArrayList<>(
+				new HashSet<>(relatedTransactions));
+
+		relatedTransactionsNoDuplicates
+				.sort(Comparator.comparing(DebitAccountTransaction::getDebitAccountTransactionDate));
+
+		return relatedTransactionsNoDuplicates;
+
 	}
 
 }
