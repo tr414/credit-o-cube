@@ -189,9 +189,9 @@ public class DebitAccountService {
 		Customer targetCustomer = optionalCustomer.get();
 		logger.debug("Customer found in database");
 
-		// retrieve acounts that belong to a customer
+		// retrieve acounts that belong to a customer and are not deactivated
 		allAccountList.forEach(account -> {
-			if (account.getCustomer() == targetCustomer) {
+			if (account.getCustomer() == targetCustomer && account.isActive()) {
 				accountListInCustomer.add(account);
 			}
 		});
@@ -245,13 +245,15 @@ public class DebitAccountService {
 		// Remove the target debit account from the customer's list of accounts
 		accountHolder.getDebitAccounts().remove(targetAccount);
 
-		// Delete the target debit account from the database
-		debitAccountRepository.delete(targetAccount);
-		logger.debug("Debit account deleted");
-
 		// Save the updated customer to the database
 		customerRepository.save(accountHolder);
 		logger.debug("Customer details updated");
+
+		// Delete the target debit account from the database
+		targetAccount.setActive(false);
+		debitAccountRepository.save(targetAccount);
+		logger.debug("Debit account set as inactive");
+
 	}
 
 	/**

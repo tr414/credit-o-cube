@@ -52,8 +52,11 @@ public class DebitAccount {
 	@JoinColumn(name = "fk_user_id")
 	private Customer customer;
 
-	public DebitAccount() {
+	@Column(name = "account_is_active")
+	private boolean isActive;
 
+	public DebitAccount() {
+		setActive(true);
 	}
 
 	/**
@@ -62,6 +65,7 @@ public class DebitAccount {
 	 * @param customer the customer to whom this debit account belongs
 	 */
 	public DebitAccount(Customer customer) {
+		this();
 		this.customer = customer;
 	}
 
@@ -160,4 +164,23 @@ public class DebitAccount {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
+
+	/**
+	 * Checks if the debit account is active.
+	 *
+	 * @return true if the account is active, false otherwise
+	 */
+	public boolean isActive() {
+		return isActive;
+	}
+
+	/**
+	 * Sets the active status of the debit account.
+	 *
+	 * @param isActive the new active status of the account
+	 */
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 }

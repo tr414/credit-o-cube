@@ -1,89 +1,85 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f7fc; /* Light greyish-blue background */
-  margin: 0;
-  padding: 0;
+	font-family: Arial, sans-serif;
+	background-color: #f4f7fc; /* Light greyish-blue background */
+	margin: 0;
+	padding: 0;
 }
 
 .main-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #ffffff; /* White background for the form */
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
-}
-
-.mandatory-and-back {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.mandatory-statement {
-  color: #333;
-  font-size: 14px;
+	max-width: 800px;
+	margin: 100px auto;
+	padding: 20px;
+	background-color: #ffffff; /* White background for the form */
+	border-radius: 8px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
 }
 
 .registration-container {
-  padding: 20px;
+	padding: 20px;
 }
 
 .form-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 }
 
 .form-group {
-  flex-basis: 48%; /* Make two form groups fit in one row */
-  margin-bottom: 20px;
+	flex-basis: 48%; /* Make two form groups fit in one row */
+	margin-bottom: 20px;
 }
 
 .form-group label {
-  display: block;
-  color: #0051ba; /* Blue color to match the theme */
-  margin-bottom: 5px;
+	display: block;
+	color: #0051ba; /* Blue color to match the theme */
+	margin-bottom: 5px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="date"],
-.form-group input[type="tel"],
-.form-group input[type="email"],
-.form-group input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.form-group input[type="text"], .form-group input[type="date"],
+	.form-group input[type="tel"], .form-group input[type="email"],
+	.form-group input[type="password"] {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
-.gender {
-  margin-right: 5px;
+/* Gender label and options layout */
+.gender-group {
+	margin-bottom: 20px; /* Space below the gender group */
+}
+
+.gender-label {
+	display: block; /* The label will be on its own line */
+	margin-bottom: 10px;
+}
+
+.gender-option {
+	display: inline-flex; /* Align radio buttons and labels side by side */
+	flex-direction: column; /* Stack them vertically */
+	align-items: center; /* Center-align items within the flex container */
+	margin-right: 20px; /* Space out each gender option */
+	margin-left: 60px;
+}
+
+/* This can ensure that the last gender option does not have extra margin on the right */
+.gender-option:last-child {
+	margin-right: 0;
 }
 
 #update-button {
-  background-color: #0051ba; /* Blue background for the button */
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
+	background-color: #0051ba; /* Blue background for the button */
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 16px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #update-button:hover {
-  background-color: #003c8f; /* Darker blue on hover */
-}
-
-.back-to-login {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.back-to-login a {
-  color: #0051ba;
-  text-decoration: none;
-}
-
-.back-to-login a:hover {
-  text-decoration: underline;
+	background-color: #003c8f; /* Darker blue on hover */
 }
