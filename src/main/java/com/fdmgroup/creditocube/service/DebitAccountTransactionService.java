@@ -38,14 +38,12 @@ public class DebitAccountTransactionService {
 
 	private static Logger logger = LogManager.getLogger(DebitAccountTransactionService.class);
 
-	/**
-	 * Constructor for DebitAccountTransactionService.
-	 *
-	 * @param debitAccountTransactionRepository the repository for debit account
-	 *                                          transactions
-	 */
-	public DebitAccountTransactionService(DebitAccountTransactionRepository debitAccountTransactionRepository) {
+	public DebitAccountTransactionService(DebitAccountTransactionRepository debitAccountTransactionRepository,
+			DebitAccountRepository debitAccountRepository, CustomerRepository customerRepository) {
+		super();
 		this.debitAccountTransactionRepository = debitAccountTransactionRepository;
+		this.debitAccountRepository = debitAccountRepository;
+		this.customerRepository = customerRepository;
 	}
 
 	/**
@@ -54,6 +52,18 @@ public class DebitAccountTransactionService {
 	 * @param debitAccountTransaction the debit account transaction to be created
 	 */
 	public void createDebitAccountTransaction(DebitAccountTransaction debitAccountTransaction) {
+
+		if (debitAccountTransaction.getDebitAccountTransactionAmount() == 0) {
+			logger.info("Transaction amount is zero, transaction not saved to database");
+			return;
+		}
+
+		if (debitAccountTransaction.getDebitAccountTransactionType() == null) {
+			logger.info("Transaction type is null, transaction not saved to database");
+			return;
+		}
+
+		logger.debug("Transaction details saved to database");
 		debitAccountTransactionRepository.save(debitAccountTransaction);
 	}
 
@@ -64,8 +74,36 @@ public class DebitAccountTransactionService {
 	 */
 	public void updateDebitAccountTransaction(DebitAccountTransaction debitAccountTransaction) {
 
+		if (debitAccountTransaction.getDebitAccountTransactionAmount() == 0) {
+			logger.info("Transaction amount is zero, transaction not saved to database");
+			return;
+		}
+
+		if (debitAccountTransaction.getDebitAccountTransactionType() == null) {
+			logger.info("Transaction type is null, transaction not saved to database");
+			return;
+		}
+
+		Optional<DebitAccountTransaction> optionalTransaction = debitAccountTransactionRepository
+				.findById(debitAccountTransaction.getDebitAccountTransactionId());
+
+		if (optionalTransaction.isEmpty()) {
+			logger.info("Transaction not found in database, abort transaction");
+			return;
+		}
+
+		// perform deep copy and save managed version of transaction
+		DebitAccountTransaction targetTransaction = optionalTransaction.get();
+		targetTransaction.setDebitAccountTransactionAmount(debitAccountTransaction.getDebitAccountTransactionAmount());
+		targetTransaction.setDebitAccountTransactionDate(debitAccountTransaction.getDebitAccountTransactionDate());
+		targetTransaction.setDebitAccountTransactionType(debitAccountTransaction.getDebitAccountTransactionType());
+		targetTransaction.setFromAccount(debitAccountTransaction.getFromAccount());
+		targetTransaction.setToAccountNumber(debitAccountTransaction.getToAccountNumber());
+
+		logger.debug("Transaction details saved to database");
+
 		// Save the updated debit account transaction to the repository
-		debitAccountTransactionRepository.save(debitAccountTransaction);
+		debitAccountTransactionRepository.save(targetTransaction);
 	}
 
 	/**
@@ -88,7 +126,8 @@ public class DebitAccountTransactionService {
 		DebitAccount targetAccount = optionalAccount.get();
 
 		// get transactions where account is toAccount or fromAccount
-		relatedTransactions.addAll(debitAccountTransactionRepository.findByToAccount(targetAccount.getAccountNumber()));
+		relatedTransactions
+				.addAll(debitAccountTransactionRepository.findByToAccountNumber(targetAccount.getAccountNumber()));
 		relatedTransactions.addAll(debitAccountTransactionRepository.findByFromAccount(targetAccount.getAccountId()));
 
 		// Sort the transactions by their transaction date
@@ -120,7 +159,8 @@ public class DebitAccountTransactionService {
 		List<DebitAccount> customerDebitAccounts = targetCustomer.getDebitAccounts();
 
 		for (DebitAccount account : customerDebitAccounts) {
-			relatedTransactions.addAll(debitAccountTransactionRepository.findByToAccount(account.getAccountNumber()));
+			relatedTransactions
+					.addAll(debitAccountTransactionRepository.findByToAccountNumber(account.getAccountNumber()));
 			relatedTransactions.addAll(debitAccountTransactionRepository.findByFromAccount(account.getAccountId()));
 		}
 
