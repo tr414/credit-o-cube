@@ -116,13 +116,12 @@ public class CustomerService {
 	}
 
 	public Customer updateCustomerDetails(String username, String rawPassword, String firstName, String lastName,
-			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
-			String oldUsername) {
+			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
 
-		Customer customer = customerRepo.findCustomerByUsername(oldUsername).get();
+		Customer customer = customerRepo.findCustomerByUsername(username).get();
 
 		boolean result = detailVerification(username, rawPassword, firstName, lastName, email, phoneNumber, nric,
-				address, salary, gender, dob, oldUsername);
+				address, salary, gender, dob);
 
 		if (result == false) {
 			System.out.println("Result is false");
@@ -146,8 +145,7 @@ public class CustomerService {
 	}
 
 	public boolean detailVerification(String username, String rawPassword, String firstName, String lastName,
-			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob,
-			String oldUsername) {
+			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
 
 		// Check if new password is more than or equal to 8 characters long
 		if (rawPassword.length() < 8) {
