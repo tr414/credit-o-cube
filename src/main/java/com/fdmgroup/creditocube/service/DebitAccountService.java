@@ -269,7 +269,7 @@ public class DebitAccountService {
 	 */
 	public void changeAccountBalance(DebitAccount account, double amount, boolean isDeposit) {
 		// Check if the account exists in the database
-		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(account.getAccountNumber());
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account is not found in database, abort transaction");

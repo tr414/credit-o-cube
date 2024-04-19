@@ -1,6 +1,7 @@
 package com.fdmgroup.creditocube.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.never;
 
 import java.util.ArrayList;
@@ -197,7 +198,7 @@ public class DebitAccountServiceTest {
 		// Assert
 		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
-		Mockito.verify(debitAccountRepository).delete(account);
+		assertFalse(account.isActive());
 		Mockito.verify(customerRepository).save(customer);
 
 		// Explanation: This test case simulates a successful close account scenario.
@@ -206,7 +207,7 @@ public class DebitAccountServiceTest {
 		// We verify that all necessary methods are called:
 		// - findByAccountNumber to find the account
 		// - findById to find the customer
-		// - delete to remove the account from the database
+		// - account is set to inactive
 		// - save to update the customer with the removed account
 	}
 
@@ -404,6 +405,202 @@ public class DebitAccountServiceTest {
 		Mockito.verify(debitAccountRepository, Mockito.times(1)).findAll();
 		Mockito.verify(customerRepository, Mockito.times(1)).findById(customer.getUser_id());
 		assertEquals(allAccounts, returnedAccounts);
+	}
+
+	@Test
+	@DisplayName("14. Test that transferToAccountNumber does not update if fromAccount is not found")
+	public void testTransferToAccountNumber_fromAccountNotFound() {
+
+		// Arrange
+		optionalAccount = Optional.empty();
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
+		DebitAccount account2 = new DebitAccount();
+		account2.setAccountNumber("654321");
+		account2.setCustomer(customer);
+		account.setAccountBalance(100.0);
+
+		// Act
+		debitAccountService.transferToAccountNumber(account, account2.getAccountNumber(), 50.0);
+
+		// Assert
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		Mockito.verify(debitAccountRepository, never()).findByAccountNumber(account2.getAccountNumber());
+		assertEquals(100.0, account.getAccountBalance());
+		assertEquals(0.00, account2.getAccountBalance());
+		Mockito.verify(debitAccountRepository, never()).save(account);
+
+	}
+
+	@Test
+	@DisplayName("15. Test that transferToAccountNumber saves and changes balance if fromAccount is found")
+	public void testTransferToAccountNumber_fromAccountFound() {
+
+		// Arrange
+		optionalAccount = Optional.of(account);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
+		DebitAccount account2 = new DebitAccount();
+		account2.setAccountNumber("654321");
+		account2.setCustomer(customer);
+		account.setAccountBalance(100.0);
+		Mockito.when(debitAccountRepository.findByAccountNumber(account2.getAccountNumber()))
+				.thenReturn(Optional.of(account2));
+
+		// Act
+		debitAccountService.transferToAccountNumber(account, account2.getAccountNumber(), 50.0);
+
+		// Assert
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		Mockito.verify(debitAccountRepository).findByAccountNumber(account2.getAccountNumber());
+		assertEquals(50.0, account.getAccountBalance());
+		assertEquals(50.0, account2.getAccountBalance());
+		Mockito.verify(debitAccountRepository).save(account);
+		Mockito.verify(debitAccountRepository).save(account2);
+
+	}
+
+	@Test
+	@DisplayName("16. Test that transferToAccountNumber does not save or change balance if transaction amount is zero")
+	public void testTransferToAccountNumber_AmountIsZero() {
+
+		// Arrange
+		optionalAccount = Optional.of(account);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
+		DebitAccount account2 = new DebitAccount();
+		account2.setAccountNumber("654321");
+		account2.setCustomer(customer);
+		account.setAccountBalance(100.0);
+
+		// Act
+		debitAccountService.transferToAccountNumber(account, account2.getAccountNumber(), 0.00);
+
+		// Assert
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		Mockito.verify(debitAccountRepository, never()).findByAccountNumber(account2.getAccountNumber());
+		assertEquals(100.0, account.getAccountBalance());
+		assertEquals(0.0, account2.getAccountBalance());
+		Mockito.verify(debitAccountRepository, never()).save(account);
+		Mockito.verify(debitAccountRepository, never()).save(account2);
+
+	}
+
+	@Test
+	@DisplayName("17. Test that changeAccountBalance deposits amount correctly in normal conditions")
+	public void testChangeAccountBalance_AccountExistsDeposit() {
+
+		// Arrange
+		optionalAccount = Optional.of(account);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
+		optionalCustomer = Optional.of(customer);
+		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
+		account.setAccountBalance(100.0);
+		double amount = 50.0;
+		boolean isDeposit = true;
+
+		// Act
+		debitAccountService.changeAccountBalance(account, amount, isDeposit);
+
+		// Assert
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		assertEquals(150.0, account.getAccountBalance());
+		Mockito.verify(debitAccountRepository).save(account);
+		Mockito.verify(customerRepository).save(customer);
+
+	}
+
+	@Test
+	@DisplayName("18. Test that changeAccountBalance withdraws amount correctly in normal conditions")
+	public void testChangeAccountBalance_AccountExistsWithdraw() {
+
+		// Arrange
+		optionalAccount = Optional.of(account);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
+		optionalCustomer = Optional.of(customer);
+		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
+		account.setAccountBalance(100.0);
+		double amount = 50.0;
+		boolean isDeposit = false;
+
+		// Act
+		debitAccountService.changeAccountBalance(account, amount, isDeposit);
+
+		// Assert
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		assertEquals(50.0, account.getAccountBalance());
+		Mockito.verify(debitAccountRepository).save(account);
+		Mockito.verify(customerRepository).save(customer);
+
+	}
+
+	@Test
+	@DisplayName("19. Test that changeAccountBalance does not update account balance if account is not found")
+	public void testChangeAccountBalance_AccountNotFound() {
+
+		// Arrange
+		optionalAccount = Optional.empty();
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
+//		optionalCustomer = Optional.of(customer);
+//		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
+		account.setAccountBalance(100.0);
+		double amount = 50.0;
+		boolean isDeposit = true;
+
+		// Act
+		debitAccountService.changeAccountBalance(account, amount, isDeposit);
+
+		// Assert
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		assertEquals(100.0, account.getAccountBalance());
+		Mockito.verify(debitAccountRepository, never()).save(account);
+		Mockito.verify(customerRepository, never()).save(customer);
+
+	}
+
+	@Test
+	@DisplayName("20. Test that changeAccountBalance does not update account balance if customer is not found")
+	public void testChangeAccountBalance_CustomerNotFound() {
+
+		// Arrange
+		optionalAccount = Optional.of(account);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
+		optionalCustomer = Optional.empty();
+		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
+		account.setAccountBalance(100.0);
+		double amount = 50.0;
+		boolean isDeposit = true;
+
+		// Act
+		debitAccountService.changeAccountBalance(account, amount, isDeposit);
+
+		// Assert
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		assertEquals(100.0, account.getAccountBalance());
+		Mockito.verify(debitAccountRepository, never()).save(account);
+		Mockito.verify(customerRepository, never()).save(customer);
+
+	}
+
+	@Test
+	@DisplayName("21. Test that changeAccountBalance does not update account balance if transaction amount is zero")
+	public void testChangeAccountBalance_AmountIsZero() {
+
+		// Arrange
+		optionalAccount = Optional.of(account);
+		Mockito.when(debitAccountRepository.findById(account.getAccountId())).thenReturn(optionalAccount);
+		optionalCustomer = Optional.of(customer);
+		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
+		account.setAccountBalance(100.0);
+		double amount = 0.0;
+		boolean isDeposit = true;
+
+		// Act
+		debitAccountService.changeAccountBalance(account, amount, isDeposit);
+
+		// Assert
+		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		assertEquals(100.0, account.getAccountBalance());
+		Mockito.verify(debitAccountRepository, never()).save(account);
+		Mockito.verify(customerRepository, never()).save(customer);
+
 	}
 
 }
