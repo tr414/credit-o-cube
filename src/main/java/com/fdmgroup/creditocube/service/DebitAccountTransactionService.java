@@ -2,6 +2,7 @@ package com.fdmgroup.creditocube.service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +97,13 @@ public class DebitAccountTransactionService {
 		return relatedTransactions;
 	}
 
+	/**
+	 * Finds recent transactions of a customer.
+	 *
+	 * @param customer the customer for which to find recent transactions
+	 * @return a list of recent debit account transactions related to the given
+	 *         customer
+	 */
 	public List<DebitAccountTransaction> findRecentTransactionsOfCustomer(Customer customer) {
 		List<DebitAccountTransaction> relatedTransactions = new ArrayList<>();
 
@@ -118,9 +126,15 @@ public class DebitAccountTransactionService {
 
 		List<DebitAccountTransaction> relatedTransactionsNoDuplicates = new ArrayList<>(
 				new HashSet<>(relatedTransactions));
+		logger.debug("Removed duplicate transactions");
 
 		relatedTransactionsNoDuplicates
 				.sort(Comparator.comparing(DebitAccountTransaction::getDebitAccountTransactionDate));
+		logger.debug("Sorted transactions in chronological order");
+
+		relatedTransactionsNoDuplicates.removeIf(transaction -> transaction.getDebitAccountTransactionDate()
+				.before(new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000)));
+		logger.debug("Remove transactions more than 7 days ago");
 
 		return relatedTransactionsNoDuplicates;
 
