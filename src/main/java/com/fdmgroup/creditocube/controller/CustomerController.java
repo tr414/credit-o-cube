@@ -15,8 +15,10 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
+import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
+import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
 import com.fdmgroup.creditocube.service.UserService;
 import com.fdmgroup.creditocube.service.ValidationService;
 
@@ -40,6 +42,9 @@ public class CustomerController {
 
 	@Autowired
 	DebitAccountService debitAccountService; // Service for debit account-related operations
+
+	@Autowired
+	DebitAccountTransactionService debitAccountTransactionService; // Service for debit account transaction operations
 
 	@Autowired
 	CustomerService customerService; // Service for customer-related operations
@@ -174,6 +179,9 @@ public class CustomerController {
 		model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
 		List<DebitAccount> customerAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
 		model.addAttribute("accounts", customerAccounts);
+		List<DebitAccountTransaction> recentTransactions = debitAccountTransactionService
+				.findRecentTransactionsOfCustomer(customer);
+		model.addAttribute("recentTransactions", recentTransactions);
 		return "customer-dashboard";
 	}
 	// home is the customer dashboard

@@ -50,11 +50,11 @@
 						<td th:text="${account.accountNumber}"></td>
 						<td th:text="${account.accountName}"></td>
 						<td th:text="'$ '+${account.accountBalance}"></td>
-						<td>
+<!-- 						<td>
 							<form th:action="@{/deposit-withdraw}" method="GET">
 								<button type="submit">Deposit/Withdraw</button>
 							</form>
-						</td>
+						</td> -->
 						<td>
 							<form th:action="@{/view-transaction-history}" method="GET">
 								<button type="submit">View Transaction History</button>
