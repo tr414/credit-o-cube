@@ -23,7 +23,7 @@
 		<div class="user-greeting">
 			Welcome, <span th:text="${firstName}">FirstName</span>
 		</div>
-		<a href="/customer-dashboard">Back to Home</a> <a href="login"
+		<a href="/customer-dashboard">Back to Home</a> <a href="/login"
 			class="logout-button">Logout</a>
 	</div>
 
@@ -81,6 +81,10 @@
 					<div class="form-group">
 						<label for="email">Email Address</label> <input type="email"
 							id="email" name="email" th:value="${email}" required>
+					</div>
+					<div class="form-group">
+						<label for="phoneNumber">Phone Number</label> <input type="tel"
+							id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}" required>
 					</div>
 					<div class="form-group">
 						<label for="password">Password</label> <input type="password"

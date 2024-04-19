@@ -2,8 +2,9 @@
 .main-content {
   margin-left: 250px; /* Make space for the sidebar */
   padding: 20px; /* Padding around the content */
+  padding-top: 80px; /* Add enough top padding to push content below the top bar */
   background-color: #f4f7fc; /* Light greyish-blue background that's lighter than the top-bar */
-  min-height: calc(100vh - 60px); /* Adjust height to take up the full page minus the top bar height */
+  min-height: calc(100vh - 80px); /* Adjust height to take up the full page minus the top bar height */
 }
 
 .sub-container {
@@ -12,6 +13,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
   padding: 15px; /* Padding inside sub-containers */
   margin-bottom: 20px; /* Space between sub-containers */
+  margin-top: 20px;
 }
 
 .sub-container h2 {

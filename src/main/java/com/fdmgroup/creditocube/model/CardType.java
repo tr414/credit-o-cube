@@ -20,7 +20,7 @@ public class CardType {
 	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_reward_id")
+	@JoinColumn(name = "reward_id")
 	private List<Rewards> rewards;
 
 	public long getCard_type_ID() {
