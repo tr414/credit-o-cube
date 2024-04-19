@@ -31,7 +31,7 @@ public class CreditCard {
 
 	private int cardLimit;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_card_type_id")
 	private CardType cardType;
 

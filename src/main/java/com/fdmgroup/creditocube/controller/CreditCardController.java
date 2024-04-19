@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.fdmgroup.creditocube.model.CardType;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.Customer;
+import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.service.CardTypeService;
 import com.fdmgroup.creditocube.service.CreditCardService;
 import com.fdmgroup.creditocube.service.CustomerService;
@@ -34,6 +35,20 @@ public class CreditCardController {
 	// credit card dashboard
 	@GetMapping("/creditcard-dashboard")
 	public String creditCardDashboard(Principal principal, Model model) {
+		// Find the user associated with the provided customer ID.
+				Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+
+				// If the user is not found, redirect to the login page.
+				if (optionalCustomer.isEmpty()) {
+					return "redirect:/login";
+				}
+
+				// set customer and their accounts as session attributes to retrieve in view
+				Customer sessionCustomer = optionalCustomer.get();
+				model.addAttribute("customer", sessionCustomer);
+				
+				List<CreditCard> creditCards = creditCardService.findAllCardsForCustomer(sessionCustomer);
+		model.addAttribute("credit_cards", creditCards);
 		return "creditcard-dashboard";
 	}
 
