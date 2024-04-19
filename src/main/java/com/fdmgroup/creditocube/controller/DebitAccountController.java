@@ -109,6 +109,7 @@ public class DebitAccountController {
 		debitAccountService.createAccount(newAccount);
 		logger.debug("New Debit Account created: " + newAccount.getAccountName());
 
+		// Add initial deposit as a first transaction
 		DebitAccountTransaction firstTransaction = new DebitAccountTransaction();
 		firstTransaction.setDebitAccountTransactionAmount(balance);
 		firstTransaction.setDebitAccountTransactionType("deposit");

@@ -252,7 +252,6 @@ public class DebitAccountService {
 		// Delete the target debit account from the database
 		targetAccount.setActive(false);
 		debitAccountRepository.save(targetAccount);
-//		debitAccountRepository.delete(targetAccount);
 		logger.debug("Debit account set as inactive");
 
 	}
