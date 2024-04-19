@@ -23,7 +23,7 @@
 		<div class="user-greeting">
 			Welcome, <span th:text="${firstName}">FirstName</span>
 		</div>
-		<a href="/customer-dashboard">Back to Home</a> <a href="/login"
+		<a href="/customer-dashboard">Back to Home</a> <a href="login"
 			class="logout-button">Logout</a>
 	</div>
 
@@ -59,44 +59,56 @@
 							id="address" name="address" th:value="${address}">
 					</div>
 					<div class="form-group">
-						<label for="salary">Salary</label> <input type="text" id="salary"
-							name="salary" th:value="${salary}" required>
+						<label for="salary">Salary (per month)</label> <input type="text"
+							id="salary" name="salary" th:value="${salary}" required>
 					</div>
 					<div class="form-group gender-group">
-						<label class="gender-label">Gender</label>
-						<div class="gender-option">
-							<input class="gender" type="radio" id="male" name="gender"
-								value="male" required> <label for="male">Male</label>
-						</div>
-						<div class="gender-option">
-							<input class="gender" type="radio" id="female" name="gender"
-								value="female"> <label for="female">Female</label>
-						</div>
-						<div class="gender-option">
-							<input class="gender" type="radio" id="other" name="gender"
-								value="other"> <label for="other">Other</label>
+						<label>Gender</label>
+						<div class="gender-options">
+							<div class="gender-option">
+								<input class="gender" type="radio" id="male" name="gender"
+									value="male" th:checked="${gender == 'male'}" required>
+								<label for="male">Male</label>
+							</div>
+							<div class="gender-option">
+								<input class="gender" type="radio" id="female" name="gender"
+									value="female" th:checked="${gender == 'female'}"> <label
+									for="female">Female</label>
+							</div>
+							<div class="gender-option">
+								<input class="gender" type="radio" id="other" name="gender"
+									value="other" th:checked="${gender == 'other'}"> <label
+									for="other">Other</label>
+							</div>
 						</div>
 					</div>
-
+					<div class="form-group">
+						<label for="phoneNumber">Mobile Number</label> <input type="tel"
+							id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}"
+							required> <span th:if="${phoneNumberError}"
+							th:text="${phoneNumberError}" class="error-message"
+							th:style="${phoneNumberError} ? 'display: block;' : 'display: none;'"></span>
+					</div>
 					<div class="form-group">
 						<label for="email">Email Address</label> <input type="email"
 							id="email" name="email" th:value="${email}" required>
 					</div>
 					<div class="form-group">
-						<label for="phoneNumber">Phone Number</label> <input type="tel"
-							id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}" required>
-					</div>
-					<div class="form-group">
 						<label for="password">Password</label> <input type="password"
-							id="password" name="password" required>
+							id="password" name="password" required> <span
+							th:if="${passwordError}" th:text="${passwordError}"
+							class="error-message"
+							th:style="${passwordError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="confirm-password">Confirm Password</label> <input
 							type="password" id="confirm-password" name="confirm-password"
-							required>
+							required> <span th:if="${confirmPasswordError}"
+							th:text="${confirmPasswordError}" class="error-message"
+							th:style="${confirmPasswordError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 				</div>
-				<button id="update-button" onclick="displayPopup()" type="submit">Update</button>
+				<button id="update-button" type="submit">Update</button>
 			</form>
 		</div>
 	</div>

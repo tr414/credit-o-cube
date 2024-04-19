@@ -205,27 +205,77 @@ public class CustomerController {
 		return "customer-details";
 	}
 
-	// actually updating their details
 	@PostMapping("/customer-details")
-	public String updateCustomerDetails(Principal principal, HttpServletRequest request) {
+	public String updateCustomerDetails(HttpServletRequest request, Principal principal, Model model) {
+
+		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
+		model.addAttribute("username", customer.getUsername());
+		model.addAttribute("firstName", customer.getFirstName());
+		model.addAttribute("lastName", customer.getLastName());
+		model.addAttribute("email", customer.getEmail());
+		model.addAttribute("phoneNumber", customer.getPhoneNumber());
+		model.addAttribute("nric", customer.getNric());
+		model.addAttribute("address", customer.getAddress());
+		model.addAttribute("salary", customer.getSalary());
+		model.addAttribute("gender", customer.getGender());
+		model.addAttribute("dob", customer.getDob());
+		model.addAttribute("customer", customer);
+
+		// Extract parameters from the request
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("confirm-password");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
-		String email = request.getParameter("email");
-		String phoneNumber = request.getParameter("phoneNumber");
-
 		String nric = request.getParameter("nric");
-		String address = request.getParameter("address");
-		Double salary = Double.parseDouble(request.getParameter("salary"));
-		String gender = request.getParameter("gender");
 		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
 
-		String oldUsername = principal.getName();
+		String salary = request.getParameter("salary");
+		String address = request.getParameter("address");
+		String gender = request.getParameter("gender");
+		String phoneNumber = request.getParameter("phoneNumber");
+		String email = request.getParameter("email");
 
-		customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
-				address, salary, gender, dob, oldUsername);
-		return "redirect:/login"; // Redirects to the login page after successful update
+		boolean hasErrors = false;
+
+		Optional<String> phoneNumberError = validationService.isMobileNumber(phoneNumber);
+		if (phoneNumberError.isPresent()) {
+			model.addAttribute("phoneNumberError", phoneNumberError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("phoneNumber", phoneNumber);
+		}
+
+		Optional<String> salaryError = validationService.isValidSalary(salary);
+		if (salaryError.isPresent()) {
+			model.addAttribute("salaryError", salaryError.get());
+			hasErrors = true;
+		} else {
+			model.addAttribute("salary", salary);
+		}
+
+		// Validate password complexity and handle retention of input
+		Optional<String> passwordError = validationService.isPasswordComplex(password);
+		if (passwordError.isPresent()) {
+			model.addAttribute("passwordError", passwordError.get());
+			hasErrors = true;
+		}
+
+		// Validate password match and handle retention of input
+		Optional<String> confirmPasswordError = validationService.isSamePassword(password, confirmPassword);
+		if (confirmPasswordError.isPresent()) {
+			model.addAttribute("confirmPasswordError", confirmPasswordError.get());
+			hasErrors = true;
+		}
+
+		if (hasErrors) {
+			// Return to registration page if there are any errors
+			return "customer-details";
+		} else {
+			customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
+					address, Double.valueOf(salary), gender, dob);
+			return "redirect:/login";
+		}
 	}
 
 	// Delete customer account

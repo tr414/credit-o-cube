@@ -27,6 +27,7 @@ body {
 .form-group {
 	flex-basis: 48%; /* Make two form groups fit in one row */
 	margin-bottom: 20px;
+	position: relative;
 }
 
 .form-group label {
@@ -35,36 +36,37 @@ body {
 	margin-bottom: 5px;
 }
 
-.form-group input[type="text"], .form-group input[type="date"],
-	.form-group input[type="tel"], .form-group input[type="email"],
-	.form-group input[type="password"] {
+.form-group input {
 	width: 100%;
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
+	margin-bottom: 25px;
 }
 
-/* Gender label and options layout */
 .gender-group {
-	margin-bottom: 20px; /* Space below the gender group */
+	margin-bottom: 20px;
 }
 
-.gender-label {
-	display: block; /* The label will be on its own line */
+.gender-group>label {
+	display: block;
 	margin-bottom: 10px;
 }
 
-.gender-option {
-	display: inline-flex; /* Align radio buttons and labels side by side */
-	flex-direction: column; /* Stack them vertically */
-	align-items: center; /* Center-align items within the flex container */
-	margin-right: 20px; /* Space out each gender option */
-	margin-left: 60px;
+.gender-options {
+	display: flex;
+	/* This makes all child divs (gender-option) align in a row */
+	justify-content: center;
 }
 
-/* This can ensure that the last gender option does not have extra margin on the right */
-.gender-option:last-child {
-	margin-right: 0;
+.gender-option {
+	margin-right: 20px; /* Adds space between the gender options */
+	margin-left: 20px;
+}
+
+/* This removes the left margin from the gender class, as it's no longer necessary */
+.gender {
+	margin-left: 0;
 }
 
 #update-button {
@@ -82,4 +84,25 @@ body {
 
 #update-button:hover {
 	background-color: #003c8f; /* Darker blue on hover */
+}
+
+.error-message {
+	color: #d8000c;
+	background-color: #ffd2d2;
+	padding: 5px;
+	border-radius: 5px;
+	font-size: 0.9em;
+	position: absolute;
+	bottom: -5px; /* Positioning the error message below the input */
+	left: 0;
+	right: 0; /* Ensures the width matches the input field */
+	text-align: center; /* Centers the text in the error message */
+	display: none; /* Hide by default, display when there's an error */
+}
+
+.form-group input[readonly] {
+	background-color: #e9ecef; /* Light gray background */
+	color: #495057; /* Slightly darker text color for contrast */
+	cursor: not-allowed;
+	/* The cursor will indicate the field is not editable */
 }

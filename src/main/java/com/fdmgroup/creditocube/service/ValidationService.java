@@ -89,4 +89,27 @@ public class ValidationService {
 		}
 		return Optional.empty();
 	}
+
+	public Optional<String> isMobileNumber(String phoneNumber) {
+		String regex = "^[89]\\d{7}$";
+
+		if (phoneNumber != null && phoneNumber.matches(regex)) {
+			return Optional.empty();
+		} else {
+			return Optional.of("Enter a valid Singapore mobile number");
+		}
+	}
+
+	public Optional<String> isValidSalary(String salary) {
+		try {
+			double salaryValue = Double.parseDouble(salary);
+
+			if (salaryValue < 0) {
+				return Optional.of("Salary cannot be negative.");
+			}
+			return Optional.empty();
+		} catch (NumberFormatException e) {
+			return Optional.of("Salary must be a valid number.");
+		}
+	}
 }
