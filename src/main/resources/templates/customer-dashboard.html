@@ -53,7 +53,7 @@
 					</tr>
 				</thead>
 				<tr th:each="account : ${accounts}">
-					<td th:text="${account.accountNumber}"></td>
+					<td th:text="${'xxxxxx' + account.accountNumber.substring(6)}"></td>
 					<td th:text="'$'+${account.accountBalance}"></td>
 				</tr>
 			</table>
