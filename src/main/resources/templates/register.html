@@ -25,14 +25,16 @@
 				<div class="form-row">
 					<div class="form-group">
 						<label for="firstName">First Name</label> <input type="text"
-							id="firstName" name="firstName" required> <span
+							id="firstName" name="firstName" required
+							th:value="${firstNameError} ? '' : ${firstName}"> <span
 							th:if="${firstNameError}" th:text="${firstNameError}"
 							class="error-message"
 							th:style="${firstNameError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="lastName">Last Name</label> <input type="text"
-							id="lastName" name="lastName" required> <span
+							id="lastName" name="lastName" required
+							th:value="${lastNameError} ? '' : ${lastName}"> <span
 							th:if="${lastNameError}" th:text="${lastNameError}"
 							class="error-message"
 							th:style="${lastNameError} ? 'display: block;' : 'display: none;'"></span>
@@ -41,23 +43,25 @@
 				<div class="form-row">
 					<div class="form-group">
 						<label for="username">Username</label> <input type="text"
-							id="username" name="username" required> <span
+							id="username" name="username" required
+							th:value="${usernameError} ? '' : ${username}"> <span
 							th:if="${usernameError}" th:text="${usernameError}"
 							class="error-message"
 							th:style="${usernameError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="nric">NRIC</label> <input type="text" id="nric"
-							name="nric" required> <span th:if="${nricError}"
-							th:text="${nricError}" class="error-message"
+							name="nric" required th:value="${nricError} ? '' : ${nric}">
+						<span th:if="${nricError}" th:text="${nricError}"
+							class="error-message"
 							th:style="${nricError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="dob">Date of Birth</label> <input type="date" id="dob"
 							name="dob" required
-							th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
-						<span th:if="${dobError}" th:text="${dobError}"
-							class="error-message"
+							th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+							th:value="${dobError} ? '' : ${dob}"> <span
+							th:if="${dobError}" th:text="${dobError}" class="error-message"
 							th:style="${dobError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 				</div>

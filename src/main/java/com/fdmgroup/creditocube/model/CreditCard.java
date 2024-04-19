@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class CreditCard {
@@ -25,15 +24,16 @@ public class CreditCard {
 	@OneToMany(mappedBy = "transactionCard")
 	private List<CreditCardTransaction> creditCardTransactions;
 
+	// each card type can belong to multiple credit cards
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_card_type_id")
+	private CardType cardType;
+
 	private String cardNumber;
 
 	private int balance;
 
 	private int cardLimit;
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_card_type_id")
-	private CardType cardType;
 
 	public CreditCard() {
 
