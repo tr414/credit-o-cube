@@ -1,18 +1,22 @@
 package com.fdmgroup.creditocube.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.RestClient;
 
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
+import com.fdmgroup.creditocube.model.CurrencyExchange;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.ForeignCurrencyCreditCardTransaction;
 import com.fdmgroup.creditocube.model.Merchant;
@@ -37,6 +41,17 @@ public class CreditCardTransactionController {
 	
 	@Autowired
 	MerchantRepository merchantRepo;
+	
+	private final RestClient restClient;
+	
+	@Value("${API_KEY}")
+	private String apiKey;
+	
+	public CreditCardTransactionController() {
+		restClient = RestClient.builder()
+				.baseUrl("http://api.exchangeratesapi.io/v1/latest")
+				.build();
+	}
 
 	@PostMapping("/card-transactions")
 	public String getAllCardTransactions(Model model, HttpServletRequest request) {
@@ -94,7 +109,16 @@ public class CreditCardTransactionController {
 			if (currency.equalsIgnoreCase("sgd")) {
 				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback, transactionDate, transactionAmount));
 			} else {
-				transactionService.createCreditCardTransaction(new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate, transactionAmount, currency, 1.3));
+				
+				CurrencyExchange forexResponse =  restClient.get()
+				.uri("?access_key={apiKey}", apiKey)
+				.retrieve()
+				.body(CurrencyExchange.class);
+			
+				BigDecimal exchangeRate = forexResponse.exchangeRateToSGD(currency).setScale(5, RoundingMode.HALF_UP);
+				double transactionSGDAmount = exchangeRate.multiply(amount).setScale(2, RoundingMode.HALF_UP).doubleValue();
+				
+				transactionService.createCreditCardTransaction(new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate, transactionSGDAmount, currency, exchangeRate.doubleValue()));
 			}
 			
 		}
