@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Rewards</title>
+    <!-- Include your CSS files here -->
+</head>
+<body>
+    <h2>List of Rewards</h2>
+    <div>
+        <ul>
+            <li th:each="reward : ${rewards}">
+                <span th:text="${reward.category}">Category</span>:
+                <span th:text="${reward.cashback_rate}">Cashback Rate</span>%
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
