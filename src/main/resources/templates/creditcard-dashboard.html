@@ -36,6 +36,7 @@
     <a href="customer-dashboard">Main dashboard</a>
     <a href="create-card-transaction">Create Card Transaction</a>
     <a href="create-card-type">Create Card Type</a>
+    <a href="create-reward">Create Reward for Card Type</a>
     <!-- Add other menu items here -->
   </div>
   
@@ -58,6 +59,7 @@
             <td th:text="${card.balance}"></td>
             <td th:text="'$ '+${card.cardLimit}"></td>
             <td>
+
               <form th:action="@{/card-transactions}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit">View Transaction History</button>
