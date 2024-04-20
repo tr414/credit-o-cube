@@ -1,8 +1,11 @@
 package com.fdmgroup.creditocube.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.fdmgroup.creditocube.model.DebitAccount;
 
@@ -24,5 +27,10 @@ public interface DebitAccountRepository extends JpaRepository<DebitAccount, Long
 	 *         empty Optional if not found
 	 */
 	public Optional<DebitAccount> findByAccountNumber(String accountNumber);
+
+	@Query("SELECT d FROM DebitAccount d WHERE d.customer.user_id = :userId AND d.isActive = true")
+//	@Query(value = "SELECT * FROM `credit-o-cube`.debit_account d WHERE d.fk_user_id = 1"
+//			+ "AND account_is_active = 1", nativeQuery = true)
+	public List<DebitAccount> findByCustomer(@Param("userId") int userId);
 
 }
