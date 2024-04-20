@@ -23,8 +23,14 @@
 		<div class="user-greeting">
 			Welcome, <span th:text="${firstName}">FirstName</span>
 		</div>
-		<a href="/customer-dashboard">Back to Home</a> <a href="login"
-			class="logout-button">Logout</a>
+		<a href="/customer-dashboard">Back to Home</a> 
+<!-- 		<a href="login" -->
+<!-- 			class="logout-button">Logout</a> -->
+		<form th:action="@{/logout}" method="post">
+				<div class="buttons">
+					<button type="submit" class="login-button">Logout</button>
+				</div>
+			</form>
 	</div>
 
 	<div class="main-container">
