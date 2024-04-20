@@ -1,17 +1,20 @@
 package com.fdmgroup.creditocube.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 
 /**
  * Represents an abstract User entity to be extended by specific user types.
  * This class provides a common structure for user entities including basic user
  * information.
  */
-@MappedSuperclass
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 public abstract class User {
 
 	@Id
@@ -32,7 +35,9 @@ public abstract class User {
 	private String firstName;
 	@Column(name = "last_name")
 	private String lastName;
-
+	
+	private String userType;
+	
 	public User() {
 
 	}
@@ -161,5 +166,13 @@ public abstract class User {
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 }

@@ -15,6 +15,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepo;
 
+
 	/**
 	 * Creates a new user in the database.
 	 * 
@@ -26,6 +27,7 @@ public class UserService {
 		if (user != null) {
 			userRepo.save(user);
 			return Optional.of(user);
+			
 		} else {
 			System.out.println("Error: User not saved");
 			return Optional.empty();
@@ -40,6 +42,11 @@ public class UserService {
 	 */
 	public Optional<User> findUserById(int id) {
 		return userRepo.findById(id);
+	}
+	
+	
+	public Optional<User> findUserByUsername(String username) {
+		return userRepo.findByUsername(username);
 	}
 
 	/**

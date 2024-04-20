@@ -46,6 +46,7 @@ public class Customer extends User {
 	 */
 	// Constructors
 	public Customer() {
+		setUserType("customer");
 	}
 
 	/**
@@ -59,6 +60,7 @@ public class Customer extends User {
 		super();
 		setUsername(username);
 		setPassword(password);
+		setUserType("customer");
 		this.debitAccounts = debitAccounts;
 		this.nric = nric;
 		this.address = address;

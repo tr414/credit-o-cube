@@ -1,8 +1,10 @@
 package com.fdmgroup.creditocube.service;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
- 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.creditocube.model.Customer;
+import com.fdmgroup.creditocube.model.User;
 import com.fdmgroup.creditocube.repository.CustomerRepository;
 
  
@@ -24,9 +27,13 @@ import com.fdmgroup.creditocube.repository.CustomerRepository;
 @Service
 public class CustomCustomerDetailsService implements UserDetailsService {
     
-    @Autowired
-    private CustomerRepository customerRepo;
+//    @Autowired
+//    private CustomerRepository customerRepo;
  
+    
+    @Autowired
+    private UserService userService;
+    
     /**
      * Loads the user's details from the database based on the username.
      *
@@ -38,16 +45,37 @@ public class CustomCustomerDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Customer customer = customerRepo.findCustomerByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + username));
+		
+		User user = userService.findUserByUsername(username)
+					.orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + username));
+		
+		
+//        Customer customer = customerRepo.findCustomerByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + username));
  
         // Fully qualify the Spring Security User class
         // Return a Spring Security UserDetails object that includes the user's username, password,
         // and granted authorities. Here we are assuming that every user has the authority 'USER'.
-        return new org.springframework.security.core.userdetails.User(
-        		customer.getUsername(),
-        		customer.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("USER"))); // Assume every user has USER authority
+		
+		if (user.getUserType().equalsIgnoreCase("customer")) {
+			return new org.springframework.security.core.userdetails.User(
+	        		user.getUsername(),
+	        		user.getPassword(),
+	                Collections.singletonList(new SimpleGrantedAuthority("USER"))); // Assume every customer has USER authority
+		}
+		else {
+			List<SimpleGrantedAuthority> roles = new ArrayList<>();
+			
+			roles.add(new SimpleGrantedAuthority("USER"));
+			roles.add(new SimpleGrantedAuthority("ADMIN"));
+			
+			return new org.springframework.security.core.userdetails.User(
+	        		user.getUsername(),
+	        		user.getPassword(),
+	                roles); 
+		}
+		
+        
     
 	}
 }
