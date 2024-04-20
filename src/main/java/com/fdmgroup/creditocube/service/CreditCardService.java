@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.creditocube.model.CreditCard;
+import com.fdmgroup.creditocube.model.CreditCardTransaction;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.repository.CreditCardRepository;
+import com.fdmgroup.creditocube.repository.CreditCardTransactionRepository;
 import com.fdmgroup.creditocube.repository.CustomerRepository;
 
 @Service
@@ -23,7 +27,12 @@ public class CreditCardService {
 	private CustomerRepository customerRepository;
 
 	@Autowired
-	private DebitAccountService debitAccountService;
+	private CreditCardTransactionRepository creditCardTransactionRepository;
+
+	private static Logger logger = LogManager.getLogger(DebitAccountService.class);
+
+//	@Autowired
+//	private DebitAccountService debitAccountService;
 
 	public void createCreditCard(CreditCard card) {
 
@@ -74,6 +83,38 @@ public class CreditCardService {
 		if (optionalCard.isPresent()) {
 			creditCardRepository.save(card);
 		}
+	}
+
+	public void updateBalance(CreditCard card, CreditCardTransaction transaction) {
+		// determine if account exists in database
+		Optional<CreditCard> optionalCard = creditCardRepository.findById(card.getCardId());
+
+		// if account exists, persist
+		if (optionalCard.isEmpty()) {
+			return;
+		}
+		CreditCard managedCard = optionalCard.get();
+
+		Optional<CreditCardTransaction> optionalTransaction = creditCardTransactionRepository
+				.findById(transaction.getTransactionId());
+		if (optionalTransaction.isEmpty()) {
+			return;
+		}
+		CreditCardTransaction managedTransaction = optionalTransaction.get();
+
+		List<CreditCardTransaction> currentTransactions = managedCard.getCreditCardTransactions();
+
+		currentTransactions.add(managedTransaction);
+		double currentBalance = 0.0;
+		for (CreditCardTransaction transactionItem : currentTransactions) {
+			currentBalance += transactionItem.getTransactionAmount();
+		}
+		managedCard.setBalance(currentBalance);
+		logger.debug("currentBalance: " + currentBalance);
+		managedCard.setCreditCardTransactions(currentTransactions);
+
+		creditCardRepository.save(managedCard);
+
 	}
 
 	public Optional<CreditCard> findCardByCardNumber(String cardNumber) {
