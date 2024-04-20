@@ -19,8 +19,7 @@ public class CardType {
 
 	private String name;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "reward_id")
+	@OneToMany(mappedBy="cardType", cascade = CascadeType.ALL)
 	private List<Rewards> rewards;
 
 	public long getCard_type_ID() {
