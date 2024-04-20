@@ -57,8 +57,9 @@
             <td th:text="${card.cardNumber}"></td>
             <td th:text="${card.balance}"></td>
             <td th:text="'$ '+${card.cardLimit}"></td>
-            
-              <form th:action="@{/view-creditcard-transaction-history}" method="GET">
+            <td>
+              <form th:action="@{/card-transactions}" method="POST">
+              	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit">View Transaction History</button>
               </form>
             </td>
