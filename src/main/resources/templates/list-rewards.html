@@ -12,6 +12,7 @@
             <li th:each="reward : ${rewards}">
                 <span th:text="${reward.category}">Category</span>:
                 <span th:text="${reward.cashback_rate}">Cashback Rate</span>%
+                <span th:text="'Card Type: ' + ${reward.cardType.name}">Card Type</span>
             </li>
         </ul>
     </div>
