@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -14,7 +14,12 @@
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
     <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-    <button class="logout-button" onclick="window.location.href='login'">Logout</button>
+<!--     <button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
+	<form th:action="@{/logout}" method="post">
+				<div class="buttons">
+					<button type="submit" class="login-button">Logout</button>
+				</div>
+			</form>
 	
   </div>
 
@@ -30,6 +35,8 @@
     <a href="creditcard-dashboard">Credit card dashboard</a> 
     <a href="customer-dashboard">Main dashboard</a>
     <a href="create-card-transaction">Create Card Transaction</a>
+    <a href="create-card-type">Create Card Type</a>
+    <a href="create-reward">Create Reward for Card Type</a>
     <!-- Add other menu items here -->
   </div>
   
@@ -51,8 +58,10 @@
             <td th:text="${card.cardNumber}"></td>
             <td th:text="${card.balance}"></td>
             <td th:text="'$ '+${card.cardLimit}"></td>
-            
-              <form th:action="@{/view-creditcard-transaction-history}" method="GET">
+            <td>
+
+              <form th:action="@{/card-transactions}" method="POST">
+              	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit">View Transaction History</button>
               </form>
             </td>

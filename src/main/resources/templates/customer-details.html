@@ -23,8 +23,14 @@
 		<div class="user-greeting">
 			Welcome, <span th:text="${firstName}">FirstName</span>
 		</div>
-		<a href="/customer-dashboard">Back to Home</a> <a href="login"
-			class="logout-button">Logout</a>
+		<a href="/customer-dashboard">Back to Home</a> 
+<!-- 		<a href="login" -->
+<!-- 			class="logout-button">Logout</a> -->
+		<form th:action="@{/logout}" method="post">
+				<div class="buttons">
+					<button type="submit" class="login-button">Logout</button>
+				</div>
+			</form>
 	</div>
 
 	<div class="main-container">
@@ -60,14 +66,14 @@
 					</div>
 					<div class="form-group">
 						<label for="salary">Salary (per month)</label> <input type="text"
-							id="salary" name="salary" th:value="${salary}" required>
+							id="salary" name="salary" th:value="${salary}">
 					</div>
 					<div class="form-group gender-group">
 						<label>Gender</label>
 						<div class="gender-options">
 							<div class="gender-option">
 								<input class="gender" type="radio" id="male" name="gender"
-									value="male" th:checked="${gender == 'male'}" required>
+									value="male" th:checked="${gender == 'male'}">
 								<label for="male">Male</label>
 							</div>
 							<div class="gender-option">
@@ -85,7 +91,7 @@
 					<div class="form-group">
 						<label for="phoneNumber">Mobile Number</label> <input type="tel"
 							id="phoneNumber" name="phoneNumber" th:value="${phoneNumber}"
-							required> <span th:if="${phoneNumberError}"
+							> <span th:if="${phoneNumberError}"
 							th:text="${phoneNumberError}" class="error-message"
 							th:style="${phoneNumberError} ? 'display: block;' : 'display: none;'"></span>
 					</div>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
+import com.fdmgroup.creditocube.model.User;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
@@ -175,6 +176,12 @@ public class CustomerController {
 	 */
 	@GetMapping("/customer-dashboard")
 	public String home(Model model, Principal principal, SessionStatus status) {
+		User user = userService.findUserByUsername(principal.getName()).get();
+		System.out.println(user.getUsername());
+		if (user.getUserType().equalsIgnoreCase("admin")) {
+			return "landing";
+		}
+		
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
 		model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
 		List<DebitAccount> customerAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);

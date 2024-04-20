@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<title>Admin Registration</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+		integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+		crossorigin="anonymous">
+</head>
+<body>
+	
+	<div class="userform">
+		<h1>Register As Bank Admin</h1>
+		
+		<div th:if="${error}">
+				Unable to create your profile. Please try using another username :)
+		</div>
+		
+		<form method="post" th:action="@{/create-admin}">
+			<input type="text" name="username" placeholder="Username"><br>
+			<input type="password" name="password" placeholder="Password"><br>
+			<input type="submit" class="btn btn-primary btn-sm" value="Create Admin Profile">
+		</form>
+	</div>
+</body>
+</html>

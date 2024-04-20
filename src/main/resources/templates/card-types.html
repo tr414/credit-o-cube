@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Card Types</title>
+    <!-- Add your CSS links here -->
+</head>
+<body>
+    <h2>Card Types</h2>
+    <div>
+        <ul>
+            <li th:each="cardType : ${cardTypes}">
+                <span th:text="${cardType.name}">Card Type Name</span>
+                <!-- Add other attributes to display if necessary -->
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

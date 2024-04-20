@@ -1,9 +1,15 @@
 package com.fdmgroup.creditocube.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 /*
  * Each card type can have multiple rewards, but we can't see the card types for each reward
@@ -18,6 +24,10 @@ public class Rewards {
 	private double cashback_rate;
 
 	private String category;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_card_type_id")
+	private CardType cardType;
 
 	public double getCashback_rate() {
 		return cashback_rate;
@@ -47,10 +57,18 @@ public class Rewards {
 		super();
 	}
 
-	public Rewards(double cashback_rate, String category) {
+	public Rewards(double cashback_rate, String category, CardType cardType) {
 		super();
 		this.cashback_rate = cashback_rate;
 		this.category = category;
+		this.cardType = cardType;
 	}
 
+	public CardType getCardType() {
+		return cardType;
+	}
+
+	public void setCardType(CardType cardType) {
+		this.cardType = cardType;
+	}
 }
