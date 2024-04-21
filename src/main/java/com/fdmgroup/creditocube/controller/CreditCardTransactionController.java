@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -44,6 +46,8 @@ public class CreditCardTransactionController {
 	MerchantRepository merchantRepo;
 
 	private final RestClient restClient;
+	
+	private static Logger logger = LogManager.getLogger(CreditCardTransactionController.class);
 
 	@Value("${API_KEY}")
 	private String apiKey;

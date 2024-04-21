@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class BillService {
 	private CreditCardTransactionService cardTransactionService;
 	
 	private long latePaymentFees = 100;
+	
+	private static final Logger LOGGER = LogManager.getLogger(BillService.class);
 	
 	public BillService() {
 		// TODO Auto-generated constructor stub
@@ -50,9 +54,14 @@ public class BillService {
 		double totalAmountDue = card.getBalance();
 		double minimumAmountDue = new BigDecimal(totalAmountDue * 0.1).setScale(2, RoundingMode.HALF_UP).doubleValue();
 		
-		//Bill cardBill = new Bill(card, totalAmountDue, minimumAmountDue, false);
 		
-		return createBill(new Bill(card, totalAmountDue, minimumAmountDue, false));
+		try {
+			return createBill(new Bill(card, totalAmountDue, minimumAmountDue, false));
+		} catch (Exception e) {
+			LOGGER.error("Unable to generate bill for card number: {}", card.getCardNumber(), e);
+			return Optional.of(null);
+		}
+		
 	}
 	
 	public void checkLatePayment(Bill bill) {
@@ -61,6 +70,7 @@ public class BillService {
 			card.setBalance(card.getBalance() + latePaymentFees);
 			cardService.updateCard(card);
 			cardTransactionService.createLatePaymentTransaction(card, latePaymentFees);
+			LOGGER.info("Late payment fee charged to card number: {}", card.getCardNumber());
 		}
 	}
 	
@@ -69,10 +79,14 @@ public class BillService {
 	@Scheduled(cron = "0 0 6 15 * *")
 	public void generateAllCardBills() {
 		List<CreditCard> creditCards = cardService.findAllCreditCards();
-		System.out.println("Generating all card bills");
+		
+		LOGGER.info("Scheduled task: generating all credit card bills.");
+		
 		for (CreditCard card : creditCards) {
 			generateBill(card.getCardId());
 		}
+		
+		LOGGER.info("Scheduled task: generating all credit card bills completed.");
 	}
 	
 	// This function is called on the 10th of every month at 6 am. It will go through every bill, and if the bill has not been paid, it will
@@ -80,7 +94,9 @@ public class BillService {
 	@Scheduled(cron = "0 0 6 10 * *")
 	public void checkAllLatePayments() {
 		List<Bill> allBills = billRepo.findAll();
-		System.out.println("Checking late payments");
+		
+		LOGGER.info("Scheduled task: checking all credit card bills for late payment.");
+		
 		for (Bill bill : allBills) {
 			checkLatePayment(bill);
 		}
