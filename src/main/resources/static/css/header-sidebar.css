@@ -7,26 +7,28 @@ body {
 /* Top navigation bar styling */
 .top-bar {
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
-	padding: 10px;
+	padding: 15px;
 	background-color: #0051ba;
 	position: fixed;
+	/* Allows absolute positioning relative to this container */
 	width: 100%;
 	top: 0;
 	left: 0;
-	z-index: 2; /* Increased z-index ensures the top bar stays on top */
+	z-index: 2; /* Stays on top */
 }
 
-/* Logo container within the top bar for centered logo */
-.logo-container {
-	flex-grow: 1;
-	text-align: center;
+.menu-btn {
+	position: absolute;
+	left: 10px; /* Positions menu button to the left */
+	z-index: 3; /* Ensures button is clickable over other content */
 }
 
-/* Styling for the logo inside the top bar */
+/* Logo styling */
 .top-bar img.center-logo {
-	max-height: 50px; /* Limits the size of the logo */
+	max-height: 50px; /* Adjust the size of your logo as needed */
+	margin: 0 auto; /* Auto margins center the logo */
 }
 
 /* Side menu styling */
