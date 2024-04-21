@@ -105,25 +105,35 @@ public class CreditCardTransactionController {
 		boolean valid = true;
 		
 		
-		if (valid) {
-			if (currency.equalsIgnoreCase("sgd")) {
+		
+		if (currency.equalsIgnoreCase("sgd")) {
+			if (validTransaction(transactionAmount, card)) {
 				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback, transactionDate, transactionAmount));
-			} else {
-				
-				CurrencyExchange forexResponse =  restClient.get()
-				.uri("?access_key={apiKey}", apiKey)
-				.retrieve()
-				.body(CurrencyExchange.class);
+			} 
 			
-				BigDecimal exchangeRate = forexResponse.exchangeRateToSGD(currency).setScale(5, RoundingMode.HALF_UP);
-				double transactionSGDAmount = exchangeRate.multiply(amount).setScale(2, RoundingMode.HALF_UP).doubleValue();
-				
-				transactionService.createCreditCardTransaction(new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate, transactionSGDAmount, currency, exchangeRate.doubleValue()));
-			}
+		} else {
 			
+			CurrencyExchange forexResponse =  restClient.get()
+			.uri("?access_key={apiKey}", apiKey)
+			.retrieve()
+			.body(CurrencyExchange.class);
+		
+			BigDecimal exchangeRate = forexResponse.exchangeRateToSGD(currency).setScale(5, RoundingMode.HALF_UP);
+			double transactionSGDAmount = exchangeRate.multiply(amount).setScale(2, RoundingMode.HALF_UP).doubleValue();
+			
+			transactionService.createCreditCardTransaction(new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate, transactionSGDAmount, currency, exchangeRate.doubleValue()));
 		}
+			
+		
 		
 		return ("redirect:creditcard-dashboard");
+	}
+
+	private boolean validTransaction(double transactionAmount, CreditCard card) {
+		if (transactionAmount + card.getBalance() < card.getCardLimit()) {
+			return true;
+		}
+		return false;
 	}
 
 }
