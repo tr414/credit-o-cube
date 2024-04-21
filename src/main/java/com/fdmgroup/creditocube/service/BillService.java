@@ -60,9 +60,9 @@ public class BillService {
 		}
 	}
 	
-	// This function is called on the 15th of every month at 9 am. It will go through every card, and generate the credit card bill for that
+	// This function is called on the 15th of every month at 6 am. It will go through every card, and generate the credit card bill for that
 	// billing cycle
-	@Scheduled(cron = "0 0 18 21 * *")
+	@Scheduled(cron = "0 0 6 15 * *")
 	public void generateAllCardBills() {
 		List<CreditCard> creditCards = cardService.findAllCreditCards();
 		System.out.println("Generating all card bills");
@@ -71,9 +71,9 @@ public class BillService {
 		}
 	}
 	
-	// This function is called on the 10th of every month at 9 am. It will go through every bill, and if the bill has not been paid, it will
-	// add a late payment fee to the credit card to which the bill belongs
-	@Scheduled(cron = "0 1 18 21 * *")
+	// This function is called on the 10th of every month at 6 am. It will go through every bill, and if the bill has not been paid, it will
+	// add a late payment fee to the credit card to which the bill belongs, and record this as a transaction on the card
+	@Scheduled(cron = "0 0 6 10 * *")
 	public void checkAllLatePayments() {
 		List<Bill> allBills = billRepo.findAll();
 		System.out.println("Checking late payments");
