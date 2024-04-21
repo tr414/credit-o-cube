@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fdmgroup.creditocube.model.CardType;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
 import com.fdmgroup.creditocube.model.Customer;
@@ -196,4 +197,10 @@ public class CreditCardService {
 		return 0;
 
 	}
+	
+	public boolean customerAlreadyHasCardType(Customer customer, CardType cardType) {
+	    return creditCardRepository.findAllByCustomer(customer).stream()
+	        .anyMatch(card -> card.getCardType().equals(cardType));
+	}
+
 }
