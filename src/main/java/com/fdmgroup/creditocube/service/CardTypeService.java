@@ -37,4 +37,11 @@ public class CardTypeService {
 	public CardType saveCardType(CardType cardType) {
         return cardTypeRepository.save(cardType);
     }
+	
+	public boolean canCreateNewCardType() {
+	    long count = cardTypeRepository.count();
+	    return count < 5;
+	}
+	
+	
 }
