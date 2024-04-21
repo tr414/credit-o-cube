@@ -20,6 +20,21 @@ body, html {
 	height: 100%;
 }
 
+/* new */
+.register-background {
+    background-image: url('../img/tech1.jpg'); /* Use the same image as your login page */
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px); /* Adjust the px value to increase or decrease the blur */
+    height: 100%;
+    position: fixed; /* Ensure it covers the whole page even when scrolling */
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1; /* Ensure it stays behind the content */
+}
+/* new */
+
 .container {
 	background: rgba(255, 255, 255, 0.9);
 	padding: 50px;
@@ -121,15 +136,26 @@ body, html {
 }
 
 .back-to-login a {
-	font-style: italic;
-	color: #0051ba; /* Change color to resemble a hyperlink */
-	text-decoration: underline; /* Underline to indicate it's clickable */
-	cursor: pointer; /* Show pointer cursor on hover */
+/* 	font-style: italic; */
+	
+/* 	text-decoration: underline; Underline to indicate it's clickable */
+	
+	color: white; /* Set text color to white to match the login button */
+    background-color: #0051ba; /* Set background color to match the login button */
+    padding: 10px 20px; /* Add padding to make it look like a button */
+    border: none; /* No border for the button */
+    border-radius: 4px; /* Rounded corners for the button */
+    display: inline-block; /* Allows padding and margin to be applied */
+    margin-bottom: 10px; /* Space below the button if needed */
+    text-align: center; /* Center the text inside the button */
+    cursor: pointer; /* Show pointer cursor on hover */
+    text-decoration: none; /* Remove underline from link */
+    transition: background-color 0.3s; /* Smooth background color transition on hover */
 }
 
 .back-to-login a:hover {
-	color: #0077cc; /* Change color on hover for emphasis */
-	text-decoration: none; /* Remove underline on hover */
+	background-color: #0077cc; /* Change color on hover for emphasis */
+/* 	text-decoration: none; Remove underline on hover */
 }
 
 .registration-container {
@@ -161,6 +187,7 @@ button[type="submit"] {
 	border-radius: 4px;
 	cursor: pointer;
 	font-size: 18px;
+	font-style: italic;
 }
 
 button[type="submit"]:hover {
