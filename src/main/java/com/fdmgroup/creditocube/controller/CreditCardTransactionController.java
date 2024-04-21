@@ -120,15 +120,16 @@ public class CreditCardTransactionController {
 
 		// TODO apply cashback
 		double cashback = 0.0;
-
-		// TODO check if transaction is valid based on card limit, current balance, and
-		// transaction amount
-		boolean valid = true;
 		
 		if (currency.equalsIgnoreCase("sgd")) {
 			if (validTransaction(transactionAmount, card)) {
-				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback, transactionDate, transactionAmount));
-			} 
+				card.setBalance(card.getBalance() + transactionAmount);
+				cardService.updateCard(card);
+				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback, transactionDate, 
+						transactionAmount));
+			} else {
+				return "redirect:creditcard-dashboard";
+			}
 			
 		} else {
 			
@@ -140,38 +141,41 @@ public class CreditCardTransactionController {
 			BigDecimal exchangeRate = forexResponse.exchangeRateToSGD(currency).setScale(5, RoundingMode.HALF_UP);
 			double transactionSGDAmount = exchangeRate.multiply(amount).setScale(2, RoundingMode.HALF_UP).doubleValue();
 			
-			transactionService.createCreditCardTransaction(new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate, transactionSGDAmount, currency, exchangeRate.doubleValue()));
+			if (validTransaction(transactionSGDAmount, card)) {
+				card.setBalance(card.getBalance() + transactionSGDAmount);
+				cardService.updateCard(card);
+				transactionService.createCreditCardTransaction(new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate, 
+						transactionSGDAmount, currency, exchangeRate.doubleValue()));
+			} else {
+				return "redirect:creditcard-dashboard";
+			}
+			
 		}
 			
-		
-		
 
-		if (!valid) {
-			return "redirect:creditcard-dashboard";
-		}
-
-		if (currency.equalsIgnoreCase("sgd")) {
-			CreditCardTransaction newTransaction = new CreditCardTransaction(card, merchant, cashback, transactionDate,
-					transactionAmount);
-			transactionService.createCreditCardTransaction(newTransaction);
-			cardService.updateBalance(card, newTransaction);
-		} else {
-
-			CurrencyExchange forexResponse = restClient.get().uri("?access_key={apiKey}", apiKey).retrieve()
-					.body(CurrencyExchange.class);
-
-			BigDecimal exchangeRate = forexResponse.exchangeRateToSGD(currency).setScale(5, RoundingMode.HALF_UP);
-			double transactionSGDAmount = exchangeRate.multiply(amount).setScale(2, RoundingMode.HALF_UP).doubleValue();
-
-			CreditCardTransaction newTransaction = new ForeignCurrencyCreditCardTransaction(card, merchant, cashback,
-					transactionDate, transactionSGDAmount, currency, exchangeRate.doubleValue());
-			transactionService.createCreditCardTransaction(newTransaction);
-			cardService.updateBalance(card, newTransaction);
-		}
+//		if (currency.equalsIgnoreCase("sgd")) {
+//			CreditCardTransaction newTransaction = new CreditCardTransaction(card, merchant, cashback, transactionDate,
+//					transactionAmount);
+//			transactionService.createCreditCardTransaction(newTransaction);
+//			cardService.updateBalance(card, newTransaction);
+//		} else {
+//
+//			CurrencyExchange forexResponse = restClient.get().uri("?access_key={apiKey}", apiKey).retrieve()
+//					.body(CurrencyExchange.class);
+//
+//			BigDecimal exchangeRate = forexResponse.exchangeRateToSGD(currency).setScale(5, RoundingMode.HALF_UP);
+//			double transactionSGDAmount = exchangeRate.multiply(amount).setScale(2, RoundingMode.HALF_UP).doubleValue();
+//
+//			CreditCardTransaction newTransaction = new ForeignCurrencyCreditCardTransaction(card, merchant, cashback,
+//					transactionDate, transactionSGDAmount, currency, exchangeRate.doubleValue());
+//			transactionService.createCreditCardTransaction(newTransaction);
+//			cardService.updateBalance(card, newTransaction);
+//		}
 		
 		return ("redirect:creditcard-dashboard");
 	}
 
+	
 	private boolean validTransaction(double transactionAmount, CreditCard card) {
 		if (transactionAmount + card.getBalance() < card.getCardLimit()) {
 			return true;
