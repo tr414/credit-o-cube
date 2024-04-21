@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Wireframe</title>
   <link rel="stylesheet" href="../css/header-sidebar.css">
-  <link rel="stylesheet" href="../css/account-creditcard-dashboard.css">
+  <link rel="stylesheet" href="../css/creditcard-dashboard.css">
 </head>
 
 <body>
@@ -14,7 +14,7 @@
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
     <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-<!--     <button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
+    <!--     <button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
 	<form th:action="@{/logout}" method="post">
 				<div class="buttons">
 					<button type="submit" class="login-button">Logout</button>
@@ -25,7 +25,8 @@
 
   <div class="side-menu" id="sideMenu">
   	<div class="user-greeting">
-		Welcome, What would you like to do today?
+		<P>CREDIT CARD</P>
+		<P>DETAILS</P>
 	</div>
     <a href="apply-creditcard">Apply for a credit card</a>
     <a href="#">Set credit limit</a>
