@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,6 +60,7 @@ public class CreditCardController {
 		}
 
 		// set customer and their accounts as session attributes to retrieve in view
+		// Customer customer = optionalCustomer.get();
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
 		model.addAttribute("customer", sessionCustomer);
@@ -68,79 +70,134 @@ public class CreditCardController {
 		return "creditcard-dashboard";
 	}
 
-	// Apply for credit card
-	@GetMapping("/apply-creditcard")
-	public String applyForCreditCard(Principal principal, Model model) {
+//	// Apply for credit card
+//	@GetMapping("/apply-creditcard")
+//	public String applyForCreditCard(Principal principal, Model model) {
+//
+//		List<CardType> cardTypes = cardTypeService.findAllCardTypes();
+//		model.addAttribute("cardTypes", cardTypes);
+//		return "apply-creditcard"; // Name of your Thymeleaf template
+//
+//	}
+	
+	//new method to get customers to register for 3 distinct cards
+    @GetMapping("/apply-creditcard")
+    public String applyForCreditCard(Principal principal, Model model) {
+        Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+        if (optionalCustomer.isEmpty()) {
+            return "redirect:/login";
+        }
 
-		List<CardType> cardTypes = cardTypeService.findAllCardTypes();
-		model.addAttribute("cardTypes", cardTypes);
-		return "apply-creditcard"; // Name of your Thymeleaf template
+        Customer customer = optionalCustomer.get();
+        List<CardType> availableCardTypes = cardTypeService.findAllCardTypes().stream()
+            .filter(cardType -> !creditCardService.customerAlreadyHasCardType(customer, cardType))
+            .collect(Collectors.toList());
 
-	}
+        model.addAttribute("cardTypes", availableCardTypes);
+        return "apply-creditcard";
+    }
 
-	// post mapping for registering for a credit card
-	@PostMapping("/apply-creditcard")
-	public String registerCreditCard(Principal principal, HttpServletRequest request) {
+//	// post mapping for registering for a credit card
+//	@PostMapping("/apply-creditcard")
+//	public String registerCreditCard(Principal principal, HttpServletRequest request) {
+//
+//		// Find the user associated with the provided customer ID.
+//		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+//
+//		// If the user is not found, redirect to the login page.
+//		if (optionalCustomer.isEmpty()) {
+//			return "redirect:/login";
+//		}
+//
+//		// Get the authenticated customer session object.
+//		Customer sessionCustomer = (Customer) session.getAttribute("customer");
+//
+//		// validation for customer - must have all their details filled up
+//		if (sessionCustomer.getFirstName() == null || sessionCustomer.getLastName() == null
+//				|| sessionCustomer.getEmail() == null || sessionCustomer.getPhoneNumber() == null
+//				|| sessionCustomer.getNric() == null || sessionCustomer.getAddress() == null
+//				|| sessionCustomer.getSalary() == null || sessionCustomer.getGender() == null
+//				|| sessionCustomer.getDob() == null) {
+//			System.out.println("Customer details are not filled up");
+//			return ("apply-creditcard");
+//		}
+//
+//		// other credit card attributes
+//		String cardNumber = creditCardService.generateCreditCardNumber();
+//		String cardLimitAsString = request.getParameter("creditCardLimit");
+//		int balance = 0; // start off with no transactions yet, so no money to owe the bank
+//
+//		// validation for card limit - must be all numbers
+//		// check if what they've entered are all digits
+//		for (int i = 0; i < cardLimitAsString.length(); i++) {
+//			if (!Character.isDigit(cardLimitAsString.charAt(i))) {
+//				System.out.println("Card Number is not all digits");
+//				return ("apply-creditcard");
+//			}
+//		}
+//
+//		// validation for \card limit - must be larger than their salary
+//		int cardLimit = Integer.parseInt(cardLimitAsString); // request this
+//		if (cardLimit > sessionCustomer.getSalary()) {
+//			System.out.println("Salary is too low");
+//			return ("apply-creditcard");
+//		}
+//
+//		// validation for cardtype
+//		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
+//		System.out.println(request.getParameter("cardType"));
+//		if (optionalCardType.isEmpty()) {
+//			// no card type of such name
+//			System.out.println("No such credit card type");
+//			return ("apply-creditcard");
+//		}
+//
+//		CardType cardType = optionalCardType.get();
+//
+//		CreditCard newCard = new CreditCard(sessionCustomer, cardNumber, balance, cardLimit, cardType);
+//		newCard.setCustomer(sessionCustomer);
+//		creditCardService.createCreditCard(newCard);
+//		System.out.println("Successfully created a new ccredit card");
+//		return ("apply-creditcard");
+//	}
+    
+    @PostMapping("/apply-creditcard")
+    public String registerCreditCard(Principal principal, HttpServletRequest request, Model model) {
+        Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+        if (optionalCustomer.isEmpty()) {
+            return "redirect:/login";
+        }
 
-		// Find the user associated with the provided customer ID.
-		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+        Customer customer = optionalCustomer.get();
+        if (customer.getCreditCards().size() >= 3) {
+            model.addAttribute("error", "You cannot have more than 3 credit cards.");
+            return "apply-creditcard";
+        }
 
-		// If the user is not found, redirect to the login page.
-		if (optionalCustomer.isEmpty()) {
-			return "redirect:/login";
-		}
+        String cardNumber = creditCardService.generateCreditCardNumber();
+        int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
+        if (cardLimit > customer.getSalary()) {
+            model.addAttribute("error", "Card limit must be less than your salary.");
+            return "apply-creditcard";
+        }
 
-		// Get the authenticated customer session object.
-		Customer sessionCustomer = (Customer) session.getAttribute("customer");
+        Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
+        if (optionalCardType.isEmpty()) {
+            model.addAttribute("error", "Invalid card type selected.");
+            return "apply-creditcard";
+        }
 
-		// validation for customer - must have all their details filled up
-		if (sessionCustomer.getFirstName() == null || sessionCustomer.getLastName() == null
-				|| sessionCustomer.getEmail() == null || sessionCustomer.getPhoneNumber() == null
-				|| sessionCustomer.getNric() == null || sessionCustomer.getAddress() == null
-				|| sessionCustomer.getSalary() == null || sessionCustomer.getGender() == null
-				|| sessionCustomer.getDob() == null) {
-			System.out.println("Customer details are not filled up");
-			return ("apply-creditcard");
-		}
+        CardType cardType = optionalCardType.get();
+        if (creditCardService.customerAlreadyHasCardType(customer, cardType)) {
+            model.addAttribute("error", "You already have a credit card of this type.");
+            return "apply-creditcard";
+        }
 
-		// other credit card attributes
-		String cardNumber = creditCardService.generateCreditCardNumber();
-		String cardLimitAsString = request.getParameter("creditCardLimit");
-		int balance = 0; // start off with no transactions yet, so no money to owe the bank
-
-		// validation for card limit - must be all numbers
-		// check if what they've entered are all digits
-		for (int i = 0; i < cardLimitAsString.length(); i++) {
-			if (!Character.isDigit(cardLimitAsString.charAt(i))) {
-				System.out.println("Card Number is not all digits");
-				return ("apply-creditcard");
-			}
-		}
-
-		// validation for \card limit - must be larger than their salary
-		int cardLimit = Integer.parseInt(cardLimitAsString); // request this
-		if (cardLimit > sessionCustomer.getSalary()) {
-			System.out.println("Salary is too low");
-			return ("apply-creditcard");
-		}
-
-		// validation for cardtype
-		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
-		System.out.println(request.getParameter("cardType"));
-		if (optionalCardType.isEmpty()) {
-			// no card type of such name
-			System.out.println("No such credit card type");
-			return ("apply-creditcard");
-		}
-
-		CardType cardType = optionalCardType.get();
-
-		CreditCard newCard = new CreditCard(sessionCustomer, cardNumber, balance, cardLimit, cardType);
-		newCard.setCustomer(sessionCustomer);
-		creditCardService.createCreditCard(newCard);
-		System.out.println("Successfully created a new ccredit card");
-		return ("apply-creditcard");
-	}
+        CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
+        creditCardService.createCreditCard(newCard);
+        model.addAttribute("success", "Successfully created a new credit card.");
+        return "redirect:/creditcard-dashboard";
+    }
 
 	@GetMapping("/pay-creditcard-balance")
 	public String payCreditcardBalance(Model model, Principal principal) {

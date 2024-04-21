@@ -7,13 +7,10 @@
 </head>
 <body>
     <h2>Card Types</h2>
-    <div>
-        <ul>
-            <li th:each="cardType : ${cardTypes}">
-                <span th:text="${cardType.name}">Card Type Name</span>
-                <!-- Add other attributes to display if necessary -->
-            </li>
-        </ul>
-    </div>
+    <div th:if="${error}" th:text="${error}" style="color:red;"></div>
+    <ul>
+        <li th:each="cardType : ${cardTypes}" th:text="${cardType.name}"></li>
+    </ul>
+    <a href="/create-card-type">Create New Card Type</a>
 </body>
 </html>

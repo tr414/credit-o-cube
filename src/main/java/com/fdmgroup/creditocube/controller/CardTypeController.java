@@ -29,6 +29,11 @@ public class CardTypeController {
 
     @PostMapping("/create-card-type")
     public String createCardType(CardType cardType, Model model) {
+        if (!cardTypeService.canCreateNewCardType()) {
+            model.addAttribute("error", "Maximum of 5 card types can be created.");
+            model.addAttribute("cardTypes", cardTypeService.findAllCardTypes());
+            return "card-types"; // Redirect back to the list with an error message
+        }
         cardTypeService.saveCardType(cardType);
         return "redirect:/card-types";
     }
