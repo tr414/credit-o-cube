@@ -106,10 +106,10 @@ public class CreditCardTransactionController {
 
 		String merchantCode = request.getParameter("merchantCode");
 		Merchant merchant = merchantRepo.findByMerchantCode(merchantCode).orElse(null);
+		String merchantCategory = merchant.getCategory();
 
 		// currency
 		String currency = request.getParameter("currency");
-		System.out.println(currency);
 
 		// date
 		LocalDateTime transactionDate = LocalDateTime.now();
@@ -125,8 +125,9 @@ public class CreditCardTransactionController {
 			if (validTransaction(transactionAmount, card)) {
 				card.setBalance(card.getBalance() + transactionAmount);
 				cardService.updateCard(card);
+				String description = String.format("Payment made to merchant code %s in category %s", merchantCode, merchantCategory);
 				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback, transactionDate, 
-						transactionAmount));
+						transactionAmount, description));
 			} else {
 				return "redirect:creditcard-dashboard";
 			}
@@ -144,8 +145,9 @@ public class CreditCardTransactionController {
 			if (validTransaction(transactionSGDAmount, card)) {
 				card.setBalance(card.getBalance() + transactionSGDAmount);
 				cardService.updateCard(card);
+				String description = String.format("Foreign currency payment made to merchant code %s in category %s. Original currency: %s. Exchange rate from currency to SGD: %s", merchantCode, merchantCategory, currency, exchangeRate.toString());
 				transactionService.createCreditCardTransaction(new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate, 
-						transactionSGDAmount, currency, exchangeRate.doubleValue()));
+						transactionSGDAmount, description, currency, exchangeRate.doubleValue()));
 			} else {
 				return "redirect:creditcard-dashboard";
 			}
