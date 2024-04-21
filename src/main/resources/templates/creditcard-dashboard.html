@@ -47,7 +47,7 @@
           <tr>
             
             <th>Credit Card Number</th>
-            <th>Balance you owe</th>
+            <th>Card Balance</th>
             <th>Credit Limit</th>
             <th>Actions</th>
           </tr>
@@ -59,10 +59,13 @@
             <td th:text="${card.balance}"></td>
             <td th:text="'$ '+${card.cardLimit}"></td>
             <td>
-
               <form th:action="@{/card-transactions}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit">View Transaction History</button>
+              </form>
+              <form th:action="@{/view-card-bill}" method="POST">
+              	<input type="hidden" th:value="${card.cardId}" name="cardId">
+                <button type="submit">View Card Bill</button>
               </form>
             </td>
           </tr>

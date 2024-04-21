@@ -1,5 +1,6 @@
 package com.fdmgroup.creditocube.controller;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fdmgroup.creditocube.model.Bill;
 import com.fdmgroup.creditocube.model.CardType;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
+import com.fdmgroup.creditocube.service.BillService;
 import com.fdmgroup.creditocube.service.CardTypeService;
 import com.fdmgroup.creditocube.service.CreditCardService;
 import com.fdmgroup.creditocube.service.CustomerService;
@@ -47,6 +50,9 @@ public class CreditCardController {
 
 	@Autowired
 	private DebitAccountTransactionService debitAccountTransactionService;
+	
+	@Autowired
+	private BillService billService;
 
 	// credit card dashboard
 	@GetMapping("/creditcard-dashboard")
@@ -321,5 +327,21 @@ public class CreditCardController {
 		}
 
 	}
+	
+	 @PostMapping("/view-card-bill")
+	    public String viewCardBill(Principal principal, Model model, HttpServletRequest request) {
+	        Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+	        if (optionalCustomer.isEmpty()) {
+	            return "redirect:/login";
+	        }
+	        long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
+	        CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
+	        Bill bill = billService.findBillByCreditCard(card).orElse(null);
+	        
+	        Customer customer = optionalCustomer.get();
+
+	        model.addAttribute("bill", bill);
+	        return "view-card-bill";
+	    }
 
 }

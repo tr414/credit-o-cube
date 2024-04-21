@@ -41,6 +41,10 @@ public class BillService {
 		return Optional.ofNullable(billRepo.save(bill));
 	}
 	
+	public Optional<Bill> findBillByCreditCard(CreditCard card) {
+		return billRepo.findByCardIs(card);
+	}
+	
 	public Optional<Bill> generateBill(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
 		double totalAmountDue = card.getBalance();
