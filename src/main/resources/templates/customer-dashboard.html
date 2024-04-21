@@ -16,11 +16,13 @@
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
 			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
 		<!-- 		<button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
+		</form>
 	</div>
 
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
-			Welcome, <span th:text="${firstName}">FirstName</span>
+			<p>Welcome, <span th:text="${firstName}">FirstName</span></p>
+			<p>What would you like to do today?</p>
 		</div>
 		<a href="/customer-details">View / change my particulars</a> <a
 			href="account-dashboard">Account dashboard</a> <a
@@ -41,13 +43,14 @@
 			<h2>
 				Welcome to Your Dashboard, <span th:text="${firstName}">FirstName</span>
 			</h2>
-			<p>Here you can find a quick overview of your account, manage
-				your details, and review recent transactions. If you need
-				assistance, our customer support is just a click away.</p>
+			<p>Here you can find a quick overview of your debit accounts 
+				and the credit cards you own, 
+				and view recent debit account 
+				and credit card transactions.</p>
 		</div>
 
 		<div class="sub-container">
-			<h2>Account Overview</h2>
+			<h2>Debit Accounts Overview</h2>
 			<p>Check the status of your account, view your current balance,
 				and more.</p>
 			<table>
@@ -63,11 +66,27 @@
 				</tr>
 			</table>
 		</div>
+		
+		<div class="sub-container">
+			<h2>Credit Cards Overview</h2>
+			<p>Check out your credit cards and its details.</p>
+<!-- 			<table> -->
+<!-- 				<thead> -->
+<!-- 					<tr> -->
+<!-- 						<th>Account Number</th> -->
+<!-- 						<th>Balance</th> -->
+<!-- 					</tr> -->
+<!-- 				</thead> -->
+<!-- 				<tr th:each="account : ${accounts}"> -->
+<!-- 					<td th:text="${'xxxxxx' + account.accountNumber.substring(6)}"></td> -->
+<!-- 					<td th:text="'$'+${account.accountBalance}"></td> -->
+<!-- 				</tr> -->
+<!-- 			</table> -->
+		</div>
 
 		<div class="sub-container">
-			<h2>Recent Transactions</h2>
-			<p>A list of recent transactions for your account and credit
-				cards.</p>
+			<h2>Recent Debit Account Transactions</h2>
+			<p>A list of recent transactions for your debit accounts.</p>
 			<table>
 				<thead>
 					<tr>
@@ -91,13 +110,14 @@
 		</div>
 
 		<div class="sub-container">
-			<h2>Manage Your Account</h2>
-			<p>Update your personal information, manage your credit cards, or
-				secure your account settings.</p>
-			<a href="/customer-details">Personal Details</a> <a
-				href="creditcard-dashboard">Credit Cards</a> <a
-				href="security-settings">Security Settings</a>
+			<h2>Recent Credit Card Transactions</h2>
+			<p>A list of recent transactions from your credit cards.</p>
+<!-- 			<a href="/customer-details">Personal Details</a> <a -->
+<!-- 				href="creditcard-dashboard">Credit Cards</a> <a -->
+<!-- 				href="security-settings">Security Settings</a> -->
 		</div>
+		
+		
 	</div>
 
 </body>
