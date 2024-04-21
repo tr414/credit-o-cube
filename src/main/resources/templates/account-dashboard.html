@@ -4,7 +4,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Wireframe</title>
+<title>Account Dashboard</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
 <link rel="stylesheet" href="../css/account-creditcard-dashboard.css">
 
@@ -15,26 +15,25 @@
 	<div class="top-bar">
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
 			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-<!-- 		<button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
-			<form th:action="@{/logout}" method="post">
-				<div class="buttons">
-					<button type="submit" class="login-button">Logout</button>
-				</div>
-			</form>
+		<!-- 		<button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
 	</div>
 
-	<div class="side-menu" id="sideMenu">
+	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
 			Welcome, <span th:text="${firstName}">FirstName</span>
 		</div>
-		<a href="view-transaction-history">Transaction history</a> 
-		<a href="transfer-to-account-number">Transfer money</a> <a
-			href="deposit-withdraw">Deposit / Withdraw</a> 
-			<a
+		<a href="view-transaction-history">Transaction history</a> <a
+			href="transfer-to-account-number">Transfer money</a> <a
+			href="deposit-withdraw">Deposit / Withdraw</a> <a
 			href="account-dashboard">Account dashboard</a> <a
 			href="creditcard-dashboard">Credit card dashboard</a> <a
 			href="customer-dashboard">Main dashboard</a>
 		<!-- Add other menu items here -->
+		<form th:action="@{/logout}" method="post">
+			<div class="buttons">
+				<button type="submit" class="login-button">Logout</button>
+			</div>
+		</form>
 	</div>
 
 	<!-- Main Content Area -->
@@ -52,10 +51,11 @@
 				</thead>
 				<tbody>
 					<tr th:each="account : ${session.accounts}">
-						<td th:text="| ${account.accountNumber.substring(0,3)}-${account.accountNumber.substring(3,6)}-${account.accountNumber.substring(6)} |"></td>
+						<td
+							th:text="| ${account.accountNumber.substring(0,3)}-${account.accountNumber.substring(3,6)}-${account.accountNumber.substring(6)} |"></td>
 						<td th:text="${account.accountName}"></td>
 						<td th:text="'$ '+${account.accountBalance}"></td>
-<!-- 						<td>
+						<!-- 						<td>
 							<form th:action="@{/deposit-withdraw}" method="GET">
 								<button type="submit">Deposit/Withdraw</button>
 							</form>
