@@ -23,7 +23,7 @@ public class CreditCardTransaction {
 	private CreditCard transactionCard;
 	
 	@ManyToOne
-	@JoinColumn(name="MERCHANT_ID_FK", nullable=false)
+	@JoinColumn(name="MERCHANT_ID_FK")
 	private Merchant merchantCode;
 	
 	private double cashbackAmount;
@@ -37,6 +37,15 @@ public class CreditCardTransaction {
 
 	public CreditCardTransaction() {
 		super();
+	}
+	
+	public CreditCardTransaction(CreditCard transactionCard,
+			LocalDateTime transactionDate, double transactionAmount, String description) {
+		super();
+		this.transactionCard = transactionCard;
+		this.transactionDate = transactionDate;
+		this.transactionAmount = transactionAmount;
+		this.description = description;
 	}
 
 	public CreditCardTransaction(CreditCard transactionCard, Merchant merchantCode, double cashbackAmount,

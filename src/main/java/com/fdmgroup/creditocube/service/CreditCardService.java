@@ -196,4 +196,8 @@ public class CreditCardService {
 		return 0;
 
 	}
+	
+	public List<CreditCard> findAllCreditCards() {
+		return creditCardRepository.findAll();
+	}
 }

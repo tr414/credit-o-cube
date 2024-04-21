@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,6 +118,12 @@ public class CreditCardTransactionService {
 		
 		//LOGGER.info("Created new task with id: {}", createdTask.get().getId());
 		return updatedTransaction;
+	}
+	
+	// In case the bill is not paid on time, this function will record the charging of a late payment fees for the credit card
+	public void createLatePaymentTransaction(CreditCard card, double latePaymentFees) {
+		CreditCardTransaction latePaymentTransaction = new CreditCardTransaction(card, LocalDateTime.now(), latePaymentFees, "Late bill payment fees");
+		createCreditCardTransaction(latePaymentTransaction);
 	}
 
 }

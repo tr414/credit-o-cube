@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 public class CreditCard {
@@ -33,7 +35,10 @@ public class CreditCard {
 
 	private double balance;
 
-	private int cardLimit;
+	private double cardLimit; // changed from int to double as cardLimit is a currency value
+	
+	@OneToOne(mappedBy="card")
+	private Bill bill;
 
 	public CreditCard() {
 
@@ -80,11 +85,11 @@ public class CreditCard {
 		this.balance = balance;
 	}
 
-	public int getCardLimit() {
+	public double getCardLimit() {
 		return cardLimit;
 	}
 
-	public void setCardLimit(int cardLimit) {
+	public void setCardLimit(double cardLimit) {
 		this.cardLimit = cardLimit;
 	}
 
@@ -104,4 +109,12 @@ public class CreditCard {
 		this.creditCardTransactions = creditCardTransactions;
 	}
 
+	public Bill getBill() {
+		return bill;
+	}
+
+	public void setBill(Bill bill) {
+		this.bill = bill;
+	}
+	
 }
