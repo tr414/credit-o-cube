@@ -16,10 +16,12 @@ import com.fdmgroup.creditocube.model.CardType;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
+import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 import com.fdmgroup.creditocube.service.CardTypeService;
 import com.fdmgroup.creditocube.service.CreditCardService;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
+import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -41,6 +43,9 @@ public class CreditCardController {
 
 	@Autowired
 	private DebitAccountService debitAccountService;
+
+	@Autowired
+	private DebitAccountTransactionService debitAccountTransactionService;
 
 	// credit card dashboard
 	@GetMapping("/creditcard-dashboard")
@@ -242,7 +247,16 @@ public class CreditCardController {
 		if (amountPayable > 0) {
 			// do withdrawal
 			debitAccountService.changeAccountBalance(fromAccount, amountPayable, false);
+			DebitAccountTransaction newTransaction = new DebitAccountTransaction();
+			newTransaction.setDebitAccountTransactionAmount(cardToBePaidOff.getBalance());
+			newTransaction.setDebitAccountTransactionType("transfer");
+			newTransaction.setFromAccount(fromAccount);
+			newTransaction.setToAccountNumber(cardToBePaidOff.getCardNumber());
+			debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
 			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
+			cardToBePaidOff.setBalance(0.0);
+			creditCardService.updateCard(cardToBePaidOff);
+
 			return "redirect:/creditcard-dashboard";
 		} else {
 			System.out.println("No amount to be paid");

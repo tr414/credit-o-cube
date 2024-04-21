@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,76 +36,94 @@ public class CreditCardTransactionController {
 
 	@Autowired
 	CreditCardService cardService;
-	
+
 	@Autowired
 	CustomerService customerService;
-	
+
 	@Autowired
 	MerchantRepository merchantRepo;
-	
+
 	private final RestClient restClient;
-	
+
 	@Value("${API_KEY}")
 	private String apiKey;
-	
+
 	public CreditCardTransactionController() {
-		restClient = RestClient.builder()
-				.baseUrl("http://api.exchangeratesapi.io/v1/latest")
-				.build();
+		restClient = RestClient.builder().baseUrl("http://api.exchangeratesapi.io/v1/latest").build();
 	}
 
 	@PostMapping("/card-transactions")
 	public String getAllCardTransactions(Model model, HttpServletRequest request) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
 
-		CreditCard card = cardService.findCardByCardId(cardId.longValue()).orElse(null);
+//		CreditCard card = cardService.findCardByCardId(cardId.longValue()).orElse(null);
+		// amended code above to return optional rather than null - tim
+		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
+		if (optionalCard.isEmpty()) {
+			return "redirect:/creditcard-dashboard";
+		}
+		CreditCard card = optionalCard.get();
 
 		List<CreditCardTransaction> cardTransactions = transactionService.findAllCreditCardTransactions(card);
 		model.addAttribute("transactions", cardTransactions);
 		return ("card-transactions");
 	}
-	
-	@GetMapping("/create-card-transaction") 
-	public String getCreateCardTransaction(Model model, Principal principal){
+
+	@GetMapping("/create-card-transaction")
+	public String getCreateCardTransaction(Model model, Principal principal) {
 		String username = principal.getName();
-		Customer customer = customerService.findCustomerByUsername(username).orElse(null);
-		
+
+		// Customer customer =
+		// customerService.findCustomerByUsername(username).orElse(null);
+		// amended code above to return optional rather than null - tim
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(username);
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
+		Customer customer = optionalCustomer.get();
+
 		List<CreditCard> customerCards = cardService.findAllCardsForCustomer(customer);
 		List<Merchant> merchantCodes = merchantRepo.findAll();
-		
+
 		model.addAttribute("merchants", merchantCodes);
 		model.addAttribute("cards", customerCards);
-	
-		
-		return("create-card-transaction");
+
+		return ("create-card-transaction");
 	}
-	
+
 	@PostMapping("/create-card-transaction")
 	public String createCardTransaction(HttpServletRequest request) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
-		CreditCard card = cardService.findCardByCardId(cardId.longValue()).orElse(null);
-		
+
+		// CreditCard card =
+		// cardService.findCardByCardId(cardId.longValue()).orElse(null);
+		// amended code above to return optional rather than null - tim
+		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
+		if (optionalCard.isEmpty()) {
+			return "redirect:/creditcard-dashboard";
+		}
+		CreditCard card = optionalCard.get();
+
 		String merchantCode = request.getParameter("merchantCode");
 		Merchant merchant = merchantRepo.findByMerchantCode(merchantCode).orElse(null);
-		
+
 		// currency
 		String currency = request.getParameter("currency");
 		System.out.println(currency);
-		
-		//date
+
+		// date
 		LocalDateTime transactionDate = LocalDateTime.now();
-		
-		//amount
+
+		// amount
 		BigDecimal amount = new BigDecimal(request.getParameter("amount"));
 		double transactionAmount = amount.doubleValue();
-		
+
 		// TODO apply cashback
 		double cashback = 0.0;
-		
-		// TODO check if transaction is valid based on card limit, current balance, and transaction amount
+
+		// TODO check if transaction is valid based on card limit, current balance, and
+		// transaction amount
 		boolean valid = true;
-		
-		
 		
 		if (currency.equalsIgnoreCase("sgd")) {
 			if (validTransaction(transactionAmount, card)) {
@@ -125,6 +144,30 @@ public class CreditCardTransactionController {
 		}
 			
 		
+		
+
+		if (!valid) {
+			return "redirect:creditcard-dashboard";
+		}
+
+		if (currency.equalsIgnoreCase("sgd")) {
+			CreditCardTransaction newTransaction = new CreditCardTransaction(card, merchant, cashback, transactionDate,
+					transactionAmount);
+			transactionService.createCreditCardTransaction(newTransaction);
+			cardService.updateBalance(card, newTransaction);
+		} else {
+
+			CurrencyExchange forexResponse = restClient.get().uri("?access_key={apiKey}", apiKey).retrieve()
+					.body(CurrencyExchange.class);
+
+			BigDecimal exchangeRate = forexResponse.exchangeRateToSGD(currency).setScale(5, RoundingMode.HALF_UP);
+			double transactionSGDAmount = exchangeRate.multiply(amount).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+			CreditCardTransaction newTransaction = new ForeignCurrencyCreditCardTransaction(card, merchant, cashback,
+					transactionDate, transactionSGDAmount, currency, exchangeRate.doubleValue());
+			transactionService.createCreditCardTransaction(newTransaction);
+			cardService.updateBalance(card, newTransaction);
+		}
 		
 		return ("redirect:creditcard-dashboard");
 	}
