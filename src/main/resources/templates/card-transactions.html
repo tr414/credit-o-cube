@@ -38,7 +38,7 @@
 			</thead>
 			<tbody>
 					<tr th:each="transaction : ${transactions}">
-					<td th:text="${transaction.transactionDate}"></td>
+					<td th:text="${transaction.getFormattedTransactionDate()}"></td>
 					<td th:text="'$ '+${transaction.transactionAmount} + ' SGD'"></td>
 					<td th:text="${transaction.description}"></td>
 				</tr>
