@@ -24,8 +24,10 @@
 		<P>My Credit Cards</P>
 	</div>
     <a href="apply-creditcard">Apply for a credit card</a>
+
     <a href="create-card-transaction">Create Card Transaction</a>
     <a href="card-transactions">Transaction history</a>
+
     <a href="pay-creditcard-balance">Pay bills</a>
     <a href="account-dashboard">Account dashboard</a>
     <a href="creditcard-dashboard">Credit card dashboard</a> 
@@ -60,10 +62,10 @@
             <td th:text="${card.balance}" class="price-element"></td>
             <td th:text="${card.cardLimit}" class="price-element"></td>
             <td>
-              <!-- <form th:action="@{/card-transactions}" method="POST">
+              <form th:action="@{/card-transactions}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit">View Transaction History</button>
-              </form> -->
+              </form>
               <form th:action="@{/view-card-bill}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit" class="credit-action-buttons">View Card Bill</button>
