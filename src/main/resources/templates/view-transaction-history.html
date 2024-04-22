@@ -11,11 +11,16 @@
 </head>
 <body>
 	<!-- Top Bar -->
-	<div class="top-bar">
+	<!-- <div class="top-bar">
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
 			src="../img/CreditOCubeLogo.png" alt="Logo" class="logo">
 		<button class="logout-button" onclick="window.location.href='login'">Logout</button>
-	</div>
+		<form th:action="@{/logout}" method="post">
+				<div class="buttons">
+					<button type="submit" class="login-button">Logout</button>
+				</div>
+			</form>
+	</div> -->
 
 	<div class="side-menu" id="sideMenu">
 		<a href="view-transaction-history">Transaction history</a> <a

@@ -15,8 +15,8 @@ public class ForeignCurrencyCreditCardTransaction extends CreditCardTransaction 
 	}
 
 	public ForeignCurrencyCreditCardTransaction(CreditCard transactionCard, Merchant merchantCode,
-			double cashbackAmount, LocalDateTime transactionDate, double transactionAmount, String transactionCurrency, double exchangeRate) {
-		super(transactionCard, merchantCode, cashbackAmount, transactionDate, transactionAmount);
+			double cashbackAmount, LocalDateTime transactionDate, double transactionAmount, String description, String transactionCurrency, double exchangeRate) {
+		super(transactionCard, merchantCode, cashbackAmount, transactionDate, transactionAmount, description);
 		this.transactionCurrency = transactionCurrency;
 		this.exchangeRate = exchangeRate;
 	}

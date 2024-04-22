@@ -11,7 +11,7 @@ body, html {
 }
 
 .login-background {
-    background-image: url('../img/tech.jpg'); /* Replace with your actual image path */
+    background-image: url('../img/tech1.jpg'); /* Replace with your actual image path */
     background-size: cover;
     background-position: center;
     display: flex;
@@ -75,6 +75,7 @@ body, html {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-style: italic;
 }
 
 .login-button:hover, .signup-button:hover {

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Wireframe</title>
   <link rel="stylesheet" href="../css/header-sidebar.css">
-  <link rel="stylesheet" href="../css/account-creditcard-dashboard.css">
+  <link rel="stylesheet" href="../css/creditcard-dashboard.css">
 </head>
 
 <body>
@@ -14,13 +14,19 @@
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
     <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-    <button class="logout-button" onclick="window.location.href='login'">Logout</button>
+    <!--     <button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
+	<form th:action="@{/logout}" method="post">
+				<div class="buttons">
+					<button type="submit" class="login-button">Logout</button>
+				</div>
+			</form>
 	
   </div>
 
   <div class="side-menu" id="sideMenu">
   	<div class="user-greeting">
-		Welcome, What would you like to do today?
+		<P>CREDIT CARD</P>
+		<P>DETAILS</P>
 	</div>
     <a href="apply-creditcard">Apply for a credit card</a>
     <a href="#">Set credit limit</a>
@@ -30,6 +36,8 @@
     <a href="creditcard-dashboard">Credit card dashboard</a> 
     <a href="customer-dashboard">Main dashboard</a>
     <a href="create-card-transaction">Create Card Transaction</a>
+    <a href="create-card-type">Create Card Type</a>
+    <a href="create-reward">Create Reward for Card Type</a>
     <!-- Add other menu items here -->
   </div>
   
@@ -40,7 +48,7 @@
           <tr>
             
             <th>Credit Card Number</th>
-            <th>Balance you owe</th>
+            <th>Card Balance</th>
             <th>Credit Limit</th>
             <th>Actions</th>
           </tr>
@@ -51,9 +59,14 @@
             <td th:text="${card.cardNumber}"></td>
             <td th:text="${card.balance}"></td>
             <td th:text="'$ '+${card.cardLimit}"></td>
-            
-              <form th:action="@{/view-creditcard-transaction-history}" method="GET">
+            <td>
+              <form th:action="@{/card-transactions}" method="POST">
+              	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit">View Transaction History</button>
+              </form>
+              <form th:action="@{/view-card-bill}" method="POST">
+              	<input type="hidden" th:value="${card.cardId}" name="cardId">
+                <button type="submit">View Card Bill</button>
               </form>
             </td>
           </tr>

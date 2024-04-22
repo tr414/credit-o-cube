@@ -72,7 +72,6 @@ public class DebitAccountService {
 
 		// determine if customer exists in database
 		Customer target = account.getCustomer();
-
 		Optional<Customer> optionalCustomer = customerRepository.findById(target.getUser_id());
 
 		if (optionalCustomer.isEmpty()) {
@@ -176,7 +175,6 @@ public class DebitAccountService {
 	public List<DebitAccount> findAllDebitAccountsForCustomer(Customer customer) {
 
 		// find all accounts
-		List<DebitAccount> allAccountList = debitAccountRepository.findAll();
 		List<DebitAccount> accountListInCustomer = new ArrayList<>();
 
 		// check if customer exists
@@ -190,11 +188,7 @@ public class DebitAccountService {
 		logger.debug("Customer found in database");
 
 		// retrieve acounts that belong to a customer and are not deactivated
-		allAccountList.forEach(account -> {
-			if (account.getCustomer() == targetCustomer && account.isActive()) {
-				accountListInCustomer.add(account);
-			}
-		});
+		accountListInCustomer = debitAccountRepository.findByCustomer(targetCustomer.getUser_id());
 
 		if (accountListInCustomer.size() == 0) {
 			logger.info("Customer does not have any debit accounts, returning empty list");
@@ -298,32 +292,36 @@ public class DebitAccountService {
 			return;
 		}
 
-		double newBalance;
-		double currentBalance = targetAccount.getAccountBalance();
-
 		if (isDeposit) {
-			newBalance = currentBalance + amount;
+			targetAccount = updateBalance(targetAccount, amount);
 			logger.debug("Customer wishes to deposit " + amount + " into account");
 		} else {
-			newBalance = (amount > currentBalance) ? 0 : currentBalance - amount;
+			targetAccount = updateBalance(targetAccount, -amount);
 			logger.debug("Customer wishes to withdraw " + amount + " from account");
 		}
 
-		targetAccount.setAccountBalance(newBalance);
-		logger.debug("New balance is updated into database");
-		debitAccountRepository.save(targetAccount);
 		customerRepository.save(accountHolder);
 		logger.debug("Customer and account information updated");
 	}
 
-	public void transferToAccountNumber(DebitAccount fromAccount, String toAccountNumber, double amount) {
-
+	/**
+	 * Transfers a specified amount from one debit account to another.
+	 *
+	 * @param fromAccount     the debit account from which the amount is to be
+	 *                        transferred
+	 * @param toAccountNumber the account number of the debit account to which the
+	 *                        amount is to be transferred
+	 * @param amount          the amount to be transferred
+	 *
+	 * @return true if the transfer was successful, false otherwise
+	 */
+	public boolean transferToAccountNumber(DebitAccount fromAccount, String toAccountNumber, double amount) {
 		// Check if fromAccount exists in the database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(fromAccount.getAccountId());
 
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account is not found in database, abort transaction");
-			return;
+			return false;
 		}
 
 		DebitAccount targetAccount = optionalAccount.get();
@@ -334,34 +332,53 @@ public class DebitAccountService {
 
 		if (amount <= 0.00) {
 			logger.info("Transaction amount is not positive, abort transaction");
-			return;
+			return false;
 		}
 
-		double currentBalance = targetAccount.getAccountBalance();
-		double newBalance = (amount > currentBalance) ? 0 : currentBalance - amount;
-		logger.debug("Withdrawing " + amount + " from fromAccount + ");
-
-		targetAccount.setAccountBalance(newBalance);
-		logger.debug("New balance is updated into database");
-		debitAccountRepository.save(targetAccount);
+		targetAccount = updateBalance(targetAccount, -amount);
 
 		Optional<DebitAccount> optionalToAccount = debitAccountRepository.findByAccountNumber(toAccountNumber);
 
 		if (optionalToAccount.isEmpty()) {
 			logger.debug("Target toAccount not found in database, assume toAccount is in another bank");
-			return;
+			return false;
 		} else {
 			DebitAccount toAccount = optionalToAccount.get();
 			logger.debug("Target toAccount found in database");
 
-			double toCurrentBalance = toAccount.getAccountBalance();
-			double toNewBalance = toCurrentBalance + amount;
-			logger.debug("Depositing " + amount + " to toAccount + ");
-
-			toAccount.setAccountBalance(toNewBalance);
-			debitAccountRepository.save(toAccount);
+			toAccount = updateBalance(toAccount, amount);
 		}
 
+		return true;
+	}
+
+	/**
+	 * Updates the balance of a debit account.
+	 *
+	 * @param account the debit account whose balance is to be updated
+	 * @param amount  the amount to be added or subtracted from the balance
+	 *
+	 * @return the updated debit account
+	 */
+	private DebitAccount updateBalance(DebitAccount account, double amount) {
+		// Check if the account exists in the database
+		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
+
+		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account is not found in database, abort transaction");
+			return account;
+		}
+
+		DebitAccount targetAccount = optionalAccount.get();
+
+		double currentBalance = targetAccount.getAccountBalance();
+		double newBalance = currentBalance + amount;
+		if (newBalance == 0)
+			newBalance = 0.0;
+		logger.debug("Account balance is updated with $ " + newBalance);
+		targetAccount.setAccountBalance(newBalance);
+		debitAccountRepository.save(targetAccount);
+		return targetAccount;
 	}
 
 	/**

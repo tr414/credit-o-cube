@@ -11,7 +11,12 @@
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
     <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-    <button class="logout-button" onclick="window.location.href='login'">Logout</button>
+<!--     <button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
+	<form th:action="@{/logout}" method="post">
+				<div class="buttons">
+					<button type="submit" class="login-button">Logout</button>
+				</div>
+			</form>
   </div>
 
   <div class="side-menu" id="sideMenu">
@@ -33,6 +38,14 @@
   <div class="main-content">
     <div class="sub-container">
       <h1>Apply for a New Credit Card</h1>
+      
+      <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+      </div>
+      <div th:if="${success}" style="color: green;">
+        <p th:text="${success}"></p>
+      </div>
+      
       <form id="creditCardApplication" th:action="@{/apply-creditcard}" method="post">
         <label for="name">Credit Card Limit:</label>
         <input type="text" id="name" name="creditCardLimit" required><br><br>

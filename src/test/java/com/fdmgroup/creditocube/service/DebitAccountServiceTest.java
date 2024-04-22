@@ -3,6 +3,7 @@ package com.fdmgroup.creditocube.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -331,15 +332,16 @@ public class DebitAccountServiceTest {
 		expectedAccounts.add(account2);
 		Optional<Customer> optionalCustomer = Optional.of(customer);
 
-		Mockito.when(debitAccountRepository.findAll()).thenReturn(allAccounts);
+		Mockito.when(debitAccountRepository.findByCustomer(customer.getUser_id())).thenReturn(expectedAccounts);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
 		// Act
 		List<DebitAccount> returnedAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findAll();
+
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
+		Mockito.verify(debitAccountRepository).findByCustomer(customer.getUser_id());
 		assertEquals(expectedAccounts, returnedAccounts);
 
 		// Explanation: This test simulates a scenario where the customer exists and has
@@ -367,15 +369,16 @@ public class DebitAccountServiceTest {
 		allAccounts.add(account2);
 		optionalCustomer = Optional.of(customer);
 
-		Mockito.when(debitAccountRepository.findAll()).thenReturn(allAccounts);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
+		Mockito.when(debitAccountRepository.findByCustomer(customer.getUser_id())).thenReturn(new ArrayList<>());
 
 		// Act
 		List<DebitAccount> returnedAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findAll();
+
 		Mockito.verify(customerRepository).findById(customer.getUser_id());
+		Mockito.verify(debitAccountRepository).findByCustomer(customer.getUser_id());
 
 		assertEquals(new ArrayList<>(), returnedAccounts);
 
@@ -394,16 +397,13 @@ public class DebitAccountServiceTest {
 		// Arrange
 		List<DebitAccount> allAccounts = new ArrayList<>();
 		optionalCustomer = Optional.empty();
-
-		Mockito.when(debitAccountRepository.findAll()).thenReturn(allAccounts);
 		Mockito.when(customerRepository.findById(customer.getUser_id())).thenReturn(optionalCustomer);
 
 		// Act
 		List<DebitAccount> returnedAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
 
 		// Assert
-		Mockito.verify(debitAccountRepository, Mockito.times(1)).findAll();
-		Mockito.verify(customerRepository, Mockito.times(1)).findById(customer.getUser_id());
+		Mockito.verify(customerRepository).findById(customer.getUser_id());
 		assertEquals(allAccounts, returnedAccounts);
 	}
 
@@ -444,12 +444,13 @@ public class DebitAccountServiceTest {
 		account.setAccountBalance(100.0);
 		Mockito.when(debitAccountRepository.findByAccountNumber(account2.getAccountNumber()))
 				.thenReturn(Optional.of(account2));
+		Mockito.when(debitAccountRepository.findById(account2.getAccountId())).thenReturn(Optional.of(account2));
 
 		// Act
 		debitAccountService.transferToAccountNumber(account, account2.getAccountNumber(), 50.0);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		Mockito.verify(debitAccountRepository, times(2)).findById(account.getAccountId());
 		Mockito.verify(debitAccountRepository).findByAccountNumber(account2.getAccountNumber());
 		assertEquals(50.0, account.getAccountBalance());
 		assertEquals(50.0, account2.getAccountBalance());
@@ -500,7 +501,7 @@ public class DebitAccountServiceTest {
 		debitAccountService.changeAccountBalance(account, amount, isDeposit);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		Mockito.verify(debitAccountRepository, times(2)).findById(account.getAccountId());
 		assertEquals(150.0, account.getAccountBalance());
 		Mockito.verify(debitAccountRepository).save(account);
 		Mockito.verify(customerRepository).save(customer);
@@ -524,7 +525,7 @@ public class DebitAccountServiceTest {
 		debitAccountService.changeAccountBalance(account, amount, isDeposit);
 
 		// Assert
-		Mockito.verify(debitAccountRepository).findById(account.getAccountId());
+		Mockito.verify(debitAccountRepository, times(2)).findById(account.getAccountId());
 		assertEquals(50.0, account.getAccountBalance());
 		Mockito.verify(debitAccountRepository).save(account);
 		Mockito.verify(customerRepository).save(customer);

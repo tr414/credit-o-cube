@@ -22,37 +22,112 @@ body {
 header {
   background: #0051ba;
   color: #fff;
-  padding-top: 30px;
-  min-height: 70px;
+  padding: 10px 0; /* Adjust the padding to reduce thickness */
+/*   padding-top: 10px; */
+/*   min-height: 50px; */
   border-bottom: #0077cc 3px solid;
+  position: relative; Allows absolute positioning within header
 }
 
 .header .logo {
   float: left;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); Centers the logo vertically
+  left: 20px; /* Adjust as necessary for proper spacing from the left */
+  padding: 10px 0; /* Add padding to center the logo vertically */
 }
 
 .header .logo img {
   display: block;
-  max-width: 50px; /* ensures it does not exceed 150px */
+  max-width: 150px; /* ensures it does not exceed 150px */
   width: 100%; /* makes it responsive within the confines of its container */
   height: auto; /* maintains aspect ratio */
 }
 
-
-.links {
-  float: right;
-  margin-top: 10px;
+/* Tagline Styles */
+.tagline p {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 40px;
+  color: #fff;
+  padding: 5px 0;
 }
 
-.links a {
-  color: #ffffff;
+
+.login-links {
+/*   float: right; */
+/*   margin-top: 10px; */
+  position: absolute;
+  top: 50%;
+  right: 150px; /* Adjust as necessary for proper spacing from the right */
+  transform: translateY(-50%); /* Centers the links vertically */
+  display: flex;
+  gap: 10px; /* Spaces out the links */
+}
+.register-links {
+/*   float: right; */
+/*   margin-top: 10px; */
+  position: absolute;
+  top: 50%;
+  right: 20px; /* Adjust as necessary for proper spacing from the right */
+  transform: translateY(-50%); /* Centers the links vertically */
+  display: flex;
+  gap: 10px; /* Spaces out the links */
+}
+
+.login-links a {
+/*   color: #0051ba; */
+/*   background: #ffffff; White background for contrast */
+/*   text-decoration: none; */
+/*   padding: 10px 20px; */
+/*   font-size: 16px; */
+/*   background: #f4f4f4; New styles for button-like appearance */
+/*   border: 1px solid #0051ba; Border color to match text */
+/*   border-radius: 3px; */
+/*   transition: background-color 0.3s, color 0.3s; Smooth transition for hover */
   text-decoration: none;
   padding: 10px 20px;
-  font-size: 16px;
+  color: #0051ba; /* Blue text color */
+  background: #ffffff; /* White background for visibility */
+  border: 1px solid #0051ba; /* Blue border to match text */
+  border-radius: 5px; /* Rounded corners for a softer look */
+  transition: background-color 0.3s, color 0.3s; /* Transition for hover effects */
 }
 
-.links a:hover {
-  background: #0077cc;
+.register-links a {
+/*   color: #0051ba; */
+/*   background: #ffffff; White background for contrast */
+/*   text-decoration: none; */
+/*   padding: 10px 20px; */
+/*   font-size: 16px; */
+/*   background: #f4f4f4; New styles for button-like appearance */
+/*   border: 1px solid #0051ba; Border color to match text */
+/*   border-radius: 3px; */
+/*   transition: background-color 0.3s, color 0.3s; Smooth transition for hover */
+  text-decoration: none;
+  padding: 10px 20px;
+  color: #0051ba; /* Blue text color */
+  background: #ffffff; /* White background for visibility */
+  border: 1px solid #0051ba; /* Blue border to match text */
+  border-radius: 5px; /* Rounded corners for a softer look */
+  transition: background-color 0.3s, color 0.3s; /* Transition for hover effects */
+}
+
+.login-links a:hover {
+/*   background: #0077cc; Darker blue on hover for better visibility */
+/*   color: #ffffff; White text on hover */
+  background-color: #0077cc; /* Darker blue on hover */
+  color: #ffffff; /* White text on hover */
+  border-color: #0077cc; /* Border color changes on hover */
+}
+
+.register-links a:hover {
+/*   background: #0077cc; Darker blue on hover for better visibility */
+/*   color: #ffffff; White text on hover */
+  background-color: #4CAF50; /* Darker blue on hover */
+  color: #ffffff; /* White text on hover */
+  border-color: #0077cc; /* Border color changes on hover */
 }
 
 /* Hero Section */
@@ -107,6 +182,51 @@ header {
   height: auto;
 }
 
+/* Promotions Section Styles */
+.promotions {
+  background: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.promo-header h2 {
+  color: #0051ba;
+  margin-bottom: 20px;
+}
+
+.promo-content {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.promo-item {
+  width: 30%;
+  margin: 10px;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.promo-item img {
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.promo-item h3 {
+  color: #0051ba;
+  margin: 10px 0;
+}
+
+.promo-item p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
 /* Footer */
 footer {
   background: #333;
@@ -144,4 +264,24 @@ footer {
 .footer-social img:hover {
   transform: scale(1.2);
 }
+
+/* Ensure the elements look good on smaller screens */
+@media (max-width: 768px) {
+  .promo-content {
+    flex-direction: column;
+  }
+
+  .promo-item {
+    width: 80%;
+    margin: 10px auto;
+  }
+
+  /* Adjust the navigation links for smaller screens */
+  .links a {
+    display: block;
+    margin: 5px 0; /* Stacks the buttons */
+  }
+}
+
+
 

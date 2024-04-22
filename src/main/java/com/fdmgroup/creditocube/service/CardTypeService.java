@@ -33,4 +33,15 @@ public class CardTypeService {
 		System.out.println("Rewards table is empty: " + isCardTypeTableEmpty);
 		return isCardTypeTableEmpty;
 	}
+	
+	public CardType saveCardType(CardType cardType) {
+        return cardTypeRepository.save(cardType);
+    }
+	
+	public boolean canCreateNewCardType() {
+	    long count = cardTypeRepository.count();
+	    return count < 5;
+	}
+	
+	
 }

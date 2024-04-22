@@ -4,7 +4,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Credit Card Transaction History</title>
+<title>Credit Card Bill</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
 <link rel="stylesheet" href="../css/account-dashboard.css">
 
@@ -31,16 +31,17 @@
 		<table>
 			<thead>
 				<tr>
-					<td>Transaction Date</td>
-					<td>Amount</td>
-					<td>Description</td>
+					<td>Total Amount Due</td>
+					<td>Minimum Amount Due</td>
+					<td>Bill Paid</td>
 				</tr>
 			</thead>
 			<tbody>
-					<tr th:each="transaction : ${transactions}">
-					<td th:text="${transaction.transactionDate}"></td>
-					<td th:text="'$ '+${transaction.transactionAmount} + ' SGD'"></td>
-					<td th:text="${transaction.description}"></td>
+				<tr>
+					<td th:text="${bill.totalAmountDue}"></td>
+					<td th:text="${bill.minimumAmountDue}"></td>
+					<td th:if="${bill.paid}">Yes</td>
+					<td th:if="${!bill.paid}">No</td>
 				</tr>
 			</tbody>
 		</table>

@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
+import com.fdmgroup.creditocube.model.User;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
@@ -51,6 +54,8 @@ public class CustomerController {
 
 	@Autowired
 	ValidationService validationService;
+
+	private static Logger logger = LogManager.getLogger(CustomerController.class);
 
 	/**
 	 * Handles the GET request for the login page. This method maps the "/login" URL
@@ -95,6 +100,8 @@ public class CustomerController {
 		String nric = request.getParameter("nric");
 		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
 
+		logger.debug("registration request parameters received");
+
 		boolean hasErrors = false;
 
 		// Validate first name and handle retention of input
@@ -102,6 +109,7 @@ public class CustomerController {
 		if (firstNameError.isPresent()) {
 			model.addAttribute("firstNameError", firstNameError.get());
 			hasErrors = true;
+			logger.info("first name is not valid: " + firstName);
 		} else {
 			model.addAttribute("firstName", firstName);
 		}
@@ -111,6 +119,7 @@ public class CustomerController {
 		if (lastNameError.isPresent()) {
 			model.addAttribute("lastNameError", lastNameError.get());
 			hasErrors = true;
+			logger.info("last name is not valid: " + lastName);
 		} else {
 			model.addAttribute("lastName", lastName);
 		}
@@ -120,6 +129,7 @@ public class CustomerController {
 		if (usernameError.isPresent()) {
 			model.addAttribute("usernameError", usernameError.get());
 			hasErrors = true;
+			logger.info("username is not valid: " + username);
 		} else {
 			model.addAttribute("username", username);
 		}
@@ -129,6 +139,7 @@ public class CustomerController {
 		if (nricError.isPresent()) {
 			model.addAttribute("nricError", nricError.get());
 			hasErrors = true;
+			logger.info("NRIC is not valid: " + nric);
 		} else {
 			model.addAttribute("nric", nric);
 		}
@@ -138,6 +149,7 @@ public class CustomerController {
 		if (dobError.isPresent()) {
 			model.addAttribute("dobError", dobError.get());
 			hasErrors = true;
+			logger.info("date-of-birth is not valid: " + dob);
 		} else {
 			model.addAttribute("dob", dob.toString());
 		}
@@ -147,6 +159,7 @@ public class CustomerController {
 		if (passwordError.isPresent()) {
 			model.addAttribute("passwordError", passwordError.get());
 			hasErrors = true;
+			logger.info("password is not valid: ");
 		}
 
 		// Validate password match and handle retention of input
@@ -154,15 +167,17 @@ public class CustomerController {
 		if (confirmPasswordError.isPresent()) {
 			model.addAttribute("confirmPasswordError", confirmPasswordError.get());
 			hasErrors = true;
+			logger.info("passwords do not match: ");
 		}
 
 		if (hasErrors) {
 			// Return to registration page if there are any errors
+			logger.info("registration request has errors, returning to registration page: ");
 			return "register";
 		} else {
 			// Proceed to register the new customer if all validations pass
 			customerService.registerNewCustomer(username, password, firstName, lastName, nric, dob);
-			System.out.println("New customer registered successfully");
+			logger.debug("New customer registered successfully");
 			return "redirect:/login"; // Redirects to the login page after successful registration
 		}
 	}
@@ -175,6 +190,12 @@ public class CustomerController {
 	 */
 	@GetMapping("/customer-dashboard")
 	public String home(Model model, Principal principal, SessionStatus status) {
+		User user = userService.findUserByUsername(principal.getName()).get();
+		System.out.println(user.getUsername());
+		if (user.getUserType().equalsIgnoreCase("admin")) {
+			return "landing";
+		}
+
 		Customer customer = customerService.findCustomerByUsername(principal.getName()).get();
 		model.addAttribute("firstName", customer.getFirstName()); // Add first name to the model
 		List<DebitAccount> customerAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);

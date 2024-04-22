@@ -14,6 +14,21 @@ body {
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
 }
 
+/* new */
+.customer-details-background {
+    background-image: url('../img/tech1.jpg'); /* Use the same image as your login page */
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px); /* Adjust the px value to increase or decrease the blur */
+    height: 100%;
+    position: fixed; /* Ensure it covers the whole page even when scrolling */
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1; /* Ensure it stays behind the content */
+}
+/* new */
+
 .registration-container {
 	padding: 20px;
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Reward</title>
+    <!-- Include your CSS files here -->
+</head>
+<body>
+    <h2>Create Reward</h2>
+    <form th:action="@{/create-reward}" th:object="${reward}" method="post">
+        <label for="cashbackRate">Cashback Rate:</label>
+        <input type="number" id="cashbackRate" th:field="*{cashback_rate}" step="0.01" min="0" required>
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" th:field="*{category}" required>
+
+        <label for="cardType">Card Type:</label>
+        <select id="cardType" th:field="*{cardType}">
+            <option th:each="cardType : ${cardTypes}" th:value="${cardType.card_type_ID}" th:text="${cardType.name}"></option>
+        </select>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

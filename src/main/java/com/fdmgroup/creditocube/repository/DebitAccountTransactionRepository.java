@@ -26,7 +26,7 @@ public interface DebitAccountTransactionRepository extends JpaRepository<DebitAc
 	 *         matches the provided accountId
 	 */
 	@Query("SELECT d FROM DebitAccountTransaction d WHERE d.toAccountNumber LIKE :account_Number")
-	public List<DebitAccountTransaction> findByToAccount(@Param("account_Number") String accountNumber);
+	public List<DebitAccountTransaction> findByToAccountNumber(@Param("account_Number") String accountNumber);
 
 	/**
 	 * Finds all DebitAccountTransactions where the fromAccount's accountId matches
