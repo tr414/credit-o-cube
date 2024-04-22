@@ -74,6 +74,45 @@ public class BillService {
 		}
 	}
 	
+	public void recordMinimumAmountPayment(Bill bill) {
+		// Record that the bill payment has been made so that the bill will not be flagged for late payment fees
+		bill.setPaid(true);
+		
+		// Update the outstanding amount to reflect that the minimum amount has been paid
+		bill.setOutstandingAmount(bill.getOutstandingAmount() - bill.getMinimumAmountDue());
+		
+		// Reset the minimum amount due to 0 as it has been paid
+		bill.setMinimumAmountDue(0.0);
+		
+		updateBill(bill);
+	}
+	
+	public void recordOutstandingAmountPayment(Bill bill) {
+		// Record that the bill payment has been made so that the bill will not be flagged for late payment fees
+		bill.setPaid(true);
+		
+		// Update the outstanding amount to reflect that the outstanding amount has been paid
+		bill.setOutstandingAmount(0.0);
+		
+		// Reset the minimum amount due to 0 as there is no payment due
+		bill.setMinimumAmountDue(0.0);
+		
+		updateBill(bill);
+	}
+	
+	public void recordCreditBalancePayment(Bill bill) {
+		// Record that the bill payment has been made so that the bill will not be flagged for late payment fees
+		bill.setPaid(true);
+		
+		// Update the outstanding amount to reflect that the outstanding amount has been paid
+		bill.setOutstandingAmount(0.0);
+		
+		// Reset the minimum amount due to 0 as there is no payment due
+		bill.setMinimumAmountDue(0.0);
+		
+		updateBill(bill);
+	}
+	
 	// This function is called on the 15th of every month at 6 am. It will go through every card, and generate the credit card bill for that
 	// billing cycle
 	@Scheduled(cron = "0 0 6 15 * *")
