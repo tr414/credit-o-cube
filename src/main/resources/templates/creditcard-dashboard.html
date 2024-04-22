@@ -30,7 +30,7 @@
 	</div>
     <a href="apply-creditcard">Apply for a credit card</a>
     <a href="#">Set credit limit</a>
-    <a href="#">Transaction history</a>
+    <!-- <a href="card-transactions">Transaction history</a> -->
     <a href="pay-creditcard-balance">Pay bills</a>
     <a href="account-dashboard">Account dashboard</a>
     <a href="creditcard-dashboard">Credit card dashboard</a> 
@@ -57,8 +57,8 @@
           <tr th:each="card : ${credit_cards}">
             
             <td th:text="${card.getFormattedCreditCardNumber()}"></td>
-            <td th:text="${card.balance}"></td>
-            <td th:text="'$ '+${card.cardLimit}"></td>
+            <td th:text="${card.balance}" class="price-element"></td>
+            <td th:text="${card.cardLimit}" class="price-element"></td>
             <td>
               <form th:action="@{/card-transactions}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">

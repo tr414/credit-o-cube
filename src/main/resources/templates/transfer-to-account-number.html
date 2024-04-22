@@ -20,11 +20,11 @@
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
 			<p>
-				Hello, <span th:text="${firstName}">FirstName</span>
+				Here you can transfer funds
 			</p>
-			<p>What would you like to do today?</p>
+			
 		</div>
-		<a href="transfer-to-account-number">Transfer money</a> <a
+		<a href="transfer-to-account-number">Transfer funds</a> <a
 			href="deposit-withdraw">Deposit / Withdraw</a> <a
 			href="account-dashboard">Account dashboard</a> <a
 			href="creditcard-dashboard">Credit card dashboard</a> <a
@@ -36,27 +36,48 @@
 		</form>
 	</div>
 
+<!-- NEED STLES FOR THIS -->
+<!-- 	<div> -->
 
-	<div>
+<!-- 		<div style="margin-top:400px; margin-left:500px"> -->
+<!-- 			<p>Please choose an account from the dropdown menu below.</p> -->
+<!-- 		</div> -->
+<!-- 		<form style="margin-left:500px" th:action="@{/transfer-to-account-number}" method="POST"> -->
+<!-- 			<select name="selectedAccountId"> -->
+<!-- 				<option th:each="account : ${session.accounts}" -->
+<!-- 					th:value="${account.accountId}" th:text="${account.accountName}"> -->
+<!-- 				</option> -->
+<!-- 			</select> <label for="amount">Amount</label> <input type="number" step="0.01" -->
+<!-- 				name="amount"> <label for="toAccountNumber">Transfer -->
+<!-- 				to Account Number</label> <input type="text" id="account-number" -->
+<!-- 				name="toAccountNumber"><br> -->
+<!-- 			<button type="submit" class="debit-action-buttons">Submit</button> -->
 
-		<div style="margin-top:400px; margin-left:500px">
-			<p>Please choose an account from the dropdown menu below.</p>
-		</div>
-		<form style="margin-left:500px" th:action="@{/transfer-to-account-number}" method="POST">
-			<select name="selectedAccountId">
-				<option th:each="account : ${session.accounts}"
-					th:value="${account.accountId}" th:text="${account.accountName}">
-				</option>
-			</select> <label for="amount">Amount</label> <input type="number" step="0.01"
-				name="amount"> <label for="toAccountNumber">Transfer
-				to Account Number</label> <input type="text" id="account-number"
-				name="toAccountNumber"><br>
-			<button type="submit" class="debit-action-buttons">Submit</button>
+<!-- 		</form> -->
 
-		</form>
+<!-- <!-- 		<a href="account-dashboard" >Account dashboard</a> --> -->
+<!-- 	</div> -->
+	
+	<!-- NEED STLES FOR THIS -->
+	
+	<div class="transfer-form-section">
+    <div>
+        <p>Please choose an account from the dropdown menu below.</p>
+    </div>
+    <form th:action="@{/transfer-to-account-number}" method="POST">
+        <select name="selectedAccountId">
+            <option th:each="account : ${session.accounts}" th:value="${account.accountId}" th:text="${account.accountName}">
+            </option>
+        </select>
+        <label for="amount">Amount</label>
+        <input type="number" step="0.01" name="amount">
+        <label for="toAccountNumber">Transfer to Account Number</label>
+        <input type="text" id="toAccountNumber" name="toAccountNumber"><br>
+        <button type="submit" class="debit-action-buttons">Submit</button>
+    </form>
+</div>
+	
 
-		<a href="account-dashboard" >Account dashboard</a>
-	</div>
 
 	
 
