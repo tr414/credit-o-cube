@@ -61,7 +61,7 @@
 					</tr>
 				</thead>
 				<tr th:each="account : ${accounts}">
-					<td th:text="${'xxxxxx' + account.accountNumber.substring(6)}"></td>
+					<td th:text="${account.getMaskedAccountNumber()}"></td>
 					<td th:text="${account.accountBalance}" class="price-element"></td>
 				</tr>
 			</table>
@@ -78,7 +78,7 @@
 					</tr>
 				</thead>
 				<tr th:each="card : ${cards}">
-					<td th:text="'xxx'+${card.getFormattedCreditCardNumber().substring(14)}"></td>
+					<td th:text="${card.getMaskedCreditCardNumber()}"></td>
 					<td th:text="${card.balance}" class="price-element"></td>
 				</tr>
 			</table>
@@ -102,7 +102,7 @@
 						th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
 					<td th:text="${transaction.fromAccount?.accountName ?: '---'}"></td>
 					<td
-						th:text="| ${transaction.toAccountNumber != null ? 'xxxxxx-' + transaction.toAccountNumber.substring(6) : '---'} |"></td>
+						th:text="| ${transaction.toAccountNumber != null ? '***-***-' + transaction.toAccountNumber.substring(6) : '---'} |"></td>
 					<td th:text="${transaction.debitAccountTransactionType ?: '---'}"></td>
 					<td th:text="${transaction.debitAccountTransactionAmount}" class="price-element" ></td>
 				</tr>
@@ -127,7 +127,7 @@
 				<tr th:each="transaction : ${creditTransactions}">
 					<td th:text="${transaction.getFormattedTransactionDate()}"></td>
 					<!-- <td th:text="${transaction.transactionCard.getFormattedCreditCardNumber()}"></td> -->
-					<td th:text="'xxx'+${transaction.transactionCard.getFormattedCreditCardNumber().substring(14)}"></td>
+					<td th:text="${transaction.transactionCard.getMaskedCreditCardNumber()}"></td>
 					<td th:text="${transaction.transactionAmount}" class="price-element"></td>
 				</tr>
 			</table>

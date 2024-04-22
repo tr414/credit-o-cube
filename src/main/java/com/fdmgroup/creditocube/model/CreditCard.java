@@ -127,4 +127,12 @@ public class CreditCard {
 
 	}
 
+	public String getMaskedCreditCardNumber() {
+		if (cardNumber.length() > 12) {
+			return ("****-****-****-" + this.getCardNumber().substring(12, 16));
+		} else {
+			return cardNumber;
+		}
+	}
+
 }

@@ -183,4 +183,14 @@ public class DebitAccount {
 		this.isActive = isActive;
 	}
 
+	public String getFormattedAccountNumber() {
+		return accountNumber.substring(0, 3) + "-" + accountNumber.substring(3, 6) + "-"
+				+ accountNumber.substring(6, 9);
+	}
+
+	public String getMaskedAccountNumber() {
+		return "***-***-" + accountNumber.substring(6, 9);
+
+	}
+
 }
