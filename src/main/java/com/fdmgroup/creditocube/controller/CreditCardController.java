@@ -2,6 +2,7 @@ package com.fdmgroup.creditocube.controller;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fdmgroup.creditocube.model.Bill;
 import com.fdmgroup.creditocube.model.CardType;
 import com.fdmgroup.creditocube.model.CreditCard;
+import com.fdmgroup.creditocube.model.CreditCardTransaction;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 import com.fdmgroup.creditocube.service.BillService;
 import com.fdmgroup.creditocube.service.CardTypeService;
 import com.fdmgroup.creditocube.service.CreditCardService;
+import com.fdmgroup.creditocube.service.CreditCardTransactionService;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
@@ -53,6 +56,9 @@ public class CreditCardController {
 
 	@Autowired
 	private BillService billService;
+
+	@Autowired
+	private CreditCardTransactionService creditCardTransactionService;
 
 	// credit card dashboard
 	@GetMapping("/creditcard-dashboard")
@@ -223,21 +229,17 @@ public class CreditCardController {
 		// set customer and their accounts as session attributes to retrieve in view
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
+		model.addAttribute("customer", sessionCustomer);
 		model.addAttribute("payamentOptions", payamentOptions);
 		return "pay-creditcard-balance"; // Name of your Thymeleaf template
 
 	}
 
-	// what i need from the form: paymentOption string, and if the
-	// paymentOption.equal("Pay Custom Amount), then i have to take another
-	// input: amount
-	// debit account number
 	@PostMapping("/pay-creditcard-balance")
 	public String payCreditcardBalance(Principal principal,
 			@RequestParam("debitAccountNumber") String debitAccountNumber,
-			@RequestParam("creditCardNumber") String creditCardNumber,
-			@RequestParam("paymentOption") String paymentOption,
-			@RequestParam(value = "amount", required = false) Double amount) {
+			@RequestParam(value = "creditCardNumber") String creditCardNumber,
+			@RequestParam(value = "paymentOption") String paymentOption) {
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
@@ -248,19 +250,16 @@ public class CreditCardController {
 		}
 
 		// Get the authenticated customer session object.
-		Customer sessionCustomer = (Customer) session.getAttribute("customer");
+		Customer sessionCustomer = optionalCustomer.get();
 
 		// find debit accounts of customer
 		List<DebitAccount> debitAccountsOfCustomer = sessionCustomer.getDebitAccounts();
-		System.out.println("Size of debitAccountsOfCustomer: " + debitAccountsOfCustomer.size());
 		DebitAccount fromAccount = null;
-		
+
 		// verify that debit account exists
 		// if they choose a debit account number for a debit account that doesnt exist,
 		// exit this method
 		for (DebitAccount debitAccount : debitAccountsOfCustomer) {
-			System.out.println(debitAccount.getAccountNumber());
-			System.out.println(debitAccountNumber);
 			if (String.valueOf(debitAccount.getAccountNumber()).equals(debitAccountNumber)) {
 				fromAccount = debitAccount;
 				break;
@@ -271,7 +270,7 @@ public class CreditCardController {
 				return ("pay-creditcard-balance");
 			}
 		}
-		
+
 		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
@@ -289,40 +288,54 @@ public class CreditCardController {
 		}
 
 		// find the balance of this credit card
-		double currentBalance = cardToBePaidOff.getBalance();
 		double amountPayable = 0;
+		Bill bill = cardToBePaidOff.getBill();
 
-		// validation for amount
+		if (paymentOption.equals("minimum")) {
 
-		// find out their payment method and therefore, the amount payable
-		// if they dont choose a custom method payment, use calculateAmountPayable in
-		// CredtCardSvc
-		if (paymentOption.equals("Pay Current Balance") || paymentOption.equals("Pay minimum")) {
-			amountPayable = creditCardService.calculateAmountPayable(paymentOption, currentBalance);
-			System.out.println("Amount to be paid: " + amountPayable);
-		} else if (paymentOption.equals("Pay Custom Amount")) {
-			amountPayable = amount;
-			System.out.println("Amount to be paid: " + amountPayable);
+			amountPayable = cardToBePaidOff.getBill().getMinimumAmountDue();
+			billService.recordMinimumAmountPayment(bill);
+			System.out.println("Paid minimum");
+		} else if (paymentOption.equals("outstanding")) {
+			// pay the outstanding bill
+			amountPayable = cardToBePaidOff.getBill().getOutstandingAmount();
+			billService.recordOutstandingAmountPayment(bill);
+			System.out.println("Paid Outstanding");
+
 		} else {
-			System.out.println("Invalid payment amount");
-			return ("pay-creditcard-balance");
+			billService.recordCreditBalancePayment(bill);
+			amountPayable = cardToBePaidOff.getBalance();
+			System.out.println("Paid Balance");
+
 		}
+		System.out.println("Amount to be paid: " + amountPayable);
 
 		// withdraw from their debit account the amount payable
-		if (amountPayable > 0) {
+		if (amountPayable > 0 && fromAccount.getAccountBalance() > amountPayable) {
 			// do withdrawal
 			debitAccountService.changeAccountBalance(fromAccount, amountPayable, false);
+			System.out.println("amountPayable: " + amountPayable);
 
+			// Debit account transaction
 			DebitAccountTransaction newTransaction = new DebitAccountTransaction();
-			newTransaction.setDebitAccountTransactionAmount(cardToBePaidOff.getBalance());
+			newTransaction.setDebitAccountTransactionAmount(Double.parseDouble(String.format("%.2f", amountPayable)));
 			newTransaction.setDebitAccountTransactionType("transfer");
 			newTransaction.setFromAccount(fromAccount);
 			newTransaction.setToAccountNumber(cardToBePaidOff.getCardNumber());
 			debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
-			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
-			cardToBePaidOff.setBalance(0.0);
-			creditCardService.updateCard(cardToBePaidOff);
 
+			// Credit card transaction
+			CreditCardTransaction newCreditCardTransaction = new CreditCardTransaction();
+			newCreditCardTransaction.setTransactionAmount(Double.parseDouble(String.format("%.2f", amountPayable)));
+			newCreditCardTransaction.setTransactionDate(LocalDateTime.now());
+			newCreditCardTransaction
+					.setDescription("Made credit card payment +$" + String.format("%.2f", amountPayable));
+			newCreditCardTransaction.setTransactionCard(cardToBePaidOff);
+			creditCardTransactionService.createCreditCardTransaction(newCreditCardTransaction);
+
+			cardToBePaidOff.setBalance(cardToBePaidOff.getBalance() - amountPayable);
+			creditCardService.updateCard(cardToBePaidOff);
+			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
 			return "redirect:/creditcard-dashboard";
 		} else {
 			System.out.println("No amount to be paid");
@@ -346,7 +359,7 @@ public class CreditCardController {
 		model.addAttribute("bill", bill);
 		return "view-card-bill";
 	}
-	
+
 	@PostMapping("/open-card-payment")
 	public String openCardPayment(Principal principal, Model model, HttpServletRequest request) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
@@ -361,7 +374,7 @@ public class CreditCardController {
 
 		model.addAttribute("bill", bill);
 		model.addAttribute("card", card);
-		model.addAttribute("customer",customer);
+		model.addAttribute("customer", customer);
 		return "pay-creditcard-balance";
 	}
 
