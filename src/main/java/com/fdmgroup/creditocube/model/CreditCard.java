@@ -31,9 +31,9 @@ public class CreditCard {
 
 	private String cardNumber;
 
-	private int balance;
+	private double balance;
 
-	private int cardLimit;
+	private double cardLimit;
 
 	public CreditCard() {
 
@@ -72,16 +72,28 @@ public class CreditCard {
 		this.cardNumber = cardNumber;
 	}
 
-	public int getBalance() {
+	public List<CreditCardTransaction> getCreditCardTransactions() {
+		return creditCardTransactions;
+	}
+
+	public void setCreditCardTransactions(List<CreditCardTransaction> creditCardTransactions) {
+		this.creditCardTransactions = creditCardTransactions;
+	}
+
+	public double getBalance() {
 		return balance;
 	}
 
-	public void setBalance(int balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 
-	public int getCardLimit() {
+	public double getCardLimit() {
 		return cardLimit;
+	}
+
+	public void setCardLimit(double cardLimit) {
+		this.cardLimit = cardLimit;
 	}
 
 	public void setCardLimit(int cardLimit) {

@@ -242,7 +242,10 @@ public class CreditCardController {
 		if (amountPayable > 0) {
 			// do withdrawal
 			debitAccountService.changeAccountBalance(fromAccount, amountPayable, false);
+			cardToBePaidOff.setBalance(cardToBePaidOff.getBalance() - amountPayable);
+			creditCardService.updateCard(cardToBePaidOff);
 			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
+			System.out.println("Current balance for credit card: " + cardToBePaidOff.getBalance());
 			return "redirect:/creditcard-dashboard";
 		} else {
 			System.out.println("No amount to be paid");
