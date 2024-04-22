@@ -169,15 +169,15 @@ public class BillService {
 
 	public void createBillForNewCard(CreditCard newCard) {
 		Optional<Bill> generatedBillOptional = generateBill(newCard.getCardId());
-		
+
 		if (generatedBillOptional.isEmpty()) {
 			// What to do
 		}
-		
+
 		Bill generatedBill = generatedBillOptional.get();
 		generatedBill.setPaid(true);
 		updateBill(generatedBill);
-		
+
 	}
 
 }
