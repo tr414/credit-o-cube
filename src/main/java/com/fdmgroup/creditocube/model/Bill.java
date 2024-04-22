@@ -23,6 +23,8 @@ public class Bill {
 	
 	private double minimumAmountDue;
 	
+	private double outstandingAmount;
+	
 	//private LocalDateTime dueDate;
 	
 	private boolean paid;
@@ -35,6 +37,7 @@ public class Bill {
 		this.card = card;
 		this.totalAmountDue = totalAmountDue;
 		this.minimumAmountDue = minimumAmountDue;
+		this.outstandingAmount = totalAmountDue;
 		this.paid = paid;
 	}
 
@@ -77,6 +80,15 @@ public class Bill {
 	public void setCard(CreditCard card) {
 		this.card = card;
 	}
+
+	public double getOutstandingAmount() {
+		return outstandingAmount;
+	}
+
+	public void setOutstandingAmount(double outstandingAmount) {
+		this.outstandingAmount = outstandingAmount;
+	}
+	
 	
 	
 }

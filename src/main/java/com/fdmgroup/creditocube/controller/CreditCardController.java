@@ -254,7 +254,8 @@ public class CreditCardController {
 		List<DebitAccount> debitAccountsOfCustomer = sessionCustomer.getDebitAccounts();
 		System.out.println("Size of debitAccountsOfCustomer: " + debitAccountsOfCustomer.size());
 		DebitAccount fromAccount = null;
-
+		
+		// verify that debit account exists
 		// if they choose a debit account number for a debit account that doesnt exist,
 		// exit this method
 		for (DebitAccount debitAccount : debitAccountsOfCustomer) {
@@ -270,7 +271,8 @@ public class CreditCardController {
 				return ("pay-creditcard-balance");
 			}
 		}
-
+		
+		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
 		CreditCard cardToBePaidOff = null;
