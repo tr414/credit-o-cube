@@ -63,7 +63,7 @@ body {
 }
 
 /* Styling for links and logout button in the side menu */
-.side-menu a, .side-menu .logout-button {
+.side-menu a, .side-menu .login-button {
 	padding: 8px 8px 8px 32px; /* Padding for alignment and spacing */
 	text-decoration: none; /* Removes underline from links */
 	font-size: 18px; /* Font size for readability */
@@ -73,8 +73,13 @@ body {
 	transition: color 0.3s; /* Transition for hover effects */
 }
 
+.login-button {
+	border: none;
+	background-color: #333;
+}
+
 /* Hover effects for links and logout button */
-.side-menu a:hover, .side-menu .logout-button:hover {
+.side-menu a:hover, .side-menu .login-button:hover {
 	color: #5C85D6; /* Light blue color on hover for visual feedback */
 }
 
@@ -85,4 +90,22 @@ body {
 	color: #818181; /* Grey color for the icon/button */
 	z-index: 2; /* Ensures the button is clickable over other content */
 	position: relative; /* Needed for proper placement */
+}
+
+/* Main content CSS */
+.main-content {
+  transition: margin-left 0.5s; /* Smooth transition for margin changes */
+  padding: 20px; 
+  padding-top: 80px;
+  background-color: #f4f7fc;
+  min-height: calc(100vh - 80px);
+}
+
+.main-content.content-expand {
+  margin-left: 0; /* Remove left margin when sidebar is hidden */
+}
+
+/* Condition for hiding the sidebar when it's not active */
+.main-content:not(.content-expand) {
+	margin-left: 250px; /* Moves the sidebar out of view */
 }

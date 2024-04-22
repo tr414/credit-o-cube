@@ -11,34 +11,70 @@
 </head>
 <body>
 
-	<!-- Top Bar -->
+	<!-- old -->
+	<!-- 	<!-- Top Bar -->
+	-->
+	<!-- 	<div class="top-bar"> -->
+	<!-- 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img -->
+	<!-- 			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo"> -->
+	<!-- 		<!-- 		<button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
+	-->
+	<!-- 	</div> -->
+
+	<!-- 	<div class="side-menu menu-active" id="sideMenu"> -->
+	<!-- 		<div class="user-greeting"> -->
+	<!-- 			<p>DEBIT ACCOUNTS</p> -->
+	<!-- 			<p>DETAILS</p> -->
+	<!-- 		</div> -->
+	<!-- 		<a href="view-transaction-history">Transaction history</a> <a -->
+	<!-- 			href="transfer-to-account-number">Transfer money</a> <a -->
+	<!-- 			href="deposit-withdraw">Deposit / Withdraw</a> <a -->
+	<!-- 			href="account-dashboard">Account dashboard</a> <a -->
+	<!-- 			href="creditcard-dashboard">Credit card dashboard</a> <a -->
+	<!-- 			href="customer-dashboard">Main dashboard</a> -->
+	<!-- 		<!-- Add other menu items here -->
+	-->
+	<!-- 		<form th:action="@{/logout}" method="post"> -->
+	<!-- 			<div class="buttons"> -->
+	<!-- 				<button type="submit" class="login-button">Logout</button> -->
+	<!-- 			</div> -->
+	<!-- 		</form> -->
+	<!-- 	</div> -->
+	<!-- 	old -->
+
+
+	<!-- 	keep this for now -->
 	<div class="top-bar">
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
 			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
 		<!-- 		<button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
+		</form>
 	</div>
 
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
-			<p>DEBIT ACCOUNTS</p>
-			<p>DETAILS</p>
+			<p>
+				Hello, <span th:text="${firstName}">FirstName</span>
+			</p>
+			<p>What would you like to do today?</p>
 		</div>
-		<a href="view-transaction-history">Transaction history</a> <a
-			href="transfer-to-account-number">Transfer money</a> <a
+		<a href="transfer-to-account-number">Transfer money</a> <a
 			href="deposit-withdraw">Deposit / Withdraw</a> <a
 			href="account-dashboard">Account dashboard</a> <a
 			href="creditcard-dashboard">Credit card dashboard</a> <a
 			href="customer-dashboard">Main dashboard</a>
-		<!-- Add other menu items here -->
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
 				<button type="submit" class="login-button">Logout</button>
 			</div>
 		</form>
 	</div>
+	<!-- 	keep this for now -->
+
+
 
 	<!-- Main Content Area -->
-	<div class="content-area">
+	<div class="content-area main-content">
 		<!-- Accounts Table -->
 		<div>
 			<table>
@@ -47,7 +83,7 @@
 						<th>Account Number</th>
 						<th>Account Name</th>
 						<th>Account Balance</th>
-						<th colspan="3">Actions</th>
+						<th colspan="2">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -56,21 +92,19 @@
 							th:text="| ${account.accountNumber.substring(0,3)}-${account.accountNumber.substring(3,6)}-${account.accountNumber.substring(6)} |"></td>
 						<td th:text="${account.accountName}"></td>
 						<td th:text="'$ '+${account.accountBalance}"></td>
-						<!-- 						<td>
-							<form th:action="@{/deposit-withdraw}" method="GET">
-								<button type="submit">Deposit/Withdraw</button>
-							</form>
-						</td> -->
+						
 						<td>
 							<form th:action="@{/view-transaction-history}" method="GET">
-								<button type="submit">View Transaction History</button>
+								<button type="submit" class="debit-action-buttons">View
+									Transaction History</button>
 							</form>
 						</td>
 						<td>
 							<form th:action="@{/deleteDebitAccount}" method="POST">
 								<input type="hidden" th:value="${account.accountId}"
 									name="accountId">
-								<button type="submit">Close Account</button>
+								<button type="submit" class="debit-action-buttons">Close
+									Account</button>
 							</form>
 						</td>
 					</tr>
@@ -80,7 +114,8 @@
 
 		<!-- Create Debit Account Button -->
 		<form th:action="@{/go-to-create-debit-account}" method="get">
-			<input type="submit" value="Create Debit Account">
+			<input type="submit" class="debit-action-buttons"
+				value="Create Debit Account">
 		</form>
 	</div>
 

@@ -4,16 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Debit Account</title>
+    <link rel="stylesheet" href="../css/header-sidebar.css">
+    <link rel="stylesheet" href="../css/account-dashboard.css">
 </head>
 <body>
+
+<!-- 	Top Bar -->
+	<!-- 	keep this for now -->
+	<div class="top-bar">
+		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
+			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
+	</div>
+
+	<div class="side-menu menu-active" id="sideMenu">
+		<div class="user-greeting">
+			<p>
+				Hello, <span th:text="${firstName}">FirstName</span>
+			</p>
+			<p>What would you like to do today?</p>
+		</div>
+		<a href="transfer-to-account-number">Transfer money</a> <a
+			href="deposit-withdraw">Deposit / Withdraw</a> <a
+			href="account-dashboard">Account dashboard</a> <a
+			href="creditcard-dashboard">Credit card dashboard</a> <a
+			href="customer-dashboard">Main dashboard</a>
+		<form th:action="@{/logout}" method="post">
+			<div class="buttons">
+				<button type="submit" class="login-button">Logout</button>
+			</div>
+		</form>
+	</div>
+
     <div>
-        <form th:action="@{/create-debit-account}" method="POST">
+        <form style="margin-top:400px; margin-left:500px"  th:action="@{/create-debit-account}" method="POST">
             <label for="account-name">Account Name</label>
             <input type="text" id="account-name" name="account-name"><br>
             <label for="account-balance">How much money do you wish to deposit into this new account?</label>
             <input type="number" step="0.01" id="account-balance" name="account-balance">
  
-            <input type="submit" value="Create New Account">
+            <input type="submit" class="debit-action-buttons" value="Create New Account">
         </form>
     </div>
 </body>
