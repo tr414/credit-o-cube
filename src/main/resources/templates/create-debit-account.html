@@ -19,9 +19,9 @@
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
 			<p>
-				Hello, <span th:text="${firstName}">FirstName</span>
+				Start your debit account journey here
 			</p>
-			<p>What would you like to do today?</p>
+			
 		</div>
 		<a href="transfer-to-account-number">Transfer money</a> <a
 			href="deposit-withdraw">Deposit / Withdraw</a> <a
@@ -35,15 +35,27 @@
 		</form>
 	</div>
 
-    <div>
-        <form style="margin-top:400px; margin-left:500px"  th:action="@{/create-debit-account}" method="POST">
-            <label for="account-name">Account Name</label>
-            <input type="text" id="account-name" name="account-name"><br>
-            <label for="account-balance">How much money do you wish to deposit into this new account?</label>
-            <input type="number" step="0.01" id="account-balance" name="account-balance">
+<!--     <div> -->
+<!--         <form class="debit-blanks" style="margin-top:400px; margin-left:500px"  th:action="@{/create-debit-account}" method="POST"> -->
+<!--             <label for="account-name">Account Name</label> -->
+<!--             <input type="text" id="account-name" name="account-name"><br> -->
+<!--             <label for="account-balance">How much money do you wish to deposit into this new account?</label> -->
+<!--             <input type="number" id="account-balance" name="account-balance"> -->
  
-            <input type="submit" class="debit-action-buttons" value="Create New Account">
-        </form>
-    </div>
+<!--             <input type="submit" class="debit-action-buttons" value="Create New Account"> -->
+<!--         </form> -->
+<!--     </div> -->
+
+	<div class="debit-form-wrapper">
+  <form th:action="@{/create-debit-account}" method="POST">
+    <label for="account-name">Account Name</label>
+    <input type="text" id="account-name" name="account-name"><br>
+    <label for="account-balance">How much money do you wish to deposit into this new account?</label>
+    <input type="number" id="account-balance" name="account-balance">
+    <input type="submit" class="debit-action-buttons" value="Create New Account">
+  </form>
+</div>
+	
+	
 </body>
 </html>
