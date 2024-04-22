@@ -68,6 +68,10 @@
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit">View Card Bill</button>
               </form>
+               <form th:action="@{/open-card-payment}" method="POST">
+              	<input type="hidden" th:value="${card.cardId}" name="cardId">
+                <button type="submit">Pay Card Bill/Balance</button>
+              </form>
             </td>
           </tr>
         </tbody>
