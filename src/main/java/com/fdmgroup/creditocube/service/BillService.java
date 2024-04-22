@@ -63,14 +63,32 @@ public class BillService {
 
 	}
 
+	// This method is called for every bill at the end of the billing cycle.
+	// If no payment has been made towards the bill, it charges a late payment fee
+	// If the bill has not been paid in full, an interest fee is charged on the
+	// outstanding bill amount and added to the card balance.
 	public void checkLatePayment(Bill bill) {
+
+		CreditCard card = cardService.findCardByCardId(bill.getCard().getCardId()).orElse(null);
+		double cardBalance = card.getBalance();
+
+		if (bill.getOutstandingAmount() > 0) {
+
+			// Interest rate is hard coded as 10% at the moment
+			double interestFee = new BigDecimal(bill.getOutstandingAmount() * 0.1).setScale(2, RoundingMode.HALF_UP)
+					.doubleValue();
+			card.setBalance(cardBalance + interestFee);
+			cardTransactionService.createInterestFeeTransaction(card, interestFee);
+			LOGGER.info("Interest fee charged on outstanding amount for card number: {}", card.getCardNumber());
+		}
+
 		if (!bill.isPaid()) {
-			CreditCard card = cardService.findCardByCardId(bill.getCard().getCardId()).orElse(null);
 			card.setBalance(card.getBalance() + latePaymentFees);
-			cardService.updateCard(card);
 			cardTransactionService.createLatePaymentTransaction(card, latePaymentFees);
 			LOGGER.info("Late payment fee charged to card number: {}", card.getCardNumber());
 		}
+
+		cardService.updateCard(card);
 	}
 
 	public void recordMinimumAmountPayment(Bill bill) {

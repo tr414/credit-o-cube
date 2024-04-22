@@ -71,5 +71,11 @@ public class CreditCardTransactionService {
 		createCreditCardTransaction(latePaymentTransaction);
 		LOGGER.info("Added late payment fee transaction to card number: {}", card.getCardNumber());
 	}
+	
+	public void createInterestFeeTransaction(CreditCard card, double interestPaymentFees) {
+		CreditCardTransaction interestFeeTransaction = new CreditCardTransaction(card, LocalDateTime.now(), interestPaymentFees, "Interest on bill outstanding amount");
+		createCreditCardTransaction(interestFeeTransaction);
+		LOGGER.info("Added interest fee on outstanding bill amount transaction to card number: {}", card.getCardNumber());
+	}
 
 }
