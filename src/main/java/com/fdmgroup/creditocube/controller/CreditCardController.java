@@ -229,6 +229,7 @@ public class CreditCardController {
 		// set customer and their accounts as session attributes to retrieve in view
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
+		model.addAttribute("customer", sessionCustomer);
 		model.addAttribute("payamentOptions", payamentOptions);
 		return "pay-creditcard-balance"; // Name of your Thymeleaf template
 
@@ -237,7 +238,7 @@ public class CreditCardController {
 	@PostMapping("/pay-creditcard-balance")
 	public String payCreditcardBalance(Principal principal,
 			@RequestParam("debitAccountNumber") String debitAccountNumber,
-			@RequestParam("creditCardNumber") String creditCardNumber,
+			@RequestParam(value = "creditCardNumber") String creditCardNumber,
 			@RequestParam(value = "paymentOption") String paymentOption) {
 
 		// Find the user associated with the provided customer ID.
@@ -249,12 +250,12 @@ public class CreditCardController {
 		}
 
 		// Get the authenticated customer session object.
-		Customer sessionCustomer = (Customer) session.getAttribute("customer");
+		Customer sessionCustomer = optionalCustomer.get();
 
 		// find debit accounts of customer
 		List<DebitAccount> debitAccountsOfCustomer = sessionCustomer.getDebitAccounts();
 		DebitAccount fromAccount = null;
-		
+
 		// verify that debit account exists
 		// if they choose a debit account number for a debit account that doesnt exist,
 		// exit this method
@@ -269,7 +270,7 @@ public class CreditCardController {
 				return ("pay-creditcard-balance");
 			}
 		}
-		
+
 		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
@@ -358,7 +359,7 @@ public class CreditCardController {
 		model.addAttribute("bill", bill);
 		return "view-card-bill";
 	}
-	
+
 	@PostMapping("/open-card-payment")
 	public String openCardPayment(Principal principal, Model model, HttpServletRequest request) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
@@ -373,7 +374,7 @@ public class CreditCardController {
 
 		model.addAttribute("bill", bill);
 		model.addAttribute("card", card);
-		model.addAttribute("customer",customer);
+		model.addAttribute("customer", customer);
 		return "pay-creditcard-balance";
 	}
 
