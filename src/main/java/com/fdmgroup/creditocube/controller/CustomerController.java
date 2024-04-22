@@ -2,6 +2,7 @@ package com.fdmgroup.creditocube.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.fdmgroup.creditocube.model.CreditCard;
+import com.fdmgroup.creditocube.model.CreditCardTransaction;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 import com.fdmgroup.creditocube.model.User;
+import com.fdmgroup.creditocube.service.CreditCardTransactionService;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
@@ -54,6 +58,9 @@ public class CustomerController {
 
 	@Autowired
 	ValidationService validationService;
+
+	@Autowired
+	CreditCardTransactionService creditCardTransactionService; // Service for credit card transaction operations
 
 	private static Logger logger = LogManager.getLogger(CustomerController.class);
 
@@ -203,6 +210,13 @@ public class CustomerController {
 		List<DebitAccountTransaction> recentTransactions = debitAccountTransactionService
 				.findRecentTransactionsOfCustomer(customer);
 		model.addAttribute("recentTransactions", recentTransactions);
+		List<CreditCard> cards = customer.getCreditCards();
+		model.addAttribute("cards", cards);
+		List<CreditCardTransaction> creditTransactions = new ArrayList<>();
+		for (CreditCard card : customer.getCreditCards()) {
+			creditTransactions.addAll(creditCardTransactionService.findAllCreditCardTransactions(card));
+		}
+		model.addAttribute("creditTransactions", creditTransactions);
 		return "customer-dashboard";
 	}
 	// home is the customer dashboard
