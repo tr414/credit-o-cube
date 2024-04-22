@@ -70,18 +70,18 @@
 		<div class="sub-container">
 			<h2>Credit Cards Overview</h2>
 			<p>Check out your credit cards and its details.</p>
-<!-- 			<table> -->
-<!-- 				<thead> -->
-<!-- 					<tr> -->
-<!-- 						<th>Account Number</th> -->
-<!-- 						<th>Balance</th> -->
-<!-- 					</tr> -->
-<!-- 				</thead> -->
-<!-- 				<tr th:each="account : ${accounts}"> -->
-<!-- 					<td th:text="${'xxxxxx' + account.accountNumber.substring(6)}"></td> -->
-<!-- 					<td th:text="'$'+${account.accountBalance}"></td> -->
-<!-- 				</tr> -->
-<!-- 			</table> -->
+			<table>
+				<thead>
+					<tr>
+						<th>Card Number</th>
+						<th>Balance</th>
+					</tr>
+				</thead>
+				<tr th:each="card : ${cards}">
+					<td th:text="'xxx'+${card.getFormattedCreditCardNumber().substring(14)}"></td>
+					<td th:text="${card.balance}"></td>
+				</tr>
+			</table>
 		</div>
 
 		<div class="sub-container">
@@ -102,7 +102,7 @@
 						th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
 					<td th:text="${transaction.fromAccount?.accountName ?: '---'}"></td>
 					<td
-						th:text="| ${transaction.toAccountNumber != null ? transaction.toAccountNumber.substring(0,3) + '-' + transaction.toAccountNumber.substring(3,6) + '-' + transaction.toAccountNumber.substring(6) : '---'} |"></td>
+						th:text="| ${transaction.toAccountNumber != null ? 'xxxxxx-' + transaction.toAccountNumber.substring(6) : '---'} |"></td>
 					<td th:text="${transaction.debitAccountTransactionType ?: '---'}"></td>
 					<td th:text="'$ '+${transaction.debitAccountTransactionAmount}"></td>
 				</tr>
@@ -120,14 +120,14 @@
 				<thead>
 					<tr>
 						<th>Date</th>
-						
+						<th>Card Number</th>
 						<th>Amount</th>
 					</tr>
 				</thead>
 				<tr th:each="transaction : ${creditTransactions}">
-					<td
-						th:text="${#dates.format(transactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
-					
+					<td th:text="${transaction.getFormattedTransactionDate()}"></td>
+					<!-- <td th:text="${transaction.transactionCard.getFormattedCreditCardNumber()}"></td> -->
+					<td th:text="'xxx'+${transaction.transactionCard.getFormattedCreditCardNumber().substring(14)}"></td>
 					<td th:text="'$ '+${transaction.transactionAmount}"></td>
 				</tr>
 			</table>

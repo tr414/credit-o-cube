@@ -171,11 +171,15 @@ public class CreditCardService {
 	}
 
 	public String generateCreditCardNumber() {
-		String accountNumber;
-		final Random random = new Random();
+
+		String accountNumber = "";
+		final Random RANDOM = new Random();
 		do {
-			long number = (long) (100000000 + random.nextInt(900000000));
-			accountNumber = String.format("%09d", number);
+			for (int i = 0; i < 4; i++) {
+				long number = RANDOM.nextLong(9999);
+				String stringNumber = String.format("%04d", number);
+				accountNumber = accountNumber + stringNumber;
+			}
 		} while (cardNumberExists(accountNumber));
 		return accountNumber;
 
