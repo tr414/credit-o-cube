@@ -17,53 +17,52 @@ import com.fdmgroup.creditocube.repository.BillRepository;
 
 @Service
 public class BillService {
-	
+
 	@Autowired
 	private BillRepository billRepo;
-	
+
 	@Autowired
 	private CreditCardService cardService;
-	
+
 	@Autowired
 	private CreditCardTransactionService cardTransactionService;
-	
+
 	private long latePaymentFees = 100;
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(BillService.class);
-	
+
 	public BillService() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Optional<Bill> createBill(Bill bill) {
 		return Optional.ofNullable(billRepo.save(bill));
 	}
-	
+
 	public Optional<Bill> updateBill(Bill bill) {
 		Bill currentBill = billRepo.findById(bill.getId()).orElse(null);
-		
+
 		return Optional.ofNullable(billRepo.save(bill));
 	}
-	
+
 	public Optional<Bill> findBillByCreditCard(CreditCard card) {
 		return billRepo.findByCardIs(card);
 	}
-	
+
 	public Optional<Bill> generateBill(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
 		double totalAmountDue = card.getBalance();
 		double minimumAmountDue = new BigDecimal(totalAmountDue * 0.1).setScale(2, RoundingMode.HALF_UP).doubleValue();
-		
-		
+
 		try {
 			return createBill(new Bill(card, totalAmountDue, minimumAmountDue, false));
 		} catch (Exception e) {
 			LOGGER.error("Unable to generate bill for card number: {}", card.getCardNumber(), e);
 			return Optional.of(null);
 		}
-		
+
 	}
-	
+
 	public void checkLatePayment(Bill bill) {
 		if (!bill.isPaid()) {
 			CreditCard card = cardService.findCardByCardId(bill.getCard().getCardId()).orElse(null);
@@ -73,30 +72,78 @@ public class BillService {
 			LOGGER.info("Late payment fee charged to card number: {}", card.getCardNumber());
 		}
 	}
-	
-	// This function is called on the 15th of every month at 6 am. It will go through every card, and generate the credit card bill for that
+
+	public void recordMinimumAmountPayment(Bill bill) {
+		// Record that the bill payment has been made so that the bill will not be
+		// flagged for late payment fees
+		bill.setPaid(true);
+
+		// Update the outstanding amount to reflect that the minimum amount has been
+		// paid
+		bill.setOutstandingAmount(bill.getOutstandingAmount() - bill.getMinimumAmountDue());
+
+		// Reset the minimum amount due to 0 as it has been paid
+		bill.setMinimumAmountDue(0.0);
+
+		updateBill(bill);
+	}
+
+	public void recordOutstandingAmountPayment(Bill bill) {
+		// Record that the bill payment has been made so that the bill will not be
+		// flagged for late payment fees
+		bill.setPaid(true);
+
+		// Update the outstanding amount to reflect that the outstanding amount has been
+		// paid
+		bill.setOutstandingAmount(0.0);
+
+		// Reset the minimum amount due to 0 as there is no payment due
+		bill.setMinimumAmountDue(0.0);
+
+		updateBill(bill);
+	}
+
+	public void recordCreditBalancePayment(Bill bill) {
+		// Record that the bill payment has been made so that the bill will not be
+		// flagged for late payment fees
+		bill.setPaid(true);
+
+		// Update the outstanding amount to reflect that the outstanding amount has been
+		// paid
+		bill.setOutstandingAmount(0.0);
+
+		// Reset the minimum amount due to 0 as there is no payment due
+		bill.setMinimumAmountDue(0.0);
+
+		updateBill(bill);
+	}
+
+	// This function is called on the 15th of every month at 6 am. It will go
+	// through every card, and generate the credit card bill for that
 	// billing cycle
 	@Scheduled(cron = "0 0 6 15 * *")
 	public void generateAllCardBills() {
 		List<CreditCard> creditCards = cardService.findAllCreditCards();
-		
+
 		LOGGER.info("Scheduled task: generating all credit card bills.");
-		
+
 		for (CreditCard card : creditCards) {
 			generateBill(card.getCardId());
 		}
-		
+
 		LOGGER.info("Scheduled task: generating all credit card bills completed.");
 	}
-	
-	// This function is called on the 10th of every month at 6 am. It will go through every bill, and if the bill has not been paid, it will
-	// add a late payment fee to the credit card to which the bill belongs, and record this as a transaction on the card
+
+	// This function is called on the 10th of every month at 6 am. It will go
+	// through every bill, and if the bill has not been paid, it will
+	// add a late payment fee to the credit card to which the bill belongs, and
+	// record this as a transaction on the card
 	@Scheduled(cron = "0 0 6 10 * *")
 	public void checkAllLatePayments() {
 		List<Bill> allBills = billRepo.findAll();
-		
+
 		LOGGER.info("Scheduled task: checking all credit card bills for late payment.");
-		
+
 		for (Bill bill : allBills) {
 			checkLatePayment(bill);
 		}

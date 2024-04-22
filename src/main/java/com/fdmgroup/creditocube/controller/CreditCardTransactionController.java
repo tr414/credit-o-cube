@@ -10,7 +10,6 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,8 +48,8 @@ public class CreditCardTransactionController {
 
 	private static Logger logger = LogManager.getLogger(CreditCardTransactionController.class);
 
-	@Value("${API_KEY}")
-	private String apiKey;
+//	@Value("${API_KEY}")
+	private String apiKey = "1234";
 
 	public CreditCardTransactionController() {
 		restClient = RestClient.builder().baseUrl("http://api.exchangeratesapi.io/v1/latest").build();
