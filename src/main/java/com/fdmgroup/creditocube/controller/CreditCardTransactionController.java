@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,7 @@ public class CreditCardTransactionController {
 
 		List<CreditCardTransaction> cardTransactions = transactionService.findAllCreditCardTransactions(card);
 		model.addAttribute("transactions", cardTransactions);
+		
 		return ("card-transactions");
 	}
 
@@ -108,7 +110,15 @@ public class CreditCardTransactionController {
 		CreditCard card = optionalCard.get();
 
 		String merchantCode = request.getParameter("merchantCode");
-		Merchant merchant = merchantRepo.findByMerchantCode(merchantCode).orElse(null);
+		Merchant merchant;
+		Optional<Merchant> merchantOptional = merchantRepo.findByMerchantCode(merchantCode);
+				
+		if (merchantOptional.isEmpty()) {
+				return "redirect:create-card-transaction";
+		} else {
+			merchant = merchantOptional.get();
+		}
+		
 		String merchantCategory = merchant.getCategory();
 
 		// currency

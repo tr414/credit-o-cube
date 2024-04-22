@@ -8,7 +8,7 @@ table {
 }
 
 th, td {
-  text-align: left;
+  text-align: center;
   padding: 12px;
   border-bottom: 1px solid #ddd; /* Light grey border for each row */
 }
@@ -28,7 +28,7 @@ tbody tr:hover {
 }
 
 /* Style for the Close Account and Create Debit Account buttons */
-button, input[type="submit"] {
+.debit-action-buttons {
   background-color: #0051ba; /* Blue background to match the theme */
   color: white;
   border: none;
@@ -38,7 +38,7 @@ button, input[type="submit"] {
   margin: 5px 0; /* A bit of margin for spacing */
 }
 
-button:hover, input[type="submit"]:hover {
+.debit-action-buttons:hover {
   background-color: #003c8f; /* Darker blue on hover */
 }
 
@@ -50,5 +50,6 @@ form {
 
 .content-area {
 	margin-left: 250px;
-	margin-top: 100px;
+	margin-top: 5px;
 }
+

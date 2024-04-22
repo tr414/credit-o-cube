@@ -87,5 +87,4 @@ public class Bill {
 	public void setOutstandingAmount(double outstandingAmount) {
 		this.outstandingAmount = outstandingAmount;
 	}
-
 }

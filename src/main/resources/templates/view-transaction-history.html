@@ -6,58 +6,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Transaction History</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/account-creditcard-dashboard.css">
+<link rel="stylesheet" href="../css/account-dashboard.css">
 
 </head>
 <body>
-	<!-- Top Bar -->
-	<!-- <div class="top-bar">
+<!-- 	Top Bar -->
+	<!-- 	keep this for now -->
+	<div class="top-bar">
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
-			src="../img/CreditOCubeLogo.png" alt="Logo" class="logo">
-		<button class="logout-button" onclick="window.location.href='login'">Logout</button>
-		<form th:action="@{/logout}" method="post">
-				<div class="buttons">
-					<button type="submit" class="login-button">Logout</button>
-				</div>
-			</form>
-	</div> -->
-
-	<div class="side-menu" id="sideMenu">
-		<a href="view-transaction-history">Transaction history</a> <a
-			href="transfer-to-account-number">Transfer money</a> <a
-			href="deposit-withdraw">Deposit / Withdraw</a> <a
-			href="creditcard-dashboard">Credit card dashboard</a> <a
-			href="account-dashboard">Account dashboard</a> <a
-			href="customer-dashboard">Main dashboard</a>
-		<!-- Add other menu items here -->
+			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
 	</div>
 
-	<div th:if="${session.selectedAccount != null}">
+	<div class="side-menu menu-active" id="sideMenu">
+		<div class="user-greeting">
+			<p>
+				Hello, <span th:text="${firstName}">FirstName</span>
+			</p>
+			<p>What would you like to do today?</p>
+		</div>
+		<a href="transfer-to-account-number">Transfer money</a> <a
+			href="deposit-withdraw">Deposit / Withdraw</a> <a
+			href="account-dashboard">Account dashboard</a> <a
+			href="creditcard-dashboard">Credit card dashboard</a> <a
+			href="customer-dashboard">Main dashboard</a>
+		<form th:action="@{/logout}" method="post">
+			<div class="buttons">
+				<button type="submit" class="login-button">Logout</button>
+			</div>
+		</form>
+	</div>
+	<!-- 	keep this for now -->
+
+	<div class="content-area main-content" th:if="${session.selectedAccount != null}">
 		<table>
 			<thead>
 				<tr>
-					<td>Transaction Date</td>
-					<td>From</td>
-					<td>To</td>
-					<td>Transaction Type</td>
-					<td>Amount</td>
+					<th>Transaction Date</th>
+					<th>From</th>
+					<th>To</th>
+					<th>Transaction Type</th>
+					<th>Amount</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="transaction : ${session.accountTransactions}">
-				<!-- 	<td th:text="${transaction.debitAccountTransactionDate}"></td> -->
+				
 					<td th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
 					<td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td>
 					<td th:text="${transaction.toAccountNumber ?: '---'}"></td>
 					<td th:text="${transaction.debitAccountTransactionType}"></td>
 					<td
-						th:text="'$ '+${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
+						th:text="${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
 				</tr>
 			</tbody>
 		</table>
+		
+		
+	
 	</div>
 
-	<div th:if="${session.selectedAccount == null}">
+	<div style="margin-top:50px" th:if="${session.selectedAccount == null}">
 		<p>Please choose an account from the dropdown menu below.</p>
 	</div>
 	<div>
@@ -67,7 +75,7 @@
 					th:value="${account.accountId}" th:text="${account.accountName}">
 				</option>
 			</select>
-			<button type="submit">Submit</button>
+			<button type="submit" class="debit-action-buttons">Submit</button>
 		</form>
 	</div>
 

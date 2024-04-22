@@ -254,7 +254,8 @@ public class CreditCardController {
 		// find debit accounts of customer
 		List<DebitAccount> debitAccountsOfCustomer = sessionCustomer.getDebitAccounts();
 		DebitAccount fromAccount = null;
-
+		
+		// verify that debit account exists
 		// if they choose a debit account number for a debit account that doesnt exist,
 		// exit this method
 		for (DebitAccount debitAccount : debitAccountsOfCustomer) {
@@ -268,7 +269,8 @@ public class CreditCardController {
 				return ("pay-creditcard-balance");
 			}
 		}
-
+		
+		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
 		CreditCard cardToBePaidOff = null;
@@ -355,6 +357,24 @@ public class CreditCardController {
 
 		model.addAttribute("bill", bill);
 		return "view-card-bill";
+	}
+	
+	@PostMapping("/open-card-payment")
+	public String openCardPayment(Principal principal, Model model, HttpServletRequest request) {
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
+		long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
+		CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
+		Bill bill = billService.findBillByCreditCard(card).orElse(null);
+
+		Customer customer = optionalCustomer.get();
+
+		model.addAttribute("bill", bill);
+		model.addAttribute("card", card);
+		model.addAttribute("customer",customer);
+		return "pay-creditcard-balance";
 	}
 
 }
