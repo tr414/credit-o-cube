@@ -346,5 +346,23 @@ public class CreditCardController {
 		model.addAttribute("bill", bill);
 		return "view-card-bill";
 	}
+	
+	@PostMapping("/open-card-payment")
+	public String openCardPayment(Principal principal, Model model, HttpServletRequest request) {
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
+		long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
+		CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
+		Bill bill = billService.findBillByCreditCard(card).orElse(null);
+
+		Customer customer = optionalCustomer.get();
+
+		model.addAttribute("bill", bill);
+		model.addAttribute("card", card);
+		model.addAttribute("customer",customer);
+		return "pay-creditcard-balance";
+	}
 
 }
