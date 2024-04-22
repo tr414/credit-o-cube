@@ -56,7 +56,7 @@
 					<td th:text="${transaction.toAccountNumber ?: '---'}"></td>
 					<td th:text="${transaction.debitAccountTransactionType}"></td>
 					<td
-						th:text="${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
+						th:text="${transaction.debitAccountTransactionAmount} + ' SGD'" class="price-element"></td>
 				</tr>
 			</tbody>
 		</table>

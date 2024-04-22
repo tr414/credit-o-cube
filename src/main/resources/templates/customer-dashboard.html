@@ -62,7 +62,7 @@
 				</thead>
 				<tr th:each="account : ${accounts}">
 					<td th:text="${'xxxxxx' + account.accountNumber.substring(6)}"></td>
-					<td th:text="'$'+${account.accountBalance}"></td>
+					<td th:text="${account.accountBalance}" class="price-element"></td>
 				</tr>
 			</table>
 		</div>
@@ -79,7 +79,7 @@
 				</thead>
 				<tr th:each="card : ${cards}">
 					<td th:text="'xxx'+${card.getFormattedCreditCardNumber().substring(14)}"></td>
-					<td th:text="${card.balance}"></td>
+					<td th:text="${card.balance}" class="price-element"></td>
 				</tr>
 			</table>
 		</div>
@@ -104,7 +104,7 @@
 					<td
 						th:text="| ${transaction.toAccountNumber != null ? 'xxxxxx-' + transaction.toAccountNumber.substring(6) : '---'} |"></td>
 					<td th:text="${transaction.debitAccountTransactionType ?: '---'}"></td>
-					<td th:text="'$ '+${transaction.debitAccountTransactionAmount}"></td>
+					<td th:text="${transaction.debitAccountTransactionAmount}" class="price-element" ></td>
 				</tr>
 			</table>
 		</div>
@@ -128,7 +128,7 @@
 					<td th:text="${transaction.getFormattedTransactionDate()}"></td>
 					<!-- <td th:text="${transaction.transactionCard.getFormattedCreditCardNumber()}"></td> -->
 					<td th:text="'xxx'+${transaction.transactionCard.getFormattedCreditCardNumber().substring(14)}"></td>
-					<td th:text="'$ '+${transaction.transactionAmount}"></td>
+					<td th:text="${transaction.transactionAmount}" class="price-element"></td>
 				</tr>
 			</table>
 			
