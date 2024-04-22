@@ -214,6 +214,7 @@ public class CreditCardController {
 		billService.createBillForNewCard(newCard);
 
 		model.addAttribute("success", "Successfully created a new credit card.");
+		billService.createBillForNewCard(newCard);
 		return "redirect:/creditcard-dashboard";
 	}
 
@@ -231,25 +232,29 @@ public class CreditCardController {
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
 		}
-	
+
 		// set customer and their accounts as session attributes to retrieve in view
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
 		model.addAttribute("customer", sessionCustomer);
-		model.addAttribute("payamentOptions", payamentOptions);
+		model.addAttribute("accounts", sessionCustomer.getDebitAccounts());
+		// model.addAttribute("payamentOptions", payamentOptions);
 		return "pay-creditcard-balance"; // Name of your Thymeleaf template
 
 	}
 
 	@PostMapping("/pay-creditcard-balance")
-	public String payCreditcardBalance(Principal principal,
+	public String payCreditcardBalance(Principal principal, HttpServletRequest request, Model model,
 			@RequestParam("debitAccountNumber") String debitAccountNumber,
 			@RequestParam(value = "creditCardNumber") String creditCardNumber,
-			@RequestParam(value = "paymentOption") String paymentOption) {
+			// @RequestParam(value = "paymentOption") String paymentOption,
+			@RequestParam(value = "paymentAmount", required = false) Double paymentAmount) {
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+		String paymentOption = request.getParameter("paymentOption");
 
+		System.out.println(paymentOption);
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
@@ -282,19 +287,20 @@ public class CreditCardController {
 		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
-		CreditCard cardToBePaidOff = null;
+		CreditCard cardToBePaidOff = creditCardService.findCardByCardNumber(creditCardNumber).get();
 
 		// if they choose to pay off a credit card that doesnt exist, exit this method
-		for (CreditCard card : creditCardsOfCustomer) {
-			if (String.valueOf(card.getCardNumber()).equals(creditCardNumber)) {
-				cardToBePaidOff = card;
-			} else {
-				logger.info("Credit card number selected is not valid");
+
+//		for (CreditCard card : creditCardsOfCustomer) {
+//			if (String.valueOf(card.getCardNumber()).equals(creditCardNumber)) {
+//				cardToBePaidOff = card;
+//				break;
+//			} else {
 //				System.out.println("Credit card number invalid - you have no such credit cards with card number "
 //						+ creditCardNumber);
-				return ("pay-creditcard-balance");
-			}
-		}
+//				return ("pay-creditcard-balance");
+//			}
+//		}
 
 		// find the balance of this credit card
 		double amountPayable = 0;
@@ -313,6 +319,16 @@ public class CreditCardController {
 			logger.debug("Customer selected to pay outstanding amount");
 //			System.out.println("Paid Outstanding");
 
+		} else if (paymentOption.equals("paymentAmount")) {
+			// make sure that payMent amount is not more than the current balance
+			if (paymentAmount > cardToBePaidOff.getBalance()) {
+				System.out.println("Payment amount is more than the current balance");
+				return ("pay-creditcard-balance");
+			} else {
+//				billService.recordCustomPayment(bill, amountPayable);
+				amountPayable = paymentAmount;
+				// need to record it in bill service
+			}
 		} else {
 			billService.recordCreditBalancePayment(bill);
 			amountPayable = cardToBePaidOff.getBalance();
@@ -320,7 +336,6 @@ public class CreditCardController {
 //			System.out.println("Paid Balance");
 
 		}
-//		System.out.println("Amount to be paid: " + amountPayable);
 
 		// withdraw from their debit account the amount payable
 		if (amountPayable > 0 && fromAccount.getAccountBalance() > amountPayable) {
@@ -390,6 +405,7 @@ public class CreditCardController {
 		model.addAttribute("bill", bill);
 		model.addAttribute("card", card);
 		model.addAttribute("customer", customer);
+		model.addAttribute("accounts", customer.getDebitAccounts());
 		return "pay-creditcard-balance";
 	}
 

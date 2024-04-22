@@ -18,11 +18,14 @@
 </head>
 <body>
     <h2>Pay Credit Card Balance</h2>
-    <form th:action="@{/pay-creditcard-balance}" method="post">
+    <form th:action="@{/pay-creditcard-balance}" method="post" onkeydown="if(event.keyCode === 13){
+    	alert('Please use the button to submit the amount');
+    	return false;
+    }">
         <div>
             <label for="debitAccountNumber">Debit Account Number:</label>
             <select id="debitAccountNumber" name="debitAccountNumber" required>
-                <option th:each="account : ${customer.debitAccounts}" th:value="${account.accountNumber}" th:text="${account.accountNumber}">Debit Account Number</option>
+                <option th:each="account : ${accounts}" th:value="${account.accountNumber}" th:text="${account.accountNumber}">Debit Account Number</option>
             </select>
         </div>
         <div>
@@ -47,6 +50,12 @@
         	<input type="number" name="currentBalance" th:value="${card.balance}" readonly>
             <button type="submit" name="paymentOption" value="balance">Pay Full Card Balance</button>
         </div>
+        <!--  only display this if the minimum amount is 0  -->
+		<div th:if="${bill.minimumAmountDue == 0}">
+		    <label for="paymentAmount">Custom Amount: </label>        	
+		    <input type="number" name="paymentAmount">
+		    <button type="submit" name="paymentOption" value="paymentAmount">Pay Amount</button>
+		</div>
     </form>
 </body>
 </html>
