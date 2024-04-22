@@ -50,7 +50,7 @@ public class CreditCardController {
 
 	@Autowired
 	private DebitAccountTransactionService debitAccountTransactionService;
-	
+
 	@Autowired
 	private BillService billService;
 
@@ -85,23 +85,23 @@ public class CreditCardController {
 //		return "apply-creditcard"; // Name of your Thymeleaf template
 //
 //	}
-	
-	//new method to get customers to register for 3 distinct cards
-    @GetMapping("/apply-creditcard")
-    public String applyForCreditCard(Principal principal, Model model) {
-        Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
-        if (optionalCustomer.isEmpty()) {
-            return "redirect:/login";
-        }
 
-        Customer customer = optionalCustomer.get();
-        List<CardType> availableCardTypes = cardTypeService.findAllCardTypes().stream()
-            .filter(cardType -> !creditCardService.customerAlreadyHasCardType(customer, cardType))
-            .collect(Collectors.toList());
+	// new method to get customers to register for 3 distinct cards
+	@GetMapping("/apply-creditcard")
+	public String applyForCreditCard(Principal principal, Model model) {
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
 
-        model.addAttribute("cardTypes", availableCardTypes);
-        return "apply-creditcard";
-    }
+		Customer customer = optionalCustomer.get();
+		List<CardType> availableCardTypes = cardTypeService.findAllCardTypes().stream()
+				.filter(cardType -> !creditCardService.customerAlreadyHasCardType(customer, cardType))
+				.collect(Collectors.toList());
+
+		model.addAttribute("cardTypes", availableCardTypes);
+		return "apply-creditcard";
+	}
 
 //	// post mapping for registering for a credit card
 //	@PostMapping("/apply-creditcard")
@@ -166,44 +166,44 @@ public class CreditCardController {
 //		System.out.println("Successfully created a new ccredit card");
 //		return ("apply-creditcard");
 //	}
-    
-    @PostMapping("/apply-creditcard")
-    public String registerCreditCard(Principal principal, HttpServletRequest request, Model model) {
-        Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
-        if (optionalCustomer.isEmpty()) {
-            return "redirect:/login";
-        }
 
-        Customer customer = optionalCustomer.get();
-        if (customer.getCreditCards().size() >= 3) {
-            model.addAttribute("error", "You cannot have more than 3 credit cards.");
-            return "apply-creditcard";
-        }
+	@PostMapping("/apply-creditcard")
+	public String registerCreditCard(Principal principal, HttpServletRequest request, Model model) {
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
 
-        String cardNumber = creditCardService.generateCreditCardNumber();
-        int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
-        if (cardLimit > customer.getSalary()) {
-            model.addAttribute("error", "Card limit must be less than your salary.");
-            return "apply-creditcard";
-        }
+		Customer customer = optionalCustomer.get();
+		if (customer.getCreditCards().size() >= 3) {
+			model.addAttribute("error", "You cannot have more than 3 credit cards.");
+			return "apply-creditcard";
+		}
 
-        Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
-        if (optionalCardType.isEmpty()) {
-            model.addAttribute("error", "Invalid card type selected.");
-            return "apply-creditcard";
-        }
+		String cardNumber = creditCardService.generateCreditCardNumber();
+		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
+		if (cardLimit > customer.getSalary()) {
+			model.addAttribute("error", "Card limit must be less than your salary.");
+			return "apply-creditcard";
+		}
 
-        CardType cardType = optionalCardType.get();
-        if (creditCardService.customerAlreadyHasCardType(customer, cardType)) {
-            model.addAttribute("error", "You already have a credit card of this type.");
-            return "apply-creditcard";
-        }
+		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
+		if (optionalCardType.isEmpty()) {
+			model.addAttribute("error", "Invalid card type selected.");
+			return "apply-creditcard";
+		}
 
-        CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
-        creditCardService.createCreditCard(newCard);
-        model.addAttribute("success", "Successfully created a new credit card.");
-        return "redirect:/creditcard-dashboard";
-    }
+		CardType cardType = optionalCardType.get();
+		if (creditCardService.customerAlreadyHasCardType(customer, cardType)) {
+			model.addAttribute("error", "You already have a credit card of this type.");
+			return "apply-creditcard";
+		}
+
+		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
+		creditCardService.createCreditCard(newCard);
+		model.addAttribute("success", "Successfully created a new credit card.");
+		return "redirect:/creditcard-dashboard";
+	}
 
 	@GetMapping("/pay-creditcard-balance")
 	public String payCreditcardBalance(Model model, Principal principal) {
@@ -312,6 +312,7 @@ public class CreditCardController {
 		if (amountPayable > 0) {
 			// do withdrawal
 			debitAccountService.changeAccountBalance(fromAccount, amountPayable, false);
+
 			DebitAccountTransaction newTransaction = new DebitAccountTransaction();
 			newTransaction.setDebitAccountTransactionAmount(cardToBePaidOff.getBalance());
 			newTransaction.setDebitAccountTransactionType("transfer");
@@ -329,21 +330,21 @@ public class CreditCardController {
 		}
 
 	}
-	
-	 @PostMapping("/view-card-bill")
-	    public String viewCardBill(Principal principal, Model model, HttpServletRequest request) {
-	        Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
-	        if (optionalCustomer.isEmpty()) {
-	            return "redirect:/login";
-	        }
-	        long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
-	        CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
-	        Bill bill = billService.findBillByCreditCard(card).orElse(null);
-	        
-	        Customer customer = optionalCustomer.get();
 
-	        model.addAttribute("bill", bill);
-	        return "view-card-bill";
-	    }
+	@PostMapping("/view-card-bill")
+	public String viewCardBill(Principal principal, Model model, HttpServletRequest request) {
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
+		long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
+		CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
+		Bill bill = billService.findBillByCreditCard(card).orElse(null);
+
+		Customer customer = optionalCustomer.get();
+
+		model.addAttribute("bill", bill);
+		return "view-card-bill";
+	}
 
 }
