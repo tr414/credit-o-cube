@@ -37,6 +37,7 @@
 	</div>
 	<!-- 	keep this for now -->
 
+
 	<div class="content-area main-content">
     <!-- Conditional content for transaction history -->
     <div class="table-scrollable" th:if="${session.selectedAccount != null}">
@@ -78,34 +79,7 @@
     </div>
   </div>
 
-<!-- NEED STYLES FOR THIS -->
-<!-- 	<div style="margin-top:50px" th:if="${session.selectedAccount == null}"> -->
-<!-- 		<p>Please choose an account from the dropdown menu below.</p> -->
-<!-- 	</div> -->
-<!-- 	<div> -->
-<!-- 		<form th:action="@{/view-transaction-history}" method="POST"> -->
-<!-- 			<select name="selectedAccountId"> -->
-<!-- 				<option th:each="account : ${session.accounts}" -->
-<!-- 					th:value="${account.accountId}" th:text="${account.accountName}"> -->
-<!-- 				</option> -->
-<!-- 			</select> -->
-<!-- 			<button type="submit" class="debit-action-buttons">Submit</button> -->
-<!-- 		</form> -->
-<!-- 	</div> -->
-<!-- NEED STYLES FOR THIS -->
 
-<!-- <div class="account-selection" th:if="${session.selectedAccount == null}"> -->
-<!--     <p>Please choose an account from the dropdown menu below.</p> -->
-<!-- </div> -->
-<!-- <div class="transaction-history-form" -->
-<!-- 	th:style="${session.selectedAccount != null} ? 'margin-top: -380px;' : 'margin-top: 20px;'"> -->
-<!--     <form th:action="@{/view-transaction-history}" method="POST"> -->
-<!--         <select name="selectedAccountId"> -->
-<!--             <option th:each="account : ${session.accounts}" th:value="${account.accountId}" th:text="${account.accountName}"></option> -->
-<!--         </select> -->
-<!--         <button type="submit" class="debit-action-buttons">Submit</button> -->
-<!--     </form> -->
-<!-- </div> -->
 
 
 

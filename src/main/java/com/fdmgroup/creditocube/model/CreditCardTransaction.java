@@ -1,6 +1,7 @@
 package com.fdmgroup.creditocube.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,35 +13,34 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class CreditCardTransaction {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long transactionId;
-	
+
 	@ManyToOne
-	@JoinColumn(name="CARD_ID_FK", nullable=false)
+	@JoinColumn(name = "CARD_ID_FK", nullable = false)
 	private CreditCard transactionCard;
-	
+
 	@ManyToOne
-	@JoinColumn(name="MERCHANT_ID_FK")
+	@JoinColumn(name = "MERCHANT_ID_FK")
 	private Merchant merchantCode;
-	
+
 	private double cashbackAmount;
-	
+
 	private LocalDateTime transactionDate;
-	
+
 	private double transactionAmount;
-	
+
 	private String description;
-	
 
 	public CreditCardTransaction() {
 		super();
 	}
-	
-	public CreditCardTransaction(CreditCard transactionCard,
-			LocalDateTime transactionDate, double transactionAmount, String description) {
+
+	public CreditCardTransaction(CreditCard transactionCard, LocalDateTime transactionDate, double transactionAmount,
+			String description) {
 		super();
 		this.transactionCard = transactionCard;
 		this.transactionDate = transactionDate;
@@ -113,7 +113,12 @@ public class CreditCardTransaction {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}	
-	
-	
+	}
+
+	public String getFormattedTransactionDate() {
+		String date = transactionDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+//				+ transactionDate.format(DateTimeFormatter.ISO_TIME);
+		return date;
+	}
+
 }

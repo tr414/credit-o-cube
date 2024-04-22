@@ -18,31 +18,57 @@ import com.fdmgroup.creditocube.repository.CreditCardRepository;
 import com.fdmgroup.creditocube.repository.CreditCardTransactionRepository;
 import com.fdmgroup.creditocube.repository.CustomerRepository;
 
+/**
+ * CreditCardService class provides methods to manage credit card operations.
+ *
+ * 
+ */
 @Service
 public class CreditCardService {
 
+	/**
+	 * Autowired CreditCardRepository for managing credit card operations.
+	 */
 	@Autowired
 	private CreditCardRepository creditCardRepository;
 
+	/**
+	 * Autowired CustomerRepository for managing customer operations.
+	 */
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	/**
+	 * Autowired CreditCardTransactionRepository for managing credit card
+	 * transactions.
+	 */
 	@Autowired
 	private CreditCardTransactionRepository creditCardTransactionRepository;
 
+	/**
+	 * Creates a new credit card for a customer.
+	 *
+	 * @param card the credit card to be created
+	 * @return void
+	 */
+
 	private static Logger logger = LogManager.getLogger(DebitAccountService.class);
 
-//	@Autowired
-//	private DebitAccountService debitAccountService;
-
+	/**
+	 * Creates a new credit card for a customer.
+	 *
+	 * @param card the credit card to be created
+	 * @return void
+	 * 
+	 */
 	public void createCreditCard(CreditCard card) {
-
 		// determine if card exists in database
 		Optional<CreditCard> optionalCard = creditCardRepository.findById(card.getCardId());
 
 		// if the credit card is already present in the database, just return that
 		if (optionalCard.isPresent()) {
 			System.out.println("Card already exists: " + optionalCard.get().getCardId());
+			logger.info("Card already exists: ");
 			return;
 		}
 
@@ -53,7 +79,7 @@ public class CreditCardService {
 
 		// if that card does not belong to a customer
 		if (optionalCustomer.isEmpty()) {
-			System.out.println("Customer not found");
+			logger.info("Customer not found");
 			return;
 		}
 
@@ -63,7 +89,8 @@ public class CreditCardService {
 
 		// if they already hold 3 or more cards, cannot make new ones
 		if (cardList.size() >= 3) {
-			System.out.println("You cannot have 3 or more credit cards per customer.");
+//			System.out.println("You cannot have 3 or more credit cards per customer.");
+			logger.info("Customer tried to apply for a card when he/she already has 3 cards");
 			return;
 		}
 
@@ -72,7 +99,6 @@ public class CreditCardService {
 		cardHolder.setCreditCards(cardList);
 		creditCardRepository.save(card);
 		customerRepository.save(cardHolder);
-
 	}
 
 	public void updateCard(CreditCard card) {
@@ -92,6 +118,7 @@ public class CreditCardService {
 
 		// if account exists, persist
 		if (optionalCard.isEmpty()) {
+			logger.info("Card not found in database");
 			return;
 		}
 		CreditCard managedCard = optionalCard.get();
@@ -99,6 +126,7 @@ public class CreditCardService {
 		Optional<CreditCardTransaction> optionalTransaction = creditCardTransactionRepository
 				.findById(transaction.getTransactionId());
 		if (optionalTransaction.isEmpty()) {
+			logger.info("Transaction not found in database");
 			return;
 		}
 		CreditCardTransaction managedTransaction = optionalTransaction.get();
@@ -111,7 +139,7 @@ public class CreditCardService {
 			currentBalance += transactionItem.getTransactionAmount();
 		}
 		managedCard.setBalance(currentBalance);
-		logger.debug("currentBalance: " + currentBalance);
+		logger.debug("updated card balance: " + currentBalance);
 		managedCard.setCreditCardTransactions(currentTransactions);
 
 		creditCardRepository.save(managedCard);
@@ -123,6 +151,7 @@ public class CreditCardService {
 		Optional<CreditCard> optionalCard = creditCardRepository.findByCardNumber(cardNumber);
 
 		if (optionalCard.isEmpty()) {
+			logger.info("Card not found");
 			return Optional.empty();
 		} else {
 			return optionalCard;
@@ -134,6 +163,7 @@ public class CreditCardService {
 		Optional<CreditCard> optionalCard = creditCardRepository.findById(id);
 
 		if (optionalCard.isEmpty()) {
+			logger.info("Card not found");
 			return Optional.empty();
 		} else {
 			return optionalCard;
@@ -149,6 +179,7 @@ public class CreditCardService {
 		// check if customer exists
 		Optional<Customer> optionalCustomer = customerRepository.findById(customer.getUser_id());
 		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found, returning empty list");
 			return customerCards;
 		}
 
@@ -171,41 +202,27 @@ public class CreditCardService {
 	}
 
 	public String generateCreditCardNumber() {
-		String accountNumber;
-		final Random random = new Random();
+
+		String accountNumber = "";
+		final Random RANDOM = new Random();
 		do {
-			long number = (long) (100000000 + random.nextInt(900000000));
-			accountNumber = String.format("%09d", number);
+			for (int i = 0; i < 4; i++) {
+				long number = RANDOM.nextLong(9999);
+				String stringNumber = String.format("%04d", number);
+				accountNumber = accountNumber + stringNumber;
+			}
 		} while (cardNumberExists(accountNumber));
 		return accountNumber;
 
 	}
-
-	// method to close the card
-
-	// method calculates how much a customer needs to pay if its not a custom amount
-	public double calculateAmountPayable(String paymentOption, double balance) {
-		if (paymentOption.equals("Pay Current Balance")) {
-			System.out.println("Paying current balance");
-			// i need to find a debit account and deduct from it
-			// what's the balance I need to pay
-			return balance;
-		} else if (paymentOption.equals("Pay minimum")) {
-			return balance * 0.03;
-		}
-		System.out.println("Invalid payment option");
-		return 0;
-
-	}
-	
 
 	public List<CreditCard> findAllCreditCards() {
 		return creditCardRepository.findAll();
 	}
 
 	public boolean customerAlreadyHasCardType(Customer customer, CardType cardType) {
-	    return creditCardRepository.findAllByCustomer(customer).stream()
-	        .anyMatch(card -> card.getCardType().equals(cardType));
+		return creditCardRepository.findAllByCustomer(customer).stream()
+				.anyMatch(card -> card.getCardType().equals(cardType));
 	}
 
 }

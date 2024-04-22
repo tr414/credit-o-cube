@@ -3,6 +3,8 @@ package com.fdmgroup.creditocube.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ public class CardTypeService {
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	private static final Logger LOGGER = LogManager.getLogger(CreditCardTransactionService.class);
+
 	public Optional<CardType> findCardTypeByName(String name) {
 		return cardTypeRepository.findByCardTypeByName(name);
 
@@ -30,18 +34,18 @@ public class CardTypeService {
 
 	public boolean isCardTypeTableEmpty() {
 		boolean isCardTypeTableEmpty = cardTypeRepository.count() == 0;
-		System.out.println("Rewards table is empty: " + isCardTypeTableEmpty);
+		LOGGER.info("Rewards table is empty: " + isCardTypeTableEmpty);
+//		System.out.println("Rewards table is empty: " + isCardTypeTableEmpty);
 		return isCardTypeTableEmpty;
 	}
-	
+
 	public CardType saveCardType(CardType cardType) {
-        return cardTypeRepository.save(cardType);
-    }
-	
-	public boolean canCreateNewCardType() {
-	    long count = cardTypeRepository.count();
-	    return count < 5;
+		return cardTypeRepository.save(cardType);
 	}
-	
-	
+
+	public boolean canCreateNewCardType() {
+		long count = cardTypeRepository.count();
+		return count < 5;
+	}
+
 }

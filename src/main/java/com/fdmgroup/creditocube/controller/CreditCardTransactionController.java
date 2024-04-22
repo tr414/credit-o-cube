@@ -4,18 +4,17 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestClient;
 
 import com.fdmgroup.creditocube.model.CreditCard;
@@ -50,18 +49,24 @@ public class CreditCardTransactionController {
 
 	private static Logger logger = LogManager.getLogger(CreditCardTransactionController.class);
 
-	@Value("${API_KEY}")
-	private String apiKey;
+//	@Value("${API_KEY}")
+	private String apiKey = "1234";
 
 	public CreditCardTransactionController() {
 		restClient = RestClient.builder().baseUrl("http://api.exchangeratesapi.io/v1/latest").build();
 	}
 
-	@PostMapping("/card-transactions")
-	public String getAllCardTransactions(Model model, HttpServletRequest request) {
-		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
+	@RequestMapping("/card-transactions")
+	public String getAllCardTransactions(Model model, HttpServletRequest request, Principal principal) {
 
-//		CreditCard card = cardService.findCardByCardId(cardId.longValue()).orElse(null);
+		String stringCardId = request.getParameter("cardId");
+		BigDecimal cardId;
+		if (stringCardId != null) {
+			cardId = new BigDecimal(request.getParameter("cardId"));
+		} else {
+			return "card-transactions";
+		}
+
 		// amended code above to return optional rather than null - tim
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
 		if (optionalCard.isEmpty()) {
@@ -71,7 +76,7 @@ public class CreditCardTransactionController {
 
 		List<CreditCardTransaction> cardTransactions = transactionService.findAllCreditCardTransactions(card);
 		model.addAttribute("transactions", cardTransactions);
-		
+
 		return ("card-transactions");
 	}
 
@@ -113,13 +118,13 @@ public class CreditCardTransactionController {
 		String merchantCode = request.getParameter("merchantCode");
 		Merchant merchant;
 		Optional<Merchant> merchantOptional = merchantRepo.findByMerchantCode(merchantCode);
-				
+
 		if (merchantOptional.isEmpty()) {
-				return "redirect:create-card-transaction";
+			return "redirect:create-card-transaction";
 		} else {
 			merchant = merchantOptional.get();
 		}
-		
+
 		String merchantCategory = merchant.getCategory();
 
 		// currency

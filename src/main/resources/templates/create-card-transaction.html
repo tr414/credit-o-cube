@@ -21,7 +21,7 @@
 					<select name="cardId" id="cardId" required>
 						<option th:each="card : ${cards}"
 							th:value="${card.cardId}"
-							th:text="${card.cardNumber}"></option>
+							th:text="${card.getFormattedCreditCardNumber()}"></option>
 					</select>
 				</div>
 				<div class="form-group">
@@ -29,7 +29,7 @@
 					<select name="merchantCode" id="merchantCode" required>
 						<option th:each="merchant : ${merchants}"
 							th:value="${merchant.merchantCode}"
-							th:text="${merchant.merchantCode}"></option>
+							th:text="${merchant.merchantCode} + ' - ' + ${merchant.category}"></option>
 					</select>
 				</div>
 				<div class="form-group">
