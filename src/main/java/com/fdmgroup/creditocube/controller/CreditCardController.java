@@ -207,6 +207,8 @@ public class CreditCardController {
 
 		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
 		creditCardService.createCreditCard(newCard);
+		billService.createBillForNewCard(newCard);
+		
 		model.addAttribute("success", "Successfully created a new credit card.");
 		billService.createBillForNewCard(newCard);
 		return "redirect:/creditcard-dashboard";
@@ -226,7 +228,7 @@ public class CreditCardController {
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
 		}
-
+	
 		// set customer and their accounts as session attributes to retrieve in view
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);

@@ -14,34 +14,35 @@
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
     <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-    <!--     <button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
-	<form th:action="@{/logout}" method="post">
-				<div class="buttons">
-					<button type="submit" class="login-button">Logout</button>
-				</div>
-			</form>
+    
+	
 	
   </div>
 
-  <div class="side-menu" id="sideMenu">
+  <div class="side-menu menu-active" id="sideMenu">
   	<div class="user-greeting">
-		<P>CREDIT CARD</P>
-		<P>DETAILS</P>
+		<P>My Credit Cards</P>
 	</div>
     <a href="apply-creditcard">Apply for a credit card</a>
-    <a href="#">Set credit limit</a>
-    <a href="#">Transaction history</a>
+
+    <a href="create-card-transaction">Create Card Transaction</a>
+
     <a href="pay-creditcard-balance">Pay bills</a>
     <a href="account-dashboard">Account dashboard</a>
     <a href="creditcard-dashboard">Credit card dashboard</a> 
     <a href="customer-dashboard">Main dashboard</a>
-    <a href="create-card-transaction">Create Card Transaction</a>
-    <a href="create-card-type">Create Card Type</a>
-    <a href="create-reward">Create Reward for Card Type</a>
+    <a href="#">Set credit limit (FOR ADMIN)</a>
+    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
+    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
+    <form th:action="@{/logout}" method="post">
+		<div class="buttons">
+			<button type="submit" class="login-button">Logout</button>
+		</div>
+	</form>
     <!-- Add other menu items here -->
   </div>
   
-  <div class="content-area">
+  <div class="content-area main-content">
     <div>
       <table>
         <thead>
@@ -56,21 +57,21 @@
         <tbody>
           <tr th:each="card : ${credit_cards}">
             
-            <td th:text="${card.cardNumber}"></td>
-            <td th:text="${card.balance}"></td>
-            <td th:text="'$ '+${card.cardLimit}"></td>
+            <td th:text="${card.getFormattedCreditCardNumber()}"></td>
+            <td th:text="${card.balance}" class="price-element"></td>
+            <td th:text="${card.cardLimit}" class="price-element"></td>
             <td>
               <form th:action="@{/card-transactions}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit">View Transaction History</button>
+                <button type="submit" class="credit-action-buttons">View Transaction History</button>
               </form>
               <form th:action="@{/view-card-bill}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit">View Card Bill</button>
+                <button type="submit" class="credit-action-buttons">View Card Bill</button>
               </form>
                <form th:action="@{/open-card-payment}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit">Pay Card Bill/Balance</button>
+                <button type="submit" class="credit-action-buttons">Pay Card Bill/Balance</button>
               </form>
             </td>
           </tr>

@@ -117,4 +117,22 @@ public class CreditCard {
 		this.bill = bill;
 	}
 
+	public String getFormattedCreditCardNumber() {
+		if (cardNumber.length() > 12) {
+			return (this.getCardNumber().substring(0, 4) + "-" + this.getCardNumber().substring(4, 8) + "-"
+					+ this.getCardNumber().substring(8, 12) + "-" + this.getCardNumber().substring(12, 16));
+		} else {
+			return cardNumber;
+		}
+
+	}
+
+	public String getMaskedCreditCardNumber() {
+		if (cardNumber.length() > 12) {
+			return ("****-****-****-" + this.getCardNumber().substring(12, 16));
+		} else {
+			return cardNumber;
+		}
+	}
+
 }

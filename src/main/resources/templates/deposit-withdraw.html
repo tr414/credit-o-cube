@@ -21,11 +21,11 @@
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
 			<p>
-				Hello, <span th:text="${firstName}">FirstName</span>
+				Deposit / Withdraw your funds here
 			</p>
-			<p>What would you like to do today?</p>
+			
 		</div>
-		<a href="transfer-to-account-number">Transfer money</a> <a
+		<a href="transfer-to-account-number">Transfer funds</a> <a
 			href="deposit-withdraw">Deposit / Withdraw</a> <a
 			href="account-dashboard">Account dashboard</a> <a
 			href="creditcard-dashboard">Credit card dashboard</a> <a
@@ -38,39 +38,64 @@
 	</div>
 
 
+<!-- NEED STYLES FOR THIS -->
+<!-- 	<div> -->
+<!-- 		<div style="margin-top:400px; margin-left:500px" th:if="${session.selectedAccount != null}"> -->
+<!-- 			<h2 th:text="'Account Name: '+${session.selectedAccount.accountName}"></h2> -->
+<!-- 			<p -->
+<!-- 				th:text="'Account Number: '+${session.selectedAccount.accountNumber}"></p> -->
+<!-- 			<p -->
+<!-- 				th:text="'Current Balance: $'+${session.selectedAccount.accountBalance}"></p> -->
+<!-- 			<form th:action="update-account-balance" method="POST"> -->
+<!-- 				<h4>Deposit / Withdraw</h4> -->
+<!-- 				<input type="hidden" th:value="${session.selectedAccount.accountId}" -->
+<!-- 					name="accountId"> <input type="number" step="0.01" -->
+<!-- 					name="amount"> -->
+<!-- 				<button type="submit" name="transaction" value="deposit">Deposit</button> -->
+<!-- 				<button type="submit" name="transaction" value="withdraw">Withdraw</button> -->
+<!-- 			</form> -->
+<!-- 		</div> -->
 
-	<div>
-		<div style="margin-top:400px; margin-left:500px" th:if="${session.selectedAccount != null}">
-			<h2 th:text="'Account Name: '+${session.selectedAccount.accountName}"></h2>
-			<p
-				th:text="'Account Number: '+${session.selectedAccount.accountNumber}"></p>
-			<p
-				th:text="'Current Balance: $'+${session.selectedAccount.accountBalance}"></p>
-			<form th:action="update-account-balance" method="POST">
-				<h4>Deposit / Withdraw</h4>
-				<input type="hidden" th:value="${session.selectedAccount.accountId}"
-					name="accountId"> <input type="number" step="0.01"
-					name="amount">
-				<button type="submit" name="transaction" value="deposit">Deposit</button>
-				<button type="submit" name="transaction" value="withdraw">Withdraw</button>
-			</form>
-		</div>
-
-		<div th:if="${session.selectedAccount == null}">
-			<p>Please choose an account from the dropdown menu below.</p>
-		</div>
-		<form style="margin-left:500px" th:action="@{/deposit-withdraw}" method="POST">
-			<select name="selectedAccountId">
-				<option th:each="account : ${session.accounts}"
-					th:value="${account.accountId}" th:text="${account.accountName}">
-				</option>
-			</select>
-			<button type="submit" class="debit-action-buttons">Submit</button>
-		</form>
+<!-- 		<div th:if="${session.selectedAccount == null}"> -->
+<!-- 			<p>Please choose an account from the dropdown menu below.</p> -->
+<!-- 		</div> -->
+<!-- 		<form style="margin-top:400px; margin-left:500px" th:action="@{/deposit-withdraw}" method="POST"> -->
+<!-- 			<select name="selectedAccountId"> -->
+<!-- 				<option th:each="account : ${session.accounts}" -->
+<!-- 					th:value="${account.accountId}" th:text="${account.accountName}"> -->
+<!-- 				</option> -->
+<!-- 			</select> -->
+<!-- 			<button type="submit" class="debit-action-buttons">Submit</button> -->
+<!-- 		</form> -->
 		
 
-	</div>
+<!-- 	</div> -->
+<!-- NEED STYLES FOR THIS -->
 
+<div class="deposit-withdraw-wrapper">
+    <div th:if="${session.selectedAccount != null}">
+        <h2 th:text="'Account Name: '+${session.selectedAccount.accountName}"></h2>
+        <p th:text="'Account Number: '+${session.selectedAccount.accountNumber}"></p>
+        <p th:text="'Current Balance: $'+${session.selectedAccount.accountBalance}"></p>
+        <form th:action="update-account-balance" method="POST">
+            <h4>Deposit / Withdraw</h4>
+            <input type="hidden" th:value="${session.selectedAccount.accountId}" name="accountId">
+            <input type="number" step="0.01" name="amount">
+            <button type="submit" name="transaction" value="deposit">Deposit</button>
+            <button type="submit" name="transaction" value="withdraw">Withdraw</button>
+        </form>
+    </div>
+
+    <div th:if="${session.selectedAccount == null}">
+        <p>Please choose an account from the dropdown menu below.</p>
+    </div>
+    <form th:action="@{/deposit-withdraw}" method="POST">
+        <select name="selectedAccountId">
+            <option th:each="account : ${session.accounts}" th:value="${account.accountId}" th:text="${account.accountName}"></option>
+        </select>
+        <button type="submit" class="debit-action-buttons">Submit</button>
+    </form>
+</div>
 
 	
 
