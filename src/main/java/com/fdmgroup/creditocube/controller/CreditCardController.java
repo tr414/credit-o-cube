@@ -227,7 +227,7 @@ public class CreditCardController {
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
 		}
-
+	
 		// set customer and their accounts as session attributes to retrieve in view
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
