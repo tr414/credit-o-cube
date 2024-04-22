@@ -207,6 +207,8 @@ public class CreditCardController {
 
 		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
 		creditCardService.createCreditCard(newCard);
+		billService.createBillForNewCard(newCard);
+		
 		model.addAttribute("success", "Successfully created a new credit card.");
 		return "redirect:/creditcard-dashboard";
 	}
