@@ -53,3 +53,229 @@ form {
 	margin-top: 5px;
 }
 
+
+
+/* NEWWWW */
+.debit-form-wrapper {
+  max-width: 500px; /* Restricts the form's width to 500px */
+  margin: 100px auto; /* Centers the form vertically and horizontally with 100px top margin */
+  padding: 20px; /* Adds padding inside the wrapper for spacing around the form */
+  background-color: #ffffff; /* Sets a white background for the form */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+  border-radius: 8px; /* Rounds the corners of the wrapper */
+}
+
+.debit-form-wrapper form {
+  display: flex;
+  flex-direction: column;
+}
+
+.debit-form-wrapper label {
+  margin-bottom: 5px; /* Adds a small space below each label */
+  font-size: 16px; /* Sets a readable font size for labels */
+  color: #333; /* Dark grey color for better readability */
+}
+
+.debit-form-wrapper input[type="text"],
+.debit-form-wrapper input[type="number"] {
+  padding: 10px; /* Adds padding inside the input fields for easier text entry */
+  margin-bottom: 20px; /* Adds space below each input field */
+  border: 1px solid #ccc; /* Adds a light grey border */
+  border-radius: 4px; /* Rounds the corners of the input fields */
+}
+
+.debit-form-wrapper input[type="submit"] {
+  font-weight: bold; /* Makes the submit button text bold */
+  text-transform: uppercase; /* Makes the submit button text uppercase for emphasis */
+  transition: background-color 0.3s, transform 0.2s; /* Smoothens the hover effect transitions */
+}
+
+.deposit-withdraw-wrapper {
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.deposit-withdraw-wrapper h2,
+.deposit-withdraw-wrapper h4 {
+  color: #333;
+  text-align: left;
+  margin-top: 0;
+}
+
+.deposit-withdraw-wrapper p {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.deposit-withdraw-wrapper form {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.deposit-withdraw-wrapper input[type="number"] {
+  width: 50%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.deposit-withdraw-wrapper button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #0051ba;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.deposit-withdraw-wrapper button:hover {
+  background-color: #003c8f;
+}
+
+.deposit-withdraw-wrapper select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  margin-top: 20px;
+}
+
+.transfer-form-section {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.transfer-form-section p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #333;
+}
+
+.transfer-form-section form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.transfer-form-section select,
+.transfer-form-section input[type="number"],
+.transfer-form-section input[type="text"] {
+    width: 90%;  /* Adjust based on preference */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.transfer-form-section label {
+    margin-bottom: 5px;
+    font-size: 16px;
+    display: block; /* Ensures the label appears above the input */
+}
+
+.transfer-form-section button {
+    padding: 10px 20px;
+    background-color: #0051ba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.transfer-form-section button:hover {
+    background-color: #003c8f;
+}
+
+.account-selection {
+    margin-top: 50px;
+    text-align: center;
+    padding: 20px;
+    background-color: #f4f7fc;
+}
+
+.transaction-history-form {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.transaction-history-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.transaction-history-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.transaction-history-form button {
+    font-size: 16px;
+    padding: 10px 20px;
+    background-color: #0051ba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.transaction-history-form button:hover {
+    background-color: #003c8f;
+}
+
+/* Scrollable container for the table */
+.table-scrollable {
+  max-height: 400px; /* Adjust this height to your preference */
+  overflow-y: auto;
+  margin-bottom: 20px; /* This ensures there's a gap between the table and the form */
+}
+
+/* Styles for the table within the scrollable container */
+.table-scrollable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-scrollable th,
+.table-scrollable td {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table-scrollable th {
+  background-color: #0073e6;
+  color: white;
+}
+
+.table-scrollable td {
+  background-color: #f4f7fc;
+  color: #333;
+}
+
+.table-scrollable tbody tr:hover {
+  background-color: #e1f0ff;
+}
+

@@ -20,9 +20,9 @@
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
 			<p>
-				Hello, <span th:text="${firstName}">FirstName</span>
+				MY TRANSACTION HISTORY
 			</p>
-			<p>What would you like to do today?</p>
+			
 		</div>
 		<a href="transfer-to-account-number">Transfer money</a> <a
 			href="deposit-withdraw">Deposit / Withdraw</a> <a
@@ -37,47 +37,76 @@
 	</div>
 	<!-- 	keep this for now -->
 
-	<div class="content-area main-content" th:if="${session.selectedAccount != null}">
-		<table>
-			<thead>
-				<tr>
-					<th>Transaction Date</th>
-					<th>From</th>
-					<th>To</th>
-					<th>Transaction Type</th>
-					<th>Amount</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="transaction : ${session.accountTransactions}">
-				
-					<td th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
-					<td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td>
-					<td th:text="${transaction.toAccountNumber ?: '---'}"></td>
-					<td th:text="${transaction.debitAccountTransactionType}"></td>
-					<td
-						th:text="${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
-				</tr>
-			</tbody>
-		</table>
-		
-		
-	
-	</div>
+	<div class="content-area main-content">
+    <!-- Conditional content for transaction history -->
+    <div class="table-scrollable" th:if="${session.selectedAccount != null}">
+      <table>
+        <thead>
+          <tr>
+            <th>Transaction Date</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Transaction Type</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop over transactions -->
+          <tr th:each="transaction : ${session.accountTransactions}">
+            <td th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
+            <td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td>
+            <td th:text="${transaction.toAccountNumber ?: '---'}"></td>
+            <td th:text="${transaction.debitAccountTransactionType}"></td>
+            <td th:text="${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Account selection form -->
+    <div class="account-selection" th:if="${session.selectedAccount == null}">
+      <p>Please choose an account from the dropdown menu below.</p>
+    </div>
 
-	<div style="margin-top:50px" th:if="${session.selectedAccount == null}">
-		<p>Please choose an account from the dropdown menu below.</p>
-	</div>
-	<div>
-		<form th:action="@{/view-transaction-history}" method="POST">
-			<select name="selectedAccountId">
-				<option th:each="account : ${session.accounts}"
-					th:value="${account.accountId}" th:text="${account.accountName}">
-				</option>
-			</select>
-			<button type="submit" class="debit-action-buttons">Submit</button>
-		</form>
-	</div>
+    <div class="transaction-history-form">
+      <form th:action="@{/view-transaction-history}" method="POST">
+        <select name="selectedAccountId">
+          <option th:each="account : ${session.accounts}" th:value="${account.accountId}" th:text="${account.accountName}"></option>
+        </select>
+        <button type="submit" class="debit-action-buttons">Submit</button>
+      </form>
+    </div>
+  </div>
+
+<!-- NEED STYLES FOR THIS -->
+<!-- 	<div style="margin-top:50px" th:if="${session.selectedAccount == null}"> -->
+<!-- 		<p>Please choose an account from the dropdown menu below.</p> -->
+<!-- 	</div> -->
+<!-- 	<div> -->
+<!-- 		<form th:action="@{/view-transaction-history}" method="POST"> -->
+<!-- 			<select name="selectedAccountId"> -->
+<!-- 				<option th:each="account : ${session.accounts}" -->
+<!-- 					th:value="${account.accountId}" th:text="${account.accountName}"> -->
+<!-- 				</option> -->
+<!-- 			</select> -->
+<!-- 			<button type="submit" class="debit-action-buttons">Submit</button> -->
+<!-- 		</form> -->
+<!-- 	</div> -->
+<!-- NEED STYLES FOR THIS -->
+
+<!-- <div class="account-selection" th:if="${session.selectedAccount == null}"> -->
+<!--     <p>Please choose an account from the dropdown menu below.</p> -->
+<!-- </div> -->
+<!-- <div class="transaction-history-form" -->
+<!-- 	th:style="${session.selectedAccount != null} ? 'margin-top: -380px;' : 'margin-top: 20px;'"> -->
+<!--     <form th:action="@{/view-transaction-history}" method="POST"> -->
+<!--         <select name="selectedAccountId"> -->
+<!--             <option th:each="account : ${session.accounts}" th:value="${account.accountId}" th:text="${account.accountName}"></option> -->
+<!--         </select> -->
+<!--         <button type="submit" class="debit-action-buttons">Submit</button> -->
+<!--     </form> -->
+<!-- </div> -->
+
 
 
 
