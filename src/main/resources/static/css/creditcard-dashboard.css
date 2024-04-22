@@ -52,3 +52,67 @@ form {
     font-style: italic; /* Italicize admin specific links */
     color: #ff4500; /* Orange color for emphasis */
 }
+
+
+/* NEWWWW */
+.payment-form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.form-section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group select {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.legend {
+    font-size: 18px;
+    color: #333;
+}
+
+.credit-action-buttons {
+    width: 100%; /* Make button width consistent */
+    padding: 10px;
+    font-size: 16px;
+}
+
+h2 {
+    font-size: 24px; /* Adjust size as needed */
+    font-family: 'Arial', sans-serif; /* Choose the font family you prefer */
+    color: #333; /* A dark color for the title */
+    text-align: center; /* Center-align the title */
+    margin-top: 20px; /* Adjust to ensure it's below the header */
+    margin-bottom: 30px; /* Space before the content starts */
+    font-weight: bold; /* Makes the title bold */
+}
+
+form.payment-form fieldset.form-section legend {
+    font-weight: bold; /* Bolds the legend text */
+    font-size: 20px; /* Adjust the font size as desired */
+    padding: 0 5px; /* Optional: Adds padding around the text */
+    margin-bottom: 10px; /* Optional: Adds space below the legend */
+}
