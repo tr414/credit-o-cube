@@ -319,20 +319,20 @@ public class CustomerController {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 
 		if (optionalCustomer.isEmpty()) {
-			System.out.println("Customer not found in database");
+			logger.info("Customer not found in database, abort account deletion");
 			return "redirect:/login";
 		}
 
 		Customer customer = optionalCustomer.get();
 
 		if (customer.getDebitAccounts().size() > 0) {
-			System.out.println("Customer has debit accounts");
+			logger.debug("Customer has existing debit accounts, abort account deletion");
 			return "redirect:/home";
 		}
 
 		customerService.deleteCustomer(customer);
 
-		System.out.println("Deleted customer account");
+		logger.debug("Deleted customer account successfully");
 		return "redirect:/login";
 	}
 
