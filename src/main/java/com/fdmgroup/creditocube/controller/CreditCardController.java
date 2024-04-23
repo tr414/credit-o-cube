@@ -221,7 +221,6 @@ public class CreditCardController {
 		billService.createBillForNewCard(newCard);
 
 		model.addAttribute("success", "Successfully created a new credit card.");
-		billService.createBillForNewCard(newCard);
 		return "redirect:/creditcard-dashboard";
 	}
 
