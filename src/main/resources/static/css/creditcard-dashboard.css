@@ -1,30 +1,28 @@
-
-
 /* Styles for the credit card table */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px auto;
+	width: 100%;
+	border-collapse: collapse;
+	margin: 20px auto;
 }
 
 th, td {
-    text-align: center;
-    padding: 12px;
-    border-bottom: 1px solid #ddd; /* Light grey border for each row */
+	text-align: center;
+	padding: 12px;
+	border-bottom: 1px solid #ddd; /* Light grey border for each row */
 }
 
 th {
-    background-color: #0073e6; /* Blue to match header */
-    color: white; /* White text for headers */
+	background-color: #0073e6; /* Blue to match header */
+	color: white; /* White text for headers */
 }
 
 td {
-    background-color: #f4f7fc; /* Matching the content area background */
-    color: #333; /* Dark grey for text */
+	background-color: #f4f7fc; /* Matching the content area background */
+	color: #333; /* Dark grey for text */
 }
 
 tbody tr:hover {
-    background-color: #e1f0ff; /* Light blue for hover effect */
+	background-color: #e1f0ff; /* Light blue for hover effect */
 }
 
 .actions-container {
@@ -50,94 +48,77 @@ tbody tr:hover {
 }
 
 .credit-action-buttons {
-  background-color: #0051ba; /* Blue background to match the theme */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 5px 0; /* A bit of margin for spacing */
-  
+	background-color: #0051ba; /* Blue background to match the theme */
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 10px 15px;
 }
-
-
 
 .credit-action-buttons:hover {
-  background-color: #003c8f; /* Darker blue on hover */
-}
-
-/* Style adjustments for forms within the dashboard */
-form {
-    text-align: center; /* Center align form contents */
-    margin: 20px 0; /* Margin top and bottom for spacing */
+	background-color: #003c8f; /* Darker blue on hover */
 }
 
 /* Specific styles for admin-only options */
 .admin-action {
-    font-style: italic; /* Italicize admin specific links */
-    color: #ff4500; /* Orange color for emphasis */
+	font-style: italic; /* Italicize admin specific links */
+	color: #ff4500; /* Orange color for emphasis */
 }
-
 
 /* NEWWWW */
 .payment-form {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    border-radius: 8px;
+	max-width: 600px;
+	margin: 20px auto;
+	padding: 20px;
+	background-color: #ffffff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
 }
 
 .form-section {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+	margin-bottom: 20px;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
 }
 
 .input-group {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .input-group label {
-    display: block;
-    margin-bottom: 5px;
+	display: block;
+	margin-bottom: 5px;
 }
 
-.input-group input,
-.input-group select {
-    width: calc(100% - 10px);
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.input-group input, .input-group select {
+	width: calc(100% - 10px);
+	padding: 8px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 .legend {
-    font-size: 18px;
-    color: #333;
-}
-
-.credit-action-buttons {
-    width: 100%; /* Make button width consistent */
-    padding: 10px;
-    font-size: 16px;
+	font-size: 18px;
+	color: #333;
 }
 
 h2 {
-    font-size: 24px; /* Adjust size as needed */
-    font-family: 'Arial', sans-serif; /* Choose the font family you prefer */
-    color: #333; /* A dark color for the title */
-    text-align: center; /* Center-align the title */
-    margin-top: 20px; /* Adjust to ensure it's below the header */
-    margin-bottom: 30px; /* Space before the content starts */
-    font-weight: bold; /* Makes the title bold */
+	font-size: 24px; /* Adjust size as needed */
+	font-family: 'Arial', sans-serif;
+	/* Choose the font family you prefer */
+	color: #333; /* A dark color for the title */
+	text-align: center; /* Center-align the title */
+	margin-top: 20px; /* Adjust to ensure it's below the header */
+	margin-bottom: 30px; /* Space before the content starts */
+	font-weight: bold; /* Makes the title bold */
 }
 
 form.payment-form fieldset.form-section legend {
-    font-weight: bold; /* Bolds the legend text */
-    font-size: 20px; /* Adjust the font size as desired */
-    padding: 0 5px; /* Optional: Adds padding around the text */
-    margin-bottom: 10px; /* Optional: Adds space below the legend */
+	font-weight: bold; /* Bolds the legend text */
+	font-size: 20px; /* Adjust the font size as desired */
+	padding: 0 5px; /* Optional: Adds padding around the text */
+	margin-bottom: 10px; /* Optional: Adds space below the legend */
 }
