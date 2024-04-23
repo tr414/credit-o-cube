@@ -62,6 +62,14 @@ public class DebitAccountTransactionService {
 			return;
 		}
 
+		if (debitAccountTransaction.getFromAccount() != null) {
+			String fromAccountNumber = debitAccountTransaction.getFromAccount().getAccountNumber();
+			if (fromAccountNumber.equals(debitAccountTransaction.getToAccountNumber())) {
+				logger.info("Transaction from and to account are the same, abort transaction");
+				return;
+			}
+		}
+
 		logger.debug("Transaction details saved to database");
 		debitAccountTransactionRepository.save(debitAccountTransaction);
 	}
@@ -89,6 +97,14 @@ public class DebitAccountTransactionService {
 		if (optionalTransaction.isEmpty()) {
 			logger.info("Transaction not found in database, abort transaction");
 			return;
+		}
+
+		if (debitAccountTransaction.getFromAccount() != null) {
+			String fromAccountNumber = debitAccountTransaction.getFromAccount().getAccountNumber();
+			if (fromAccountNumber.equals(debitAccountTransaction.getToAccountNumber())) {
+				logger.info("Transaction from and to account are the same, abort transaction");
+				return;
+			}
 		}
 
 		// perform deep copy and save managed version of transaction
