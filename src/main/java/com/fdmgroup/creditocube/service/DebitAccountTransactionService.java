@@ -163,11 +163,6 @@ public class DebitAccountTransactionService {
 			relatedTransactions.addAll(debitAccountTransactionRepository.findByFromAccount(account.getAccountId()));
 		}
 
-		if (relatedTransactions.size() == 0) {
-			logger.debug("Customer has no transactions");
-			return relatedTransactions;
-		}
-
 		List<DebitAccountTransaction> relatedTransactionsNoDuplicates = new ArrayList<>(
 				new HashSet<>(relatedTransactions));
 		logger.debug("Removed duplicate transactions");
@@ -183,6 +178,11 @@ public class DebitAccountTransactionService {
 //		relatedTransactionsNoDuplicates.removeIf(transaction -> transaction.getDebitAccountTransactionDate()
 //				.before(new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000)));
 //		logger.debug("Remove transactions more than 7 days ago");
+
+		if (relatedTransactions.size() < 6) {
+			logger.debug("Customer has no transactions");
+			return relatedTransactions;
+		}
 
 		relatedTransactionsNoDuplicates.subList(5, relatedTransactionsNoDuplicates.size()).clear();
 		logger.debug("Keep only most recent 5 transactions");
