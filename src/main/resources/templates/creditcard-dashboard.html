@@ -41,9 +41,9 @@
 <!--     <a href="account-dashboard">Account dashboard</a> -->
 <!--     <a href="creditcard-dashboard">Credit card dashboard</a>  -->
 <!--     <a href="customer-dashboard">Main dashboard</a> -->
-<!--     <a href="#">Set credit limit (FOR ADMIN)</a> -->
-<!--     <a href="create-card-type">Create Card Type (FOR ADMIN)</a> -->
-<!--     <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a> -->
+    <a href="#">Set credit limit (FOR ADMIN)</a>
+    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
+    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
 <!--     <form th:action="@{/logout}" method="post"> -->
 <!-- 		<div class="buttons"> -->
 <!-- 			<button type="submit" class="login-button">Logout</button> -->
@@ -84,7 +84,11 @@
         <tbody>
           <tr th:each="card : ${credit_cards}">
             
-            <td th:text="${card.getFormattedCreditCardNumber()}"></td>
+            <!-- <td th:text="${card.getFormattedCreditCardNumber()} + ' -- ' + ${card.cardType.name}"></td> -->
+            <td>
+            	<p th:text="${card.getFormattedCreditCardNumber()} "></p><br>
+            	<p th:text="${card.cardType.name}" ></p>
+            </td>
             <td th:text="${card.balance}" class="price-element"></td>
             <td th:text="${card.cardLimit}" class="price-element"></td>
             <td>
