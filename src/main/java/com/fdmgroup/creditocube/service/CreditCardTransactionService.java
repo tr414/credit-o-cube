@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
+import com.fdmgroup.creditocube.model.InstallmentPayment;
 import com.fdmgroup.creditocube.repository.CreditCardTransactionRepository;
 
 @Service
@@ -20,6 +21,9 @@ public class CreditCardTransactionService {
 
 	@Autowired
 	private CreditCardTransactionRepository repo;
+	
+	@Autowired 
+	private InstallmentPaymentService installmentService;
 
 	public Optional<CreditCardTransaction> createCreditCardTransaction(CreditCardTransaction transaction) {
 		Optional<CreditCardTransaction> createdTransaction;
@@ -66,6 +70,17 @@ public class CreditCardTransactionService {
 		CreditCardTransaction interestFeeTransaction = new CreditCardTransaction(card, LocalDateTime.now(), interestPaymentFees, "Interest on bill outstanding amount");
 		createCreditCardTransaction(interestFeeTransaction);
 		LOGGER.info("Added interest fee on outstanding bill amount transaction to card number: {}", card.getCardNumber());
+	}
+
+	public void createCashbackTransaction(CreditCard card, double cashback) {
+		CreditCardTransaction cashbackTransaction = new CreditCardTransaction(card, LocalDateTime.now(), cashback, "Cashback credited on monthly spending");
+		createCreditCardTransaction(cashbackTransaction);
+		
+	}
+
+	public void createInstallmentPayment(CreditCard card, double transactionAmount) {
+		InstallmentPayment installmentPayment = new InstallmentPayment(card, transactionAmount, 6);
+		installmentService.createInstallmentPayment(installmentPayment);		
 	}
 
 }

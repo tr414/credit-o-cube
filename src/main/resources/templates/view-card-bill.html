@@ -58,17 +58,19 @@
 		<table>
 			<thead>
 				<tr>
-					<th>Total Amount Due</th>
-					<th>Minimum Amount Due</th>
-					<th>Bill Paid</th>
+					<td>Total Bill Amount</td>
+					<td>Outstanding Amount Due</td>
+					<td>Minimum Amount Due</td>
+					<td>Payment Required</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td th:text="${bill.totalAmountDue}"></td>
+					<td th:text="${bill.outstandingAmount}"></td>
 					<td th:text="${bill.minimumAmountDue}"></td>
-					<td th:if="${bill.paid}">Yes</td>
-					<td th:if="${!bill.paid}">No</td>
+					<td th:if="${bill.paid}">No</td>
+					<td th:if="${!bill.paid}">Yes</td>
 				</tr>
 			</tbody>
 		</table>

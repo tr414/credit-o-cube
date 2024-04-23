@@ -100,9 +100,9 @@ public class ValidationService {
 		}
 	}
 
-	public Optional<String> isValidSalary(String salary) {
+	public Optional<String> isValidSalary(double salary) {
 		try {
-			double salaryValue = Double.parseDouble(salary);
+			double salaryValue = salary;
 
 			if (salaryValue < 0) {
 				return Optional.of("Salary cannot be negative.");

@@ -335,6 +335,11 @@ public class DebitAccountService {
 			return false;
 		}
 
+		if (targetAccount.getAccountNumber().equals(toAccountNumber)) {
+			logger.info("Cannot transfer to same account, abort transaction");
+			return false;
+		}
+
 		targetAccount = updateBalance(targetAccount, -amount);
 
 		Optional<DebitAccount> optionalToAccount = debitAccountRepository.findByAccountNumber(toAccountNumber);
