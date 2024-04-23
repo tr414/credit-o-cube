@@ -14,11 +14,6 @@
 
 </head>
 <body>
-
-
-
-
-	<!-- 	keep this for now -->
 	<div class="top-bar">
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
 			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
@@ -51,13 +46,21 @@
 				<input type="submit" class="debit-action-buttons"
 					value="Create Debit Account">
 			</form>
+			<form th:action="@{/account-dashboard}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="View all Debit Accounts">
+			</form>
+			<form th:action="@{/view-transaction-history}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="View transaction history">
+			</form>
 			<form th:action="@{/deposit-withdraw}" method="get">
 				<input type="submit" class="debit-action-buttons"
 					value="Deposit / Withdraw">
 			</form>
 			<form th:action="@{/transfer-to-account-number}" method="get">
 				<input type="submit" class="debit-action-buttons"
-					value="Transfer Funds">
+					value="Transfer Money">
 			</form>
 		</div>
 		<!-- Accounts Table -->
@@ -80,15 +83,6 @@
 							th:text="| ${account.accountNumber.substring(0,3)}-${account.accountNumber.substring(3,6)}-${account.accountNumber.substring(6)} |"></td>
 						<td th:text="${account.accountName}"></td>
 						<td th:text="${account.accountBalance}" class="price-element"></td>
-
-						<td>
-							<form th:action="@{/view-transaction-history}" method="POST">
-								<input type="hidden" th:value="${account.accountId}"
-									name="selectedAccountId">
-								<button type="submit" class="debit-action-buttons">View
-									Transaction History</button>
-							</form>
-						</td>
 						<td>
 							<form th:action="@{/deleteDebitAccount}" method="POST">
 								<input type="hidden" th:value="${account.accountId}"
