@@ -93,7 +93,7 @@
 					<tr>
 						<th>Date</th>
 						<th>From Account</th>
-						<th>To Account Number</th>
+						<th>To Account Number / Card Number</th>
 						<th>Type</th>
 						<th>Amount</th>
 					</tr>
@@ -102,8 +102,9 @@
 					<td
 						th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
 					<td th:text="${transaction.fromAccount?.accountName ?: '---'}"></td>
-					<td
-						th:text="| ${transaction.toAccountNumber != null ? '***-***-' + transaction.toAccountNumber.substring(6) : '---'} |"></td>
+					<!-- <td
+						th:text="| ${transaction.toAccountNumber != null ? '***-***-' + transaction.toAccountNumber.substring(6) : '---'} |"></td> -->
+					<td th:text="${transaction.getMaskedToAccountNumber()}"></td>
 					<td th:text="${transaction.debitAccountTransactionType ?: '---'}"></td>
 					<td th:text="${transaction.debitAccountTransactionAmount}"
 						class="price-element"></td>

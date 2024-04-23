@@ -64,8 +64,9 @@
 					<tr th:each="transaction : ${session.accountTransactions}">
 						<td
 							th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
-						<td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td>
-						<td th:text="${transaction.toAccountNumber ?: '---'}"></td>
+						<!-- <td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td> -->
+						<td th:text="${transaction.getFormattedFromAccountNumber()}"></td>
+						<td th:text="${transaction.getFormattedToAccountNumber()}"></td>
 						<td th:text="${transaction.debitAccountTransactionType}"></td>
 						<td
 							th:text="${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
