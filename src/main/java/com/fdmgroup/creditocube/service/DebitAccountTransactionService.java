@@ -195,9 +195,9 @@ public class DebitAccountTransactionService {
 //				.before(new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000)));
 //		logger.debug("Remove transactions more than 7 days ago");
 
-		if (relatedTransactions.size() < 6) {
+		if (relatedTransactionsNoDuplicates.size() < 6) {
 			logger.debug("Customer has no transactions");
-			return relatedTransactions;
+			return relatedTransactionsNoDuplicates;
 		}
 
 		relatedTransactionsNoDuplicates.subList(5, relatedTransactionsNoDuplicates.size()).clear();

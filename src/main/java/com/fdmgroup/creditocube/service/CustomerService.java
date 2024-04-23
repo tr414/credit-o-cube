@@ -143,7 +143,7 @@ public class CustomerService {
 		}
 
 		if (result == false) {
-			System.out.println("Result is false");
+//			System.out.println("Result is false");
 			return customer;
 		}
 
