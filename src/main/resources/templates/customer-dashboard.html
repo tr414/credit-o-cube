@@ -16,7 +16,7 @@
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
 			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
 		<!-- 		<button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
-		</form>
+
 	</div>
 
 	<div class="side-menu menu-active" id="sideMenu">
@@ -28,7 +28,8 @@
 		</div>
 		<a href="account-dashboard">View Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a> <a
-			href="/customer-details">Update Particulars</a> <a
+			href="/customer-details">Update Particulars</a>
+			<a href="/update-password">Change Password</a> <a
 			href="deleteCustomerAccount" class="logout-button">Delete Account</a>
 		<!-- 			<a href="login" class="logout-button">Logout</a> -->
 		<form th:action="@{/logout}" method="post">
