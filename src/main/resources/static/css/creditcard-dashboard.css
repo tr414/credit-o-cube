@@ -1,57 +1,143 @@
-/* creditcard-dashboard.css */
 
-/* General styles for the content area */
-.content-area {
-  margin-left: 250px; /* Offset for the sidebar */
-  margin-top: 100px; /* Space from the top bar */
-  padding: 20px; /* Padding for content inside */
-  background-color: #ffffff; /* White background for clarity */
-}
 
-/* Styles for the table to display credit card details */
+/* Styles for the credit card table */
 table {
-  width: 100%;
-  border-collapse: collapse; /* Ensures borders between cells are merged */
-  margin: 20px auto; /* Center table with margin from top and bottom */
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
 }
 
 th, td {
-  padding: 12px; /* Padding inside table cells */
-  text-align: left; /* Align text to the left side */
-  border-bottom: 1px solid #ddd; /* Light grey border for rows */
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #ddd; /* Light grey border for each row */
 }
 
 th {
-  background-color: #0073e6; /* Blue header background */
-  color: white; /* White text for header */
+    background-color: #0073e6; /* Blue to match header */
+    color: white; /* White text for headers */
 }
 
 td {
-  background-color: #f4f7fc; /* Light greyish-blue background for cells */
-  color: #333; /* Dark grey color for text */
+    background-color: #f4f7fc; /* Matching the content area background */
+    color: #333; /* Dark grey for text */
 }
 
 tbody tr:hover {
-  background-color: #e1f0ff; /* Light blue for row hover effect */
+    background-color: #e1f0ff; /* Light blue for hover effect */
 }
 
-/* Styles for buttons within forms */
-button, input[type="submit"] {
-  background-color: #0051ba; /* Consistent blue background */
-  color: white; /* White text on buttons */
-  border: none; /* No borders on buttons */
-  padding: 10px 15px; /* Padding for button size */
-  border-radius: 5px; /* Rounded corners for buttons */
-  cursor: pointer; /* Cursor indicates clickable */
-  margin: 5px 0; /* Margin around buttons for spacing */
+.actions-container {
+	display: flex;
+	justify-content: center;
+	gap: 50px; /* This will create 10px space between each button */
+	margin: 50px auto;
+	/* Other styles */
 }
 
-button:hover, input[type="submit"]:hover {
-  background-color: #003c8f; /* Darker blue when hovered */
+.actions-container .credit-action-buttons {
+	background-color: white;
+	color: #0051ba;
+	border: #0051ba solid 1px;
 }
 
-/* Adjust form button alignment for aesthetics */
+.actions-container .credit-action-buttons:hover {
+	background-color: #0051ba;
+	/* Change background to the same color as the text */
+	color: white; /* Change text color to white for contrast */
+	border-color: #003585;
+	/* Slightly darker shade of the original blue for the border */
+}
+
+.credit-action-buttons {
+  background-color: #0051ba; /* Blue background to match the theme */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px 0; /* A bit of margin for spacing */
+  
+}
+
+
+
+.credit-action-buttons:hover {
+  background-color: #003c8f; /* Darker blue on hover */
+}
+
+/* Style adjustments for forms within the dashboard */
 form {
-  text-align: center; /* Center the forms in the table cell */
-  margin: 20px 0; /* Margin above and below for spacing */
+    text-align: center; /* Center align form contents */
+    margin: 20px 0; /* Margin top and bottom for spacing */
+}
+
+/* Specific styles for admin-only options */
+.admin-action {
+    font-style: italic; /* Italicize admin specific links */
+    color: #ff4500; /* Orange color for emphasis */
+}
+
+
+/* NEWWWW */
+.payment-form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.form-section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group select {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.legend {
+    font-size: 18px;
+    color: #333;
+}
+
+.credit-action-buttons {
+    width: 100%; /* Make button width consistent */
+    padding: 10px;
+    font-size: 16px;
+}
+
+h2 {
+    font-size: 24px; /* Adjust size as needed */
+    font-family: 'Arial', sans-serif; /* Choose the font family you prefer */
+    color: #333; /* A dark color for the title */
+    text-align: center; /* Center-align the title */
+    margin-top: 20px; /* Adjust to ensure it's below the header */
+    margin-bottom: 30px; /* Space before the content starts */
+    font-weight: bold; /* Makes the title bold */
+}
+
+form.payment-form fieldset.form-section legend {
+    font-weight: bold; /* Bolds the legend text */
+    font-size: 20px; /* Adjust the font size as desired */
+    padding: 0 5px; /* Optional: Adds padding around the text */
+    margin-bottom: 10px; /* Optional: Adds space below the legend */
 }

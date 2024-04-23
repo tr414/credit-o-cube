@@ -198,7 +198,7 @@ public class CustomerController {
 	@GetMapping("/customer-dashboard")
 	public String home(Model model, Principal principal, SessionStatus status) {
 		User user = userService.findUserByUsername(principal.getName()).get();
-		System.out.println(user.getUsername());
+		logger.debug(user.getUsername() + " logged in successfully");
 		if (user.getUserType().equalsIgnoreCase("admin")) {
 			return "landing";
 		}
@@ -219,7 +219,65 @@ public class CustomerController {
 		model.addAttribute("creditTransactions", creditTransactions);
 		return "customer-dashboard";
 	}
-	// home is the customer dashboard
+
+	@GetMapping("/update-password")
+	public String goToUpdatePasswordPage(Principal principal, Model model) {
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+		if (optionalCustomer.isEmpty()) {
+			logger.debug("Customer is not logged in");
+			return "redirect:/login";
+		}
+		Customer customer = optionalCustomer.get();
+		model.addAttribute("customer", customer);
+		return "update-password";
+	}
+
+	@PostMapping("/update-password")
+	public String updatePassword(HttpServletRequest request, Principal principal, Model model) {
+		// Check that customer is logged in
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+		if (optionalCustomer.isEmpty()) {
+			logger.debug("Customer is not logged in");
+			return "redirect:/login";
+		}
+		Customer customer = optionalCustomer.get();
+
+		// Get request parameters
+		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("confirm-password");
+
+		// if password fields are null, use database value
+		if (password == null || confirmPassword == null) {
+			password = customer.getPassword();
+			confirmPassword = customer.getPassword();
+		}
+
+		boolean hasErrors = false;
+
+		// Validate password complexity and handle retention of input
+		Optional<String> passwordError = validationService.isPasswordComplex(password);
+		if (passwordError.isPresent()) {
+			model.addAttribute("passwordError", passwordError.get());
+			hasErrors = true;
+		}
+
+		// Validate password match and handle retention of input
+		Optional<String> confirmPasswordError = validationService.isSamePassword(password, confirmPassword);
+		if (confirmPasswordError.isPresent()) {
+			model.addAttribute("confirmPasswordError", confirmPasswordError.get());
+			hasErrors = true;
+		}
+
+		if (hasErrors) {
+			// Return to registration page if there are any errors
+			return "customer-details";
+		} else {
+//			customerService.updateCustomerDetails(username, firstName, lastName, email, phoneNumber, nric, address,
+//					salary, gender, dob);
+			return "redirect:/login";
+		}
+
+	}
 
 	// viewing the update details page
 	@GetMapping("/customer-details")
@@ -258,14 +316,13 @@ public class CustomerController {
 
 		// Extract parameters from the request
 		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		String confirmPassword = request.getParameter("confirm-password");
+
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String nric = request.getParameter("nric");
 		LocalDate dob = LocalDate.parse(request.getParameter("dob"));
 
-		String salary = request.getParameter("salary");
+		String stringSalary = request.getParameter("salary");
 		String address = request.getParameter("address");
 		String gender = request.getParameter("gender");
 		String phoneNumber = request.getParameter("phoneNumber");
@@ -273,42 +330,53 @@ public class CustomerController {
 
 		boolean hasErrors = false;
 
-		Optional<String> phoneNumberError = validationService.isMobileNumber(phoneNumber);
-		if (phoneNumberError.isPresent()) {
-			model.addAttribute("phoneNumberError", phoneNumberError.get());
-			hasErrors = true;
-		} else {
-			model.addAttribute("phoneNumber", phoneNumber);
+		// if customer input is null but there is a registered phone number in database,
+		// use database value
+		if (phoneNumber.isEmpty() && customer.getPhoneNumber() != null) {
+			phoneNumber = customer.getPhoneNumber();
 		}
-
-		Optional<String> salaryError = validationService.isValidSalary(salary);
-		if (salaryError.isPresent()) {
-			model.addAttribute("salaryError", salaryError.get());
-			hasErrors = true;
-		} else {
-			model.addAttribute("salary", salary);
+		// if customer input is not null, use customer input
+		else if (!phoneNumber.isEmpty()) {
+			Optional<String> phoneNumberError = validationService.isMobileNumber(phoneNumber);
+			if (phoneNumberError.isPresent()) {
+				model.addAttribute("phoneNumberError", phoneNumberError.get());
+				hasErrors = true;
+			} else {
+				model.addAttribute("phoneNumber", phoneNumber);
+			}
 		}
+		// otherwise, if phone number is null and registered phone number is null, then
+		// ignore field
 
-		// Validate password complexity and handle retention of input
-		Optional<String> passwordError = validationService.isPasswordComplex(password);
-		if (passwordError.isPresent()) {
-			model.addAttribute("passwordError", passwordError.get());
-			hasErrors = true;
+		// if customer input is null but there is a registered salary in database,
+		// use database value
+		double salary = 0;
+		if (stringSalary.isEmpty() && customer.getSalary() != null) {
+			salary = customer.getSalary();
 		}
+		// if customer input is not null, use customer input
+		else if (!stringSalary.isEmpty()) {
+			salary = Double.parseDouble(stringSalary);
+			Optional<String> salaryError = validationService.isValidSalary(salary);
+			if (salaryError.isPresent()) {
+				model.addAttribute("salaryError", salaryError.get());
+				hasErrors = true;
+			} else {
+				model.addAttribute("salary", salary);
+			}
+		}
+		// otherwise, if salary is null and registered salary is null, then ignore field
 
-		// Validate password match and handle retention of input
-		Optional<String> confirmPasswordError = validationService.isSamePassword(password, confirmPassword);
-		if (confirmPasswordError.isPresent()) {
-			model.addAttribute("confirmPasswordError", confirmPasswordError.get());
-			hasErrors = true;
+		if (address.isEmpty() && customer.getAddress() != null) {
+			address = customer.getAddress();
 		}
 
 		if (hasErrors) {
 			// Return to registration page if there are any errors
 			return "customer-details";
 		} else {
-			customerService.updateCustomerDetails(username, password, firstName, lastName, email, phoneNumber, nric,
-					address, Double.valueOf(salary), gender, dob);
+			customerService.updateCustomerDetails(username, firstName, lastName, email, phoneNumber, nric, address,
+					salary, gender, dob);
 			return "redirect:/login";
 		}
 	}
@@ -319,20 +387,20 @@ public class CustomerController {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 
 		if (optionalCustomer.isEmpty()) {
-			System.out.println("Customer not found in database");
+			logger.info("Customer not found in database, abort account deletion");
 			return "redirect:/login";
 		}
 
 		Customer customer = optionalCustomer.get();
 
 		if (customer.getDebitAccounts().size() > 0) {
-			System.out.println("Customer has debit accounts");
+			logger.debug("Customer has existing debit accounts, abort account deletion");
 			return "redirect:/home";
 		}
 
 		customerService.deleteCustomer(customer);
 
-		System.out.println("Deleted customer account");
+		logger.debug("Deleted customer account successfully");
 		return "redirect:/login";
 	}
 
