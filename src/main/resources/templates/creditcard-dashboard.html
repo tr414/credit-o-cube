@@ -104,6 +104,10 @@
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit" class="credit-action-buttons">Generate Bill</button>
               </form>
+               <form th:action="@{/simulate-late-payment}" method="POST">
+              	<input type="hidden" th:value="${card.cardId}" name="cardId">
+                <button type="submit" class="credit-action-buttons">Simulate Late Payment</button>
+              </form>
             </td>
           </tr>
         </tbody>

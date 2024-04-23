@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.fdmgroup.creditocube.model.Bill;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.service.BillService;
 import com.fdmgroup.creditocube.service.CreditCardService;
@@ -30,13 +31,16 @@ public class BillController {
 	public String generateBill(HttpServletRequest request) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
 		
-		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
-		if (optionalCard.isEmpty()) {
-			return "redirect:/creditcard-dashboard";
-		}
-		CreditCard card = optionalCard.get();
-		
 		billService.generateBill(cardId.longValue());
+		
+		return "redirect:/creditcard-dashboard";
+	}
+	
+	@PostMapping("/simulate-late-payment")
+	public String simulateLatePaymentAndInterest(HttpServletRequest request) {
+		long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
+		Bill bill = billService.findBillByCreditCard(cardService.findCardByCardId(cardId).get()).get();
+		billService.checkLatePayment(bill);
 		
 		return "redirect:/creditcard-dashboard";
 	}
