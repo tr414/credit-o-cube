@@ -148,7 +148,6 @@ public class CustomerService {
 		}
 
 		customer.setUsername(username);
-//		customer.setPassword(passwordEncoder.encode(rawPassword)); // Encrypts the password before saving
 		customer.setFirstName(firstName);
 		customer.setLastName(lastName);
 		customer.setEmail(email);
@@ -159,8 +158,25 @@ public class CustomerService {
 		customer.setGender(gender);
 		customer.setDob(dob);
 		logger.debug("customer saved into database");
-//		System.out.println("customer saved into database");
 		return customerRepo.save(customer);
+
+	}
+
+	public Customer updatePassword(Customer customer, String newPassword) {
+		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getUser_id());
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database");
+			return customer;
+		}
+		Customer targetCustomer = optionalCustomer.get();
+
+		if (!passwordVerification(newPassword)) {
+			logger.info("New password is less than 8 characters");
+			return customer;
+		}
+
+		targetCustomer.setPassword(passwordEncoder.encode(newPassword));
+		return customerRepo.save(targetCustomer);
 
 	}
 
@@ -178,12 +194,6 @@ public class CustomerService {
 
 	public boolean detailVerification(String username, String firstName, String lastName, String email,
 			String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
-
-		// Check if new password is more than or equal to 8 characters long
-//		if (rawPassword.length() < 8) {
-//			System.out.println("password is too short");
-//			return false;
-//		}
 
 		// Check if new email address contains an '@' character
 		if (!email.contains("@")) {
@@ -220,27 +230,6 @@ public class CustomerService {
 
 		return true;
 	}
-
-//	public boolean detailVerificationRegistration(String username, String rawPassword, String firstName,
-//			String lastName, String nric, LocalDate dob) {
-//
-//		if (rawPassword.length() < 8) {
-//			System.out.println("password is too short");
-//			return false;
-//		}
-//
-//		if (nricVerification(nric) == false) {
-//			System.out.println("NRIC does not follow proper format");
-//			return false;
-//		}
-//
-//		if (dob.isAfter(LocalDate.now().minusYears(18)) || dob.isBefore(LocalDate.of(1900, 1, 1))) {
-//			System.out.println("Age requirement not fulfilled");
-//			return false;
-//		}
-//
-//		return true;
-//	}
 
 	private boolean nricVerification(String nric) {
 		if (nric.length() != 9) // Checking if the length is exactly 9
