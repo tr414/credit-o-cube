@@ -12,7 +12,10 @@
         <input type="number" id="cashbackRate" th:field="*{cashback_rate}" step="0.01" min="0" required>
 
         <label for="category">Category:</label>
-        <input type="text" id="category" th:field="*{category}" required>
+        <!-- <input type="text" id="category" th:field="*{category}" required> -->
+        <select id="category" th:field="*{category}">
+        	<option th:each="category : ${categories}" th:text="${category}" th:value="${category}"></option>
+        </select>
 
         <label for="cardType">Card Type:</label>
         <select id="cardType" th:field="*{cardType}">
