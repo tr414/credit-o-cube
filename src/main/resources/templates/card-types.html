@@ -9,8 +9,16 @@
     <h2>Card Types</h2>
     <div th:if="${error}" th:text="${error}" style="color:red;"></div>
     <ul>
-        <li th:each="cardType : ${cardTypes}" th:text="${cardType.name}"></li>
+        <li th:each="cardType : ${cardTypes}">
+            <div>
+                <h3 th:text="${cardType.name}">Card Name</h3>
+                <img th:if="${cardType.imageUrl}" th:src="@{'/img/' + ${cardType.imageUrl}}" alt="Card Image" style="width: 100px; height: auto;"/>
+
+                <p th:text="${cardType.requirements}">Requirements</p>
+            </div>
+        </li>
     </ul>
     <a href="/create-card-type">Create New Card Type</a>
+    <a href="/creditcard-dashboard">Back to Credit Card Dashboard</a>
 </body>
 </html>

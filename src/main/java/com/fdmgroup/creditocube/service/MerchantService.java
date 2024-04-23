@@ -1,21 +1,25 @@
 package com.fdmgroup.creditocube.service;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.fdmgroup.creditocube.model.Merchant;
-import com.fdmgroup.creditocube.repository.MerchantRepository;
-import jakarta.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.springframework.stereotype.Service;
+
+import com.fdmgroup.creditocube.model.Merchant;
+import com.fdmgroup.creditocube.repository.MerchantRepository;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  * Service class for managing merchant data.
@@ -86,5 +90,9 @@ public class MerchantService {
 		} catch (Exception e) {
 			logger.error("Failed to load merchant data from CSV", e);
 		}
+	}
+
+	public List<Merchant> findAllMerchants() {
+		return merchantRepository.findAll();
 	}
 }

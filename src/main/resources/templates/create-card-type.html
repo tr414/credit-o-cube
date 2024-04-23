@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Card Type</title>
-    <!-- Add your CSS links here -->
 </head>
 <body>
     <h2>Create Card Type</h2>
+    <div th:if="${error}" th:text="${error}" style="color:red;"></div>
     <form th:action="@{/create-card-type}" th:object="${cardType}" method="post">
         <label for="name">Name:</label>
         <input type="text" id="name" th:field="*{name}" required>
-        <!-- Add other fields for rewards if necessary -->
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" th:field="*{imageUrl}" required>
+        <label for="requirements">Requirements:</label>
+        <textarea id="requirements" th:field="*{requirements}" required></textarea>
         <button type="submit">Submit</button>
     </form>
 </body>

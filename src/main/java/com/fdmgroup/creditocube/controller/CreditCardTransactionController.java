@@ -144,7 +144,7 @@ public class CreditCardTransactionController {
 		double cashbackRate = 0.0;
 
 		if (reward != null) {
-			cashbackRate = reward.getCashback_rate();
+			cashbackRate = reward.getCashback_rate() / 100;
 		}
 
 		// currency
