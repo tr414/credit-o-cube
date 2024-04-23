@@ -11,28 +11,19 @@
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
     <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-<!--     <button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
-	<form th:action="@{/logout}" method="post">
-				<div class="buttons">
-					<button type="submit" class="login-button">Logout</button>
-				</div>
-			</form>
   </div>
 
-  <div class="side-menu" id="sideMenu">
-  	<div class="user-greeting">
-		Welcome, <span th:text="${firstName}">FirstName</span>
-		What would you like to do today?
-	</div>
-    <a href="apply-creditcard">Apply credit card</a>
-    <a href="#">Set credit limit</a>
-    <a href="#">Transaction history</a>
-    <a href="#">Pay bills</a>
-    <a href="account-dashboard">Account dashboard</a>
-    <a href="creditcard-dashboard">Credit card dashboard</a> 
-    <a href="customer-dashboard">Main dashboard</a>
-    
-    <!-- Add other menu items here -->
+  <div class="side-menu menu-active" id="sideMenu">
+    <div class="user-greeting"><p>My Credit Cards</p></div>
+    <a href="customer-dashboard">Back to Main dashboard</a>
+    <a href="account-dashboard">View Account dashboard</a>
+    <a href="creditcard-dashboard">View Credit card dashboard</a> 
+    <form th:action="@{/logout}" method="post">
+      <div class="buttons">
+        <button type="submit" class="login-button">Logout</button>
+      </div>
+    </form>
+    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
   </div>
 
   <div class="main-content">
@@ -45,24 +36,31 @@
       <div th:if="${success}" style="color: green;">
         <p th:text="${success}"></p>
       </div>
-      
+
       <form id="creditCardApplication" th:action="@{/apply-creditcard}" method="post">
-        <label for="name">Credit Card Limit:</label>
-        <input type="text" id="name" name="creditCardLimit" required><br><br>
+        <div class="card-selection">
+  			<th:block th:each="cardType : ${cardTypes}">
+    			<label class="card-info">
+<!--       				Hidden radio button -->
+        				<input type="radio" name="cardType" th:value="${cardType.name}" required>
+        				<img th:src="@{'/img/' + ${cardType.imageUrl}}" alt="Card Image" style="width: 100px; height: auto;">
+      					<div class="card-details">
+        					<h3 th:text="${cardType.name}">Card Type Name</h3>
+        					<p th:text="${cardType.requirements}">Requirements</p>
+      					</div>
+    			</label>
+  			</th:block>
+		</div>
+
+        <label for="creditCardLimit">Credit Card Limit:</label>
+        <input type="text" id="creditCardLimit" name="creditCardLimit" required><br><br>
         
-        <label for="cardType">Card Type:</label>
-        <select id="cardType" name="cardType" required>
-            <option value="">Select a Card Type</option>
-            <th:block th:each="cardType : ${cardTypes}">
-                <option th:value="${cardType.name}" th:text="${cardType.name}">Card Type Name</option>
-            </th:block>
-        </select><br><br>
-        
-        <button type="submit">Submit Application</button>
+        <button type="submit" class="apply-card-button">Submit Application</button>
       </form>
     </div>
   </div>
 
   <script src="../js/sidebar.js"></script>
+  <script src="../js/apply-creditcard-select.js"></script>
 </body>
 </html>

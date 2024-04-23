@@ -40,12 +40,15 @@ public class CardTypeService {
 	}
 
 	public CardType saveCardType(CardType cardType) {
+		Optional<CardType> existingCardType = findCardTypeByName(cardType.getName());
+        if (existingCardType.isPresent()) {
+            LOGGER.error("Attempt to save duplicate card type name: " + cardType.getName());
+            return null; // or throw a custom exception that you handle in your controller
+        }
+		
 		return cardTypeRepository.save(cardType);
 	}
 
-	public boolean canCreateNewCardType() {
-		long count = cardTypeRepository.count();
-		return count < 5;
-	}
+	
 
 }

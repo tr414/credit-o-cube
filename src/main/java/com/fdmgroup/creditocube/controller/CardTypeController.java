@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fdmgroup.creditocube.model.CardType;
 import com.fdmgroup.creditocube.service.CardTypeService;
@@ -28,13 +29,12 @@ public class CardTypeController {
     }
 
     @PostMapping("/create-card-type")
-    public String createCardType(CardType cardType, Model model) {
-        if (!cardTypeService.canCreateNewCardType()) {
-            model.addAttribute("error", "Maximum of 5 card types can be created.");
-            model.addAttribute("cardTypes", cardTypeService.findAllCardTypes());
-            return "card-types"; // Redirect back to the list with an error message
+    public String createCardType(CardType cardType, RedirectAttributes redirectAttributes) {
+        CardType savedCardType = cardTypeService.saveCardType(cardType);
+        if (savedCardType == null) {
+            redirectAttributes.addFlashAttribute("error", "Card type already exists. Please rename your card type name.");
+            return "redirect:/create-card-type";
         }
-        cardTypeService.saveCardType(cardType);
         return "redirect:/card-types";
     }
 }
