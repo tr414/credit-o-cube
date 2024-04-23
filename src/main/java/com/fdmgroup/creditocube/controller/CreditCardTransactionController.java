@@ -202,18 +202,18 @@ public class CreditCardTransactionController {
 			if (validTransaction(transactionSGDAmount, card)) {
 				card.setBalance(card.getBalance() + transactionSGDAmount);
 				
-				double cashback = new BigDecimal(transactionAmount * cashbackRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
+				double cashback = new BigDecimal(transactionSGDAmount * cashbackRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
 				card.setCashback(card.getCashback() + cashback);
 				
 				// add the transaction to monthly spend on the card for eventual cashback eligibility check
-				card.setMonthlySpend(transactionAmount + card.getMonthlySpend());
+				card.setMonthlySpend(transactionSGDAmount + card.getMonthlySpend());
 				
 				cardService.updateCard(card);
 				
 				String description;
 				
 				if (installmentPayment) {
-					transactionService.createInstallmentPayment(card, transactionAmount);
+					transactionService.createInstallmentPayment(card, transactionSGDAmount);
 					description = String.format("This transaction will be paid in 6 installments which will be charged to your card over the next 6 months. Original currency: %s. Exchange rate from currency to SGD: %s",
 									currency, exchangeRate.toString());
 					
