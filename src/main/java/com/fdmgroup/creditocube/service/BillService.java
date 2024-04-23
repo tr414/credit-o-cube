@@ -81,7 +81,7 @@ public class BillService {
 		// not need to be paid this month
 		double nonDueInstallmentPayments = calculateNonDueInstallmentPayments(cardId);
 		
-		totalAmountDue = totalAmountDue - nonDueInstallmentPayments;
+		totalAmountDue = new BigDecimal(totalAmountDue - nonDueInstallmentPayments).setScale(2, RoundingMode.HALF_UP).doubleValue();
 		
 		double minimumAmountDue = new BigDecimal(totalAmountDue * 0.1).setScale(2, RoundingMode.HALF_UP).doubleValue();
 		
@@ -246,12 +246,13 @@ public class BillService {
 	private void applyCashback(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
 		double monthlySpend = card.getMonthlySpend();
+		double cashbackAccrued = card.getCashback();
 		
 		// if monthly spend exceeds minimum spend requirement, credit cashback for the month 
 		// create a transaction to show that the cashback was credited
-		if (monthlySpend >= 600) {
-			card.setBalance(card.getBalance() - card.getCashback());
-			cardTransactionService.createCashbackTransaction(card, card.getCashback());
+		if (monthlySpend >= 600 && cashbackAccrued > 0) {
+			card.setBalance(card.getBalance() - cashbackAccrued);
+			cardTransactionService.createCashbackTransaction(card, cashbackAccrued);
 		}
 		
 		// once cashback has been credited, reset accrued cashback to 0, reset spending in billing cycle to 0, and persist the new state of the card

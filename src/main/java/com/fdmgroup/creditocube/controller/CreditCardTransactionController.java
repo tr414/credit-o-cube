@@ -164,7 +164,7 @@ public class CreditCardTransactionController {
 				card.setBalance(card.getBalance() + transactionAmount);
 				
 				// calculate cashback based on merchant category and card reward
-				double cashback = transactionAmount * cashbackRate;
+				double cashback = new BigDecimal(transactionAmount * cashbackRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
 				card.setCashback(card.getCashback() + cashback);
 				
 				// add the transaction to monthly spend on the card for eventual cashback eligibility check
@@ -202,7 +202,7 @@ public class CreditCardTransactionController {
 			if (validTransaction(transactionSGDAmount, card)) {
 				card.setBalance(card.getBalance() + transactionSGDAmount);
 				
-				double cashback = transactionAmount * cashbackRate;
+				double cashback = new BigDecimal(transactionAmount * cashbackRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
 				card.setCashback(card.getCashback() + cashback);
 				
 				// add the transaction to monthly spend on the card for eventual cashback eligibility check
@@ -210,9 +210,20 @@ public class CreditCardTransactionController {
 				
 				cardService.updateCard(card);
 				
-				String description = String.format(
-						"Foreign currency payment made to merchant code %s in category %s. Original currency: %s. Exchange rate from currency to SGD: %s",
-						merchantCode, merchantCategory, currency, exchangeRate.toString());
+				String description;
+				
+				if (installmentPayment) {
+					transactionService.createInstallmentPayment(card, transactionAmount);
+					description = String.format("This transaction will be paid in 6 installments which will be charged to your card over the next 6 months. Original currency: %s. Exchange rate from currency to SGD: %s",
+									currency, exchangeRate.toString());
+					
+				}
+				else {
+					description = String.format("Foreign currency payment made to merchant code %s in category %s. Original currency: %s. Exchange rate from currency to SGD: %s",
+							merchantCode, merchantCategory, currency, exchangeRate.toString());
+				}
+				
+				
 				transactionService.createCreditCardTransaction(
 						new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate,
 								transactionSGDAmount, description, currency, exchangeRate.doubleValue()));

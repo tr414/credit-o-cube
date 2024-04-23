@@ -32,4 +32,9 @@ public class InstallmentPaymentService {
 	public void deleteInstallmentPayment(InstallmentPayment installmentPayment) {
 		installmentRepo.deleteById(installmentPayment.getInstallmentPaymentId());
 	}
+
+	public void deleteAllInstallmentPayments(CreditCard cardToBePaidOff) {
+		// TODO Auto-generated method stub
+		installmentRepo.deleteAll(findAllInstallmentPaymentsByCard(cardToBePaidOff));
+	}
 }

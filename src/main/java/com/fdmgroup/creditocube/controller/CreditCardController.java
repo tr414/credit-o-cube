@@ -31,6 +31,7 @@ import com.fdmgroup.creditocube.service.CreditCardTransactionService;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
+import com.fdmgroup.creditocube.service.InstallmentPaymentService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -61,6 +62,9 @@ public class CreditCardController {
 
 	@Autowired
 	private CreditCardTransactionService creditCardTransactionService;
+	
+	@Autowired
+	private InstallmentPaymentService installmentService;
 
 	private static Logger logger = LogManager.getLogger(CreditCardController.class);
 
@@ -336,6 +340,9 @@ public class CreditCardController {
 				// need to record it in bill service
 			}
 		} else {
+			// Customer is paying off all the outstanding balance on the card.
+			// Therefore any outstanding installment payments are also being paid and should be removed from the card.
+			installmentService.deleteAllInstallmentPayments(cardToBePaidOff);
 			billService.recordCreditBalancePayment(bill);
 			amountPayable = cardToBePaidOff.getBalance();
 			logger.debug("Customer selected to pay current balance");

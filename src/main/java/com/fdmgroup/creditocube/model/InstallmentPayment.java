@@ -14,7 +14,7 @@ public class InstallmentPayment {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long installmentPaymentId;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "fk_card_id")
 	private CreditCard transactionCard;
 	
