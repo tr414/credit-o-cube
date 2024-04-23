@@ -7,10 +7,11 @@
 <title>Transaction History</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
 <link rel="stylesheet" href="../css/account-dashboard.css">
-
+<script src="../js/sidebar.js" defer></script>
+<script src="../js/sort-tables.js" defer></script>
 </head>
 <body>
-<!-- 	Top Bar -->
+	<!-- 	Top Bar -->
 	<!-- 	keep this for now -->
 	<div class="top-bar">
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
@@ -19,16 +20,11 @@
 
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
-			<p>
-				MY TRANSACTION HISTORY
-			</p>
-			
+			<p>MY TRANSACTION HISTORY</p>
+
 		</div>
-		<a href="transfer-to-account-number">Transfer funds</a> <a
-			href="deposit-withdraw">Deposit / Withdraw</a> <a
-			href="account-dashboard">Account dashboard</a> <a
-			href="creditcard-dashboard">Credit card dashboard</a> <a
-			href="customer-dashboard">Main dashboard</a>
+		<a href="customer-dashboard">Back to Main Dashboard</a><a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
 				<button type="submit" class="login-button">Logout</button>
@@ -39,45 +35,70 @@
 
 
 	<div class="content-area main-content">
-    <!-- Conditional content for transaction history -->
-    <div class="table-scrollable" th:if="${session.selectedAccount != null}">
-      <table>
-        <thead>
-          <tr>
-            <th>Transaction Date</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Transaction Type</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Loop over transactions -->
-          <tr th:each="transaction : ${session.accountTransactions}">
-            <td th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
-            <td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td>
-            <td th:text="${transaction.toAccountNumber ?: '---'}"></td>
-            <td th:text="${transaction.debitAccountTransactionType}"></td>
-            <td th:text="${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <!-- Account selection form -->
-    <div class="account-selection" th:if="${session.selectedAccount == null}">
-      <p>Please choose an account from the dropdown menu below.</p>
-    </div>
-
-    <div class="transaction-history-form">
-      <form th:action="@{/view-transaction-history}" method="POST">
-        <select name="selectedAccountId">
-          <option th:each="account : ${session.accounts}" th:value="${account.accountId}" th:text="${account.accountName}"></option>
-        </select>
-        <button type="submit" class="debit-action-buttons">Submit</button>
-      </form>
-    </div>
-  </div>
+		<div class="actions-container">
+			<!-- Create Debit Account Button -->
+			<form th:action="@{/go-to-create-debit-account}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Create Debit Account">
+			</form>
+			<form th:action="@{/account-dashboard}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="View all Debit Accounts">
+			</form>
+			<form th:action="@{/view-transaction-history}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="View transaction history">
+			</form>
+			<form th:action="@{/deposit-withdraw}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Deposit / Withdraw">
+			</form>
+			<form th:action="@{/transfer-to-account-number}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Transfer Money">
+			</form>
+		</div>
+		<div class="account-selection">
+			<form th:action="@{/view-transaction-history}" method="POST">
+				<label for="selectedAccountId">Choose an account:</label> <select
+					name="selectedAccountId" id="selectedAccountId">
+					<option th:each="account : ${session.accounts}"
+						th:value="${account.accountId}" th:text="${account.accountName}"></option>
+				</select>
+				<button type="submit" class="debit-action-buttons">Submit</button>
+			</form>
+		</div>
+		<!-- Conditional content for transaction history -->
+		<div class="table-scrollable"
+			th:if="${session.selectedAccount != null}">
+			<table id="myTable">
+				<thead>
+					<tr>
+						<th>Transaction Date <span class="sort-icon"
+							onclick="sortTable(0)">▼</span></th>
+						<th>From <span class="sort-icon" onclick="sortTable(1)">▼</span></th>
+						<th>To <span class="sort-icon" onclick="sortTable(2)">▼</span></th>
+						<th>Transaction Type <span class="sort-icon"
+							onclick="sortTable(3)">▼</span></th>
+						<th>Amount <span class="sort-icon" onclick="sortTable(4)">▼</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Loop over transactions -->
+					<tr th:each="transaction : ${session.accountTransactions}">
+						<td
+							th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
+						<!-- <td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td> -->
+						<td th:text="${transaction.getFormattedFromAccountNumber()}"></td>
+						<td th:text="${transaction.getFormattedToAccountNumber()}"></td>
+						<td th:text="${transaction.debitAccountTransactionType}"></td>
+						<td
+							th:text="${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 	<!-- JavaScript for Sidebar Toggle -->
 	<script src="../js/sidebar.js"></script>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -86,11 +87,12 @@ public class CreditCardService {
 		// determine if customer has 3 or more credit cards
 		Customer cardHolder = optionalCustomer.get(); // get the customer who wants to apply for a card
 		List<CreditCard> cardList = cardHolder.getCreditCards();
+		List<CreditCard> activeCardList = cardList.stream().filter(c -> c.isActive()).collect(Collectors.toList());
 
 		// if they already hold 3 or more cards, cannot make new ones
-		if (cardList.size() >= 3) {
+		if (activeCardList.size() >= 3) {
 //			System.out.println("You cannot have 3 or more credit cards per customer.");
-			logger.info("Customer tried to apply for a card when he/she already has 3 cards");
+			logger.info("Customer tried to apply for a card when he/she already has 3 active cards");
 			return;
 		}
 

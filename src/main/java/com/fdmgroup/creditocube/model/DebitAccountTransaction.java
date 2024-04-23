@@ -148,14 +148,6 @@ public class DebitAccountTransaction {
 		this.fromAccount = fromAccount;
 	}
 
-//	public String getFromAccountNumber() {
-//		return fromAccountNumber;
-//	}
-//
-//	public void setFromAccountNumber(String fromAccountNumber) {
-//		this.fromAccountNumber = fromAccountNumber;
-//	}
-
 	public String getToAccountNumber() {
 		return toAccountNumber;
 	}
@@ -198,6 +190,44 @@ public class DebitAccountTransaction {
 	 */
 	public void setDebitAccountTransactionAmount(double debitAccountTransactionAmount) {
 		this.debitAccountTransactionAmount = debitAccountTransactionAmount;
+	}
+
+	public String getFormattedToAccountNumber() {
+		if (toAccountNumber == null || toAccountNumber.isEmpty() || toAccountNumber.isBlank()) {
+			return "---";
+		} else if (toAccountNumber.length() > 12) {
+			return (toAccountNumber.substring(0, 4) + "-" + toAccountNumber.substring(4, 8) + "-"
+					+ toAccountNumber.substring(8, 12) + "-" + toAccountNumber.substring(12, 16));
+		} else {
+			return (toAccountNumber.substring(0, 3) + "-" + toAccountNumber.substring(3, 6) + "-"
+					+ toAccountNumber.substring(6));
+		}
+	}
+
+	public String getMaskedToAccountNumber() {
+		if (toAccountNumber == null || toAccountNumber.isEmpty() || toAccountNumber.isBlank()) {
+			return "---";
+		} else if (toAccountNumber.length() > 12) {
+			return ("****-****-****-" + toAccountNumber.substring(12));
+		} else {
+			return ("***-***-" + toAccountNumber.substring(6));
+		}
+	}
+
+	public String getFormattedFromAccountNumber() {
+		if (fromAccount == null) {
+			return "---";
+		}
+
+		String fromAccountNumber = fromAccount.getAccountNumber();
+
+		if (fromAccountNumber.length() > 12) {
+			return (fromAccountNumber.substring(0, 4) + "-" + fromAccountNumber.substring(4, 8) + "-"
+					+ fromAccountNumber.substring(8, 12) + "-" + fromAccountNumber.substring(12, 16));
+		} else {
+			return (fromAccountNumber.substring(0, 3) + "-" + fromAccountNumber.substring(3, 6) + "-"
+					+ fromAccountNumber.substring(6));
+		}
 	}
 
 }

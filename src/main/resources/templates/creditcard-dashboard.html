@@ -49,6 +49,9 @@
 <!-- 			<button type="submit" class="login-button">Logout</button> -->
 <!-- 		</div> -->
 <!-- 	</form> -->
+<a href="create-card-type">Create Card Type (FOR ADMIN)</a>
+<a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
+
     <!-- Add other menu items here -->
   </div>
   
@@ -108,6 +111,10 @@
 				  <input type="hidden" th:value="${card.cardId}" name="cardId">
 				  <button type="submit" class="credit-action-buttons">Close Credit Card</button>
 				</form>
+               <form th:action="@{/generate-bill}" method="POST">
+              	<input type="hidden" th:value="${card.cardId}" name="cardId">
+                <button type="submit" class="credit-action-buttons">Generate Bill</button>
+              </form>
             </td>
           </tr>
         </tbody>

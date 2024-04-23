@@ -32,6 +32,7 @@ import com.fdmgroup.creditocube.service.CreditCardTransactionService;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
+import com.fdmgroup.creditocube.service.InstallmentPaymentService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -62,6 +63,9 @@ public class CreditCardController {
 
 	@Autowired
 	private CreditCardTransactionService creditCardTransactionService;
+
+	@Autowired
+	private InstallmentPaymentService installmentService;
 
 	private static Logger logger = LogManager.getLogger(CreditCardController.class);
 
@@ -188,7 +192,11 @@ public class CreditCardController {
 		}
 
 		Customer customer = optionalCustomer.get();
-		if (customer.getCreditCards().size() >= 3) {
+		List<CreditCard> cardList = customer.getCreditCards();
+		List<CreditCard> activeCardList = cardList.stream().filter(c -> c.isActive()).collect(Collectors.toList());
+
+		// if they already hold 3 or more cards, cannot make new ones
+		if (activeCardList.size() >= 3) {
 			model.addAttribute("error", "You cannot have more than 3 credit cards.");
 			return "apply-creditcard";
 		}
@@ -338,6 +346,10 @@ public class CreditCardController {
 				// need to record it in bill service
 			}
 		} else {
+			// Customer is paying off all the outstanding balance on the card.
+			// Therefore any outstanding installment payments are also being paid and should
+			// be removed from the card.
+			installmentService.deleteAllInstallmentPayments(cardToBePaidOff);
 			billService.recordCreditBalancePayment(bill);
 			amountPayable = cardToBePaidOff.getBalance();
 			logger.debug("Customer selected to pay current balance");

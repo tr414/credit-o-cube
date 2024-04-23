@@ -25,6 +25,9 @@ public class CreditCard {
 
 	@OneToMany(mappedBy = "transactionCard")
 	private List<CreditCardTransaction> creditCardTransactions;
+	
+	@OneToMany(mappedBy = "transactionCard")
+	private List<InstallmentPayment> installmentPayments;
 
 	// each card type can belong to multiple credit cards
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -36,6 +39,10 @@ public class CreditCard {
 	private double balance;
 
 	private double cardLimit; // changed from int to double as cardLimit is a currency value
+	
+	private double cashback;
+	
+	private double monthlySpend;
 
 	@Column(name = "card_is_active")
 	private boolean isActive;
@@ -44,16 +51,19 @@ public class CreditCard {
 	private Bill bill;
 
 	public CreditCard() {
+		this.cashback = 0.0;
+		this.monthlySpend = 0.0;
 		setActive(true);
 	}
 
 	public CreditCard(Customer customer, String cardNumber, int balance, int cardLimit, CardType cardType) {
-
 		this.customer = customer;
 		this.cardNumber = cardNumber;
 		this.balance = balance;
 		this.cardLimit = cardLimit;
 		this.cardType = cardType;
+		this.cashback = 0.0;
+		this.monthlySpend = 0.0;
 		this.isActive = true;
 	}
 
@@ -120,6 +130,30 @@ public class CreditCard {
 
 	public void setBill(Bill bill) {
 		this.bill = bill;
+	}
+	
+	public double getCashback() {
+		return cashback;
+	}
+
+	public void setCashback(double cashback) {
+		this.cashback = cashback;
+	}
+	
+	public double getMonthlySpend() {
+		return monthlySpend;
+	}
+
+	public void setMonthlySpend(double monthlySpend) {
+		this.monthlySpend = monthlySpend;
+	}
+
+	public List<InstallmentPayment> getInstallmentPayments() {
+		return installmentPayments;
+	}
+
+	public void setInstallmentPayments(List<InstallmentPayment> installmentPayments) {
+		this.installmentPayments = installmentPayments;
 	}
 
 	public String getFormattedCreditCardNumber() {
