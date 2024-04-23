@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="../css/header-sidebar.css">
 <link rel="stylesheet" href="../css/account-dashboard.css">
 
+<!-- JavaScript for Sidebar Toggle -->
+<script src="../js/sidebar.js" defer></script>
+<script src="../js/sort-tables.js"></script>
+
 </head>
 <body>
 
@@ -28,7 +32,6 @@
 			<p>What would you like to do today?</p>
 		</div>
 		<a href="customer-dashboard">Back to Main Dashboard</a><a
-			href="account-dashboard">View Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
@@ -59,12 +62,15 @@
 		</div>
 		<!-- Accounts Table -->
 		<div>
-			<table>
+			<table id="myTable">
 				<thead>
 					<tr>
-						<th>Account Number</th>
-						<th>Account Name</th>
-						<th>Account Balance</th>
+						<th>Account Number <span class="sort-icon"
+							onclick="sortTable(0)">▼</span></th>
+						<th>Account Name <span class="sort-icon"
+							onclick="sortTable(0)">▼</span></th>
+						<th>Account Balance <span class="sort-icon"
+							onclick="sortTable(0)">▼</span></th>
 						<th colspan="2">Actions</th>
 					</tr>
 				</thead>
@@ -96,8 +102,5 @@
 			</table>
 		</div>
 	</div>
-
-	<!-- JavaScript for Sidebar Toggle -->
-	<script src="../js/sidebar.js"></script>
 </body>
 </html>
