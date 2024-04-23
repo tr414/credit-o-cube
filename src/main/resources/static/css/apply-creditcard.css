@@ -1,5 +1,48 @@
 /* Apply Credit Card Page Specific Styles */
 
+/* Main content area styling */
+.content-container {
+    width: 80%;
+    margin: 0 auto; /* Centralize the container */
+    background-color: #fff; /* White background for clarity */
+    padding: 20px;
+    border-radius: 8px; /* Soft rounded corners */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+/* Title styling */
+.title {
+    text-align: center; /* Center the title for emphasis */
+    color: #0051ba; /* Stylish blue for the title */
+    margin-bottom: 20px; /* Space below the title */
+}
+
+/* Error and success message styling */
+.error-message, .success-message {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center; /* Center the text for messages */
+}
+
+.error-message {
+    background-color: #ffdddd; /* Light red for error background */
+    border: 1px solid #ff0000; /* Red border for errors */
+}
+
+.success-message {
+    background-color: #ddffdd; /* Light green for success background */
+    border: 1px solid #00b300; /* Green border for successes */
+}
+
+.input-hint {
+    color: #666; /* Dark gray for readability */
+    font-size: 14px; /* Smaller font size for hints */
+    margin-bottom: 5px; /* Space between hint and input field */
+}
+
+
 /* Styling for the card selection area */
 .card-selection {
     display: flex;
@@ -26,9 +69,11 @@
 
 /* Styling for the images inside the card selection */
 .card-info img {
-    width: 100%; /* Full width of the container */
-    height: auto; /* Maintain aspect ratio */
-    border-bottom: 1px solid #eee; /* Line separating image from details */
+    width: 300px !important; /* Adjust the max-width as needed for the desired size */
+    height: auto !important; /* Maintain aspect ratio */
+    display: block !important; /* Makes it a block-level element */
+    margin: auto !important; /* Centers the image in its container */
+    border-bottom: 1px solid #eee !important; /* Line separating image from details */
 }
 
 /* Details section within card info */

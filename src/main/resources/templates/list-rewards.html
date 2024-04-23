@@ -13,8 +13,15 @@
                 <span th:text="${reward.category}">Category</span>:
                 <span th:text="${reward.cashback_rate}">Cashback Rate</span>%
                 <span th:text="'Card Type: ' + ${reward.cardType.name}">Card Type</span>
+                
             </li>
         </ul>
     </div>
+    
+    <!-- Back to Credit Card Dashboard Button -->
+    <div>
+        <a href="@{/creditcard-dashboard}" th:href="@{/creditcard-dashboard}"><button type="button">Back to Credit Card Dashboard</button></a>
+    </div>
+    
 </body>
 </html>

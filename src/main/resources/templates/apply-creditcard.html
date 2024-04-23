@@ -15,9 +15,10 @@
 
   <div class="side-menu menu-active" id="sideMenu">
     <div class="user-greeting"><p>My Credit Cards</p></div>
+    <a href="creditcard-dashboard">Back to Credit card dashboard</a> 
     <a href="customer-dashboard">Back to Main dashboard</a>
     <a href="account-dashboard">View Account dashboard</a>
-    <a href="creditcard-dashboard">View Credit card dashboard</a> 
+    
     <form th:action="@{/logout}" method="post">
       <div class="buttons">
         <button type="submit" class="login-button">Logout</button>
@@ -27,8 +28,8 @@
   </div>
 
   <div class="main-content">
-    <div class="sub-container">
-      <h1>Apply for a New Credit Card</h1>
+    <div class="content-container">
+      <h1 class="title">Apply for a New Credit Card</h1>
       
       <div th:if="${error}" style="color: red;">
         <p th:text="${error}"></p>
@@ -46,14 +47,24 @@
         				<img th:src="@{'/img/' + ${cardType.imageUrl}}" alt="Card Image" style="width: 100px; height: auto;">
       					<div class="card-details">
         					<h3 th:text="${cardType.name}">Card Type Name</h3>
-        					<p th:text="${cardType.requirements}">Requirements</p>
+        					<ul class="requirements-list" th:data-requirements="${cardType.requirements}"></ul>
+        					<h4>Associated Cashback</h4>
+        					<ul class="rewards-list">
+                  				<li th:each="reward : ${cardType.rewards}">
+                    				<strong th:text="${reward.category}">Reward Category</strong>: 
+                    				<span th:text="${reward.cashback_rate} + '%'">Cashback Rate</span>
+                  				</li>
+                			</ul>
       					</div>
     			</label>
   			</th:block>
 		</div>
 
+		<div id="creditLimitField" class="visible">
         <label for="creditCardLimit">Credit Card Limit:</label>
-        <input type="text" id="creditCardLimit" name="creditCardLimit" required><br><br>
+        <p class="input-hint">Please ensure that your credit limit is within your salary for your credit card application to be approved.</p>
+        <input type="text" id="creditCardLimit" name="creditCardLimit" required placeholder="Enter your desired credit limit"><br><br>
+        </div>
         
         <button type="submit" class="apply-card-button">Submit Application</button>
       </form>

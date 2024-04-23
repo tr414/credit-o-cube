@@ -109,3 +109,20 @@ body {
 .main-content:not(.content-expand) {
 	margin-left: 250px; /* Moves the sidebar out of view */
 }
+
+/* Ensures the logo link does not disrupt the flex layout */
+.top-bar .logo-link {
+    flex-grow: 1;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none; /* Removes underline from the link */
+    
+}
+
+/* Ensures the logo maintains its properties */
+.top-bar img.center-logo {
+    max-height: 50px; /* Keep existing height */
+    margin: 0 auto; /* Center the logo within the link */
+    width: auto;
+}

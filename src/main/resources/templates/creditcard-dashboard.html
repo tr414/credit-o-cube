@@ -13,10 +13,9 @@
 
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
+    <a href="customer-dashboard" class="logo-link">
     <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-    
-	
-	
+    </a>
   </div>
 
   <div class="side-menu menu-active" id="sideMenu">
@@ -26,7 +25,7 @@
 	
 	<a href="customer-dashboard">Back to Main dashboard</a>
 		<a href="account-dashboard">View Account dashboard</a>
-    	<a href="creditcard-dashboard">View Credit card dashboard</a> 
+    	
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
 				<button type="submit" class="login-button">Logout</button>
@@ -50,6 +49,12 @@
 				<input type="submit" class="credit-action-buttons"
 					value="Apply for a Credit Card">
 			</form>
+			
+			<form th:action="@{/creditcard-dashboard}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="View all Credit Cards">
+			</form>
+			
 			<form th:action="@{/request-limit}" method="get">
 				<input type="submit" class="credit-action-buttons"
 					value="Update Credit Limit">
