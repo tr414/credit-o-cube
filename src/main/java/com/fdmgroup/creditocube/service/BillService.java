@@ -29,7 +29,7 @@ public class BillService {
 
 	@Autowired
 	private CreditCardTransactionService cardTransactionService;
-	
+
 	@Autowired
 	private InstallmentPaymentService installmentService;
 
@@ -51,7 +51,7 @@ public class BillService {
 		currentBill.setOutstandingAmount(bill.getOutstandingAmount());
 		currentBill.setPaid(bill.isPaid());
 		currentBill.setTotalAmountDue(bill.getTotalAmountDue());
-		
+
 		return Optional.ofNullable(billRepo.save(currentBill));
 	}
 
@@ -61,34 +61,39 @@ public class BillService {
 
 	public Optional<Bill> generateBill(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
-		
-		// Before generating the bill, check if the customer is eligible for cashback based on the monthly spend, and apply that cashback
+
+		// Before generating the bill, check if the customer is eligible for cashback
+		// based on the monthly spend, and apply that cashback
 		applyCashback(card.getCardId());
-		
+
 		double totalAmountDue = card.getBalance();
 		Optional<Bill> cardBillOptional = billRepo.findByCardIs(card);
-		
-		// The bill for this card does not exist, suggesting that this is a new card, and hence we need to generate a new bill
+
+		// The bill for this card does not exist, suggesting that this is a new card,
+		// and hence we need to generate a new bill
 		// Return this newly generated bill
 		if (cardBillOptional.isEmpty()) {
 			Bill newCardBill = new Bill(card, 0, 0, true);
 			newCardBill.setBillIssueTime(LocalDateTime.now());
 			return createBill(newCardBill);
 		}
-		
+
 		Bill cardBill = cardBillOptional.get();
-		
-		// Modify total amount due by accounting for transactions made on installment plans, subtracting away the used balance that does
+
+		// Modify total amount due by accounting for transactions made on installment
+		// plans, subtracting away the used balance that does
 		// not need to be paid this month
 		double nonDueInstallmentPayments = calculateNonDueInstallmentPayments(cardId);
-		
-		totalAmountDue = new BigDecimal(totalAmountDue - nonDueInstallmentPayments).setScale(2, RoundingMode.HALF_UP).doubleValue();
-		
+
+		totalAmountDue = new BigDecimal(totalAmountDue - nonDueInstallmentPayments).setScale(2, RoundingMode.HALF_UP)
+				.doubleValue();
+
 		double minimumAmountDue = new BigDecimal(totalAmountDue * 0.1).setScale(2, RoundingMode.HALF_UP).doubleValue();
-		
+
 		cardBill.setMinimumAmountDue(minimumAmountDue);
 		cardBill.setTotalAmountDue(totalAmountDue);
 		cardBill.setOutstandingAmount(totalAmountDue);
+
 		if (cardBill.getOutstandingAmount() > 0) {
 			cardBill.setPaid(false);
 		} else {
@@ -107,56 +112,58 @@ public class BillService {
 
 	private double calculateNonDueInstallmentPayments(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
-		List<InstallmentPayment> allInstallmentPayments =  installmentService.findAllInstallmentPaymentsByCard(card);
-		
+		List<InstallmentPayment> allInstallmentPayments = installmentService.findAllInstallmentPaymentsByCard(card);
+
 		double totalNonDueInstallmentPayments = 0.0;
-		
+
 		for (InstallmentPayment installment : allInstallmentPayments) {
-			
+
 			CreditCardTransaction installmentTransaction = new CreditCardTransaction();
 			installmentTransaction.setTransactionCard(card);
 			installmentTransaction.setTransactionDate(LocalDateTime.now());
 			installmentTransaction.setDescription("Installment payment for outstanding big ticket purchase");
-			
-			// If this is the final installment, the entire amount needs to be paid, so no contribution
-			// to nondueinstallmentpayments. Simply delete this entry from the database and ensure that it is added to the current bill
-			// delete the entry from the table as this is the final installment, and move into the next InstallmentPayment in the list
+
+			// If this is the final installment, the entire amount needs to be paid, so no
+			// contribution
+			// to nondueinstallmentpayments. Simply delete this entry from the database and
+			// ensure that it is added to the current bill
+			// delete the entry from the table as this is the final installment, and move
+			// into the next InstallmentPayment in the list
 			// Create a transaction to reflect in the user bill for the month
-			if (installment.getInstallmentsLeft() ==  1) {
+			if (installment.getInstallmentsLeft() == 1) {
 				installmentTransaction.setTransactionAmount(installment.getAmountLeft());
 				cardTransactionService.createCreditCardTransaction(installmentTransaction);
 				installmentService.deleteInstallmentPayment(installment);
 				continue;
 			}
-			
-			// If this is not the last installment, calculate how much money will be due in future installments and should be subtracted
+
+			// If this is not the last installment, calculate how much money will be due in
+			// future installments and should be subtracted
 			// from the current bill.
-			
+
 			double installmentAmount = new BigDecimal((installment.getAmountLeft() / installment.getInstallmentsLeft()))
-											.setScale(2, RoundingMode.HALF_UP)
-											.doubleValue();
-			
+					.setScale(2, RoundingMode.HALF_UP).doubleValue();
+
 			// Create a transaction to reflect in the user bill for the month
 			installmentTransaction.setTransactionAmount(installmentAmount);
 			cardTransactionService.createCreditCardTransaction(installmentTransaction);
-			
+
 			int remainingInstallments = installment.getInstallmentsLeft() - 1;
 			double nonDueInstallmentPayments = new BigDecimal((installment.getAmountLeft() - installmentAmount))
-												.setScale(2, RoundingMode.HALF_UP)
-												.doubleValue();
-			
-			totalNonDueInstallmentPayments = totalNonDueInstallmentPayments + nonDueInstallmentPayments; 
-			
-			// Update the installment payment to reflect that the current month's installment will be charged in the bill
+					.setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+			totalNonDueInstallmentPayments = totalNonDueInstallmentPayments + nonDueInstallmentPayments;
+
+			// Update the installment payment to reflect that the current month's
+			// installment will be charged in the bill
 			// Hence reducing the amount left by the amount paid in the current installment
 			// And reducing the number of installment payments left for this item by 1
 			installment.setAmountLeft(nonDueInstallmentPayments);
 			installment.setInstallmentsLeft(remainingInstallments);
 			installmentService.updateInstallmentPayment(installment);
-			
-			
+
 		}
-		
+
 		return totalNonDueInstallmentPayments;
 	}
 
@@ -236,6 +243,7 @@ public class BillService {
 	// This function is called on the 15th of every month at 6 am. It will go
 	// through every card, and generate the credit card bill for that
 	// billing cycle
+
 	@Scheduled(cron = "0 27 12 23 4 *")
 	public void generateAllCardBills() {
 		List<CreditCard> creditCards = cardService.findAllCreditCards();
@@ -253,19 +261,21 @@ public class BillService {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
 		double monthlySpend = card.getMonthlySpend();
 		double cashbackAccrued = card.getCashback();
-		
-		// if monthly spend exceeds minimum spend requirement, credit cashback for the month 
+
+		// if monthly spend exceeds minimum spend requirement, credit cashback for the
+		// month
 		// create a transaction to show that the cashback was credited
 		if (monthlySpend >= 600 && cashbackAccrued > 0) {
 			card.setBalance(card.getBalance() - cashbackAccrued);
 			cardTransactionService.createCashbackTransaction(card, cashbackAccrued);
 		}
-		
-		// once cashback has been credited, reset accrued cashback to 0, reset spending in billing cycle to 0, and persist the new state of the card
+
+		// once cashback has been credited, reset accrued cashback to 0, reset spending
+		// in billing cycle to 0, and persist the new state of the card
 		card.setCashback(0.0);
 		card.setMonthlySpend(0.0);
 		cardService.updateCard(card);
-		
+
 	}
 
 	// This function is called on the 10th of every month at 6 am. It will go
@@ -288,6 +298,7 @@ public class BillService {
 
 		if (generatedBillOptional.isEmpty()) {
 			// What to do
+			System.out.println("No bill generated");
 		}
 
 		Bill generatedBill = generatedBillOptional.get();

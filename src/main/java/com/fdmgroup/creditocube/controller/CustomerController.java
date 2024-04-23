@@ -22,6 +22,7 @@ import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 import com.fdmgroup.creditocube.model.User;
+import com.fdmgroup.creditocube.service.CreditCardService;
 import com.fdmgroup.creditocube.service.CreditCardTransactionService;
 import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
@@ -61,6 +62,9 @@ public class CustomerController {
 
 	@Autowired
 	CreditCardTransactionService creditCardTransactionService; // Service for credit card transaction operations
+
+	@Autowired
+	CreditCardService creditCardService; // Service for credit card
 
 	private static Logger logger = LogManager.getLogger(CustomerController.class);
 
@@ -210,7 +214,7 @@ public class CustomerController {
 		List<DebitAccountTransaction> recentTransactions = debitAccountTransactionService
 				.findRecentTransactionsOfCustomer(customer);
 		model.addAttribute("recentTransactions", recentTransactions);
-		List<CreditCard> cards = customer.getCreditCards();
+		List<CreditCard> cards = creditCardService.findAllActiveCreditCardsForCustomer(customer);
 		model.addAttribute("cards", cards);
 		List<CreditCardTransaction> creditTransactions = new ArrayList<>();
 		for (CreditCard card : customer.getCreditCards()) {

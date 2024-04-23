@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fdmgroup.creditocube.model.Bill;
 import com.fdmgroup.creditocube.model.CardType;
@@ -62,7 +63,7 @@ public class CreditCardController {
 
 	@Autowired
 	private CreditCardTransactionService creditCardTransactionService;
-	
+
 	@Autowired
 	private InstallmentPaymentService installmentService;
 
@@ -85,8 +86,10 @@ public class CreditCardController {
 		session.setAttribute("customer", sessionCustomer);
 		model.addAttribute("customer", sessionCustomer);
 
-		List<CreditCard> creditCards = creditCardService.findAllCardsForCustomer(sessionCustomer);
-		model.addAttribute("credit_cards", creditCards);
+//		List<CreditCard> creditCards = creditCardService.findAllCardsForCustomer(sessionCustomer);
+//		model.addAttribute("credit_cards", creditCards);
+		List<CreditCard> activeCreditCards = creditCardService.findAllActiveCreditCardsForCustomer(sessionCustomer);
+		model.addAttribute("credit_cards", activeCreditCards);
 		return "creditcard-dashboard";
 	}
 
@@ -189,7 +192,11 @@ public class CreditCardController {
 		}
 
 		Customer customer = optionalCustomer.get();
-		if (customer.getCreditCards().size() >= 3) {
+		List<CreditCard> cardList = customer.getCreditCards();
+		List<CreditCard> activeCardList = cardList.stream().filter(c -> c.isActive()).collect(Collectors.toList());
+
+		// if they already hold 3 or more cards, cannot make new ones
+		if (activeCardList.size() >= 3) {
 			model.addAttribute("error", "You cannot have more than 3 credit cards.");
 			return "apply-creditcard";
 		}
@@ -264,7 +271,6 @@ public class CreditCardController {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 		String paymentOption = request.getParameter("paymentOption");
 
-		System.out.println(paymentOption);
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
@@ -341,7 +347,8 @@ public class CreditCardController {
 			}
 		} else {
 			// Customer is paying off all the outstanding balance on the card.
-			// Therefore any outstanding installment payments are also being paid and should be removed from the card.
+			// Therefore any outstanding installment payments are also being paid and should
+			// be removed from the card.
 			installmentService.deleteAllInstallmentPayments(cardToBePaidOff);
 			billService.recordCreditBalancePayment(bill);
 			amountPayable = cardToBePaidOff.getBalance();
@@ -405,6 +412,68 @@ public class CreditCardController {
 		model.addAttribute("customer", customer);
 		model.addAttribute("accounts", customer.getDebitAccounts());
 		return "pay-creditcard-balance";
+	}
+
+	@PostMapping("/close-credit-card")
+	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam long cardId) {
+
+		// Find the user associated with the provided customer ID.
+		Optional<Customer> optionalCustomer = customerService.findCustomerById(customer.getUser_id());
+
+		// If the user is not found, redirect to the login page.
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database, redirect to login page");
+			return "redirect:/login";
+		}
+
+		logger.debug("Customer exists, Customer details retrieved from database");
+
+		// Find the card associated with the provided account number.
+		Optional<CreditCard> optionalCreditCard = creditCardService.findCardByCardId(cardId);
+
+		// If the debit account is not found, redirect to the login page.
+		if (optionalCreditCard.isEmpty()) {
+			logger.info("Credit Card not found in database, redirect to credit card dashboard");
+			return "redirect:/creditcard-dashboard";
+		}
+
+		CreditCard card = optionalCreditCard.get();
+		if (card.getBalance() != 0) {
+			System.out.println("Credit card has balance");
+			logger.debug("Credit card has balance");
+			return "redirect:/creditcard-dashboard";
+		}
+
+		System.out.println("Closing credit card");
+		logger.debug("Credit card exists, details retrieved from database");
+
+		creditCardService.closeCreditCard(card);
+
+		// Return a redirect to the dashboard page.
+		return "redirect:/creditcard-dashboard";
+	}
+
+	@GetMapping("/show-inactive-cards")
+	public String showInactiveCards(Principal principal, Model model) {
+
+		// Find the user associated with the provided customer ID.
+		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+
+		// If the user is not found, redirect to the login page.
+		if (optionalCustomer.isEmpty()) {
+			return "redirect:/login";
+		}
+
+		// set customer and their accounts as session attributes to retrieve in view
+		// Customer customer = optionalCustomer.get();
+		Customer sessionCustomer = optionalCustomer.get();
+		session.setAttribute("customer", sessionCustomer);
+		model.addAttribute("customer", sessionCustomer);
+
+		List<CreditCard> inactiveCreditCards = creditCardService.findAllInactiveCreditCardsForCustomer(sessionCustomer);
+		model.addAttribute("inactive_credit_cards", inactiveCreditCards);
+		return "show-inactive-cards";
+
 	}
 
 }
