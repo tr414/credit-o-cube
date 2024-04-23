@@ -6,34 +6,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credit Card Bill</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/account-dashboard.css">
+<link rel="stylesheet" href="../css/creditcard-dashboard.css">
 
 </head>
 <body>
 	<!-- Top Bar -->
-	<!-- <div class="top-bar">
-		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
-			src="../img/CreditOCubeLogo.png" alt="Logo" class="logo">
-		<button class="logout-button" onclick="window.location.href='login'">Logout</button>
-	</div> -->
+	<div class="top-bar">
+    <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
+    <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
+    
+	
+	
+  </div>
 
-	<!-- Side Menu -->
-	<div class="side-menu" id="sideMenu">
-		<div class="user-greeting">What would you like to do today?</div>
-		<a href="#">Transaction history</a> <a href="#">Transfer money</a> <a
-			href="#">Deposit / Withdraw</a> <a href="creditcard-dashboard">Creditcard
-			dashboard</a> <a href="account-dashboard">Account dashboard</a> <a
-			href="customer-dashboard">Main dashboard</a>
-		<!-- Add other menu items here -->
+  <div class="side-menu menu-active" id="sideMenu">
+  	<div class="user-greeting">
+		<P>My Credit Cards</P>
 	</div>
+    <a href="apply-creditcard">Apply for a credit card</a>
 
+    <a href="create-card-transaction">Create Card Transaction</a>
+
+    <a href="pay-creditcard-balance">Pay bills</a>
+    <a href="account-dashboard">Account dashboard</a>
+    <a href="creditcard-dashboard">Credit card dashboard</a> 
+    <a href="customer-dashboard">Main dashboard</a>
+    <a href="#">Set credit limit (FOR ADMIN)</a>
+    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
+    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
+    <form th:action="@{/logout}" method="post">
+		<div class="buttons">
+			<button type="submit" class="login-button">Logout</button>
+		</div>
+	</form>
+    <!-- Add other menu items here -->
+  </div>
+
+	<div class="content-area main-content">
 	<div>
 		<table>
 			<thead>
 				<tr>
-					<td>Total Amount Due</td>
-					<td>Minimum Amount Due</td>
-					<td>Bill Paid</td>
+					<th>Total Amount Due</th>
+					<th>Minimum Amount Due</th>
+					<th>Bill Paid</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -45,6 +61,7 @@
 				</tr>
 			</tbody>
 		</table>
+	</div>
 	</div>
 
 
