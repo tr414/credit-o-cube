@@ -24,7 +24,9 @@ import com.fdmgroup.creditocube.model.CurrencyExchange;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.ForeignCurrencyCreditCardTransaction;
 import com.fdmgroup.creditocube.model.Merchant;
+import com.fdmgroup.creditocube.model.Rewards;
 import com.fdmgroup.creditocube.repository.MerchantRepository;
+import com.fdmgroup.creditocube.repository.RewardsRepository;
 import com.fdmgroup.creditocube.service.CreditCardService;
 import com.fdmgroup.creditocube.service.CreditCardTransactionService;
 import com.fdmgroup.creditocube.service.CustomerService;
@@ -45,6 +47,9 @@ public class CreditCardTransactionController {
 
 	@Autowired
 	MerchantRepository merchantRepo;
+	
+	@Autowired
+	RewardsRepository rewardsRepo;
 
 	private final RestClient restClient;
 
@@ -119,7 +124,10 @@ public class CreditCardTransactionController {
 		String merchantCode = request.getParameter("merchantCode");
 		Merchant merchant;
 		Optional<Merchant> merchantOptional = merchantRepo.findByMerchantCode(merchantCode);
-
+		
+		boolean installmentPayment = (request.getParameter("installment") != null);
+		System.out.println(installmentPayment);
+		
 		if (merchantOptional.isEmpty()) {
 			return "redirect:create-card-transaction";
 		} else {
@@ -127,7 +135,17 @@ public class CreditCardTransactionController {
 		}
 
 		String merchantCategory = merchant.getCategory();
-
+		
+		// find reward based on category of transaction and card type
+		Rewards reward = rewardsRepo.findByCardTypeIsAndCategoryIs(card.getCardType(), merchantCategory).orElse(null);
+		
+		
+		double cashbackRate = 0.0;
+		
+		if (reward != null) {
+			cashbackRate = reward.getCashback_rate();
+		}
+	
 		// currency
 		String currency = request.getParameter("currency");
 
@@ -135,18 +153,38 @@ public class CreditCardTransactionController {
 		LocalDateTime transactionDate = LocalDateTime.now();
 
 		// amount
-		BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+		BigDecimal amount = new BigDecimal(request.getParameter("amount")).setScale(2, RoundingMode.HALF_UP);
 		double transactionAmount = amount.doubleValue();
 
 		// TODO apply cashback
-		double cashback = 0.0;
+		
 
 		if (currency.equalsIgnoreCase("sgd")) {
 			if (validTransaction(transactionAmount, card)) {
 				card.setBalance(card.getBalance() + transactionAmount);
+				
+				// calculate cashback based on merchant category and card reward
+				double cashback = new BigDecimal(transactionAmount * cashbackRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
+				card.setCashback(card.getCashback() + cashback);
+				
+				// add the transaction to monthly spend on the card for eventual cashback eligibility check
+				card.setMonthlySpend(transactionAmount + card.getMonthlySpend());
+				
 				cardService.updateCard(card);
-				String description = String.format("Payment made to merchant code %s in category %s", merchantCode,
-						merchantCategory);
+				
+				String description;
+				
+				// If the transaction is an installment payment, create the installment payment and associate it with the card
+				// Inform the customer through the description that this transaction will be paid in installments over the next 6 months
+				if (installmentPayment) {
+					transactionService.createInstallmentPayment(card, transactionAmount);
+					description = "This transaction will be paid in 6 installments which will be charged to your card over the next 6 months.";
+					
+				}
+				else {
+					description = String.format("Payment made to merchant code %s in category %s", merchantCode,
+							merchantCategory);
+				}
 				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback,
 						transactionDate, transactionAmount, description));
 			} else {
@@ -163,10 +201,29 @@ public class CreditCardTransactionController {
 
 			if (validTransaction(transactionSGDAmount, card)) {
 				card.setBalance(card.getBalance() + transactionSGDAmount);
+				
+				double cashback = new BigDecimal(transactionAmount * cashbackRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
+				card.setCashback(card.getCashback() + cashback);
+				
+				// add the transaction to monthly spend on the card for eventual cashback eligibility check
+				card.setMonthlySpend(transactionAmount + card.getMonthlySpend());
+				
 				cardService.updateCard(card);
-				String description = String.format(
-						"Foreign currency payment made to merchant code %s in category %s. Original currency: %s. Exchange rate from currency to SGD: %s",
-						merchantCode, merchantCategory, currency, exchangeRate.toString());
+				
+				String description;
+				
+				if (installmentPayment) {
+					transactionService.createInstallmentPayment(card, transactionAmount);
+					description = String.format("This transaction will be paid in 6 installments which will be charged to your card over the next 6 months. Original currency: %s. Exchange rate from currency to SGD: %s",
+									currency, exchangeRate.toString());
+					
+				}
+				else {
+					description = String.format("Foreign currency payment made to merchant code %s in category %s. Original currency: %s. Exchange rate from currency to SGD: %s",
+							merchantCode, merchantCategory, currency, exchangeRate.toString());
+				}
+				
+				
 				transactionService.createCreditCardTransaction(
 						new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate,
 								transactionSGDAmount, description, currency, exchangeRate.doubleValue()));
