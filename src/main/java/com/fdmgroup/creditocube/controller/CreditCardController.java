@@ -186,6 +186,13 @@ public class CreditCardController {
 			return "apply-creditcard";
 		}
 
+		if (customer.getFirstName() == null || customer.getLastName() == null || customer.getEmail() == null
+				|| customer.getPhoneNumber() == null || customer.getNric() == null || customer.getAddress() == null
+				|| customer.getSalary() == null || customer.getGender() == null || customer.getDob() == null) {
+			System.out.println("Customer details are not filled up");
+			return ("apply-creditcard");
+		}
+
 		String cardNumber = creditCardService.generateCreditCardNumber();
 		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
 		if (cardLimit > customer.getSalary()) {
@@ -208,7 +215,7 @@ public class CreditCardController {
 		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
 		creditCardService.createCreditCard(newCard);
 		billService.createBillForNewCard(newCard);
-		
+
 		model.addAttribute("success", "Successfully created a new credit card.");
 		billService.createBillForNewCard(newCard);
 		return "redirect:/creditcard-dashboard";
@@ -228,7 +235,7 @@ public class CreditCardController {
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
 		}
-	
+
 		// set customer and their accounts as session attributes to retrieve in view
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
@@ -249,7 +256,7 @@ public class CreditCardController {
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 		String paymentOption = request.getParameter("paymentOption");
-		
+
 		System.out.println(paymentOption);
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
