@@ -1,5 +1,7 @@
 package com.fdmgroup.creditocube.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,8 @@ public class Bill {
 	@OneToOne
 	@JoinColumn(name = "fk_card_id")
 	private CreditCard card;
+	
+	private LocalDateTime billIssueTime;
 
 	private double totalAmountDue;
 
@@ -87,4 +91,14 @@ public class Bill {
 	public void setOutstandingAmount(double outstandingAmount) {
 		this.outstandingAmount = outstandingAmount;
 	}
+
+	public LocalDateTime getBillIssueTime() {
+		return billIssueTime;
+	}
+
+	public void setBillIssueTime(LocalDateTime billIssueTime) {
+		this.billIssueTime = billIssueTime;
+	}
+	
+	
 }
