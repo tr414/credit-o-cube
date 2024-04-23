@@ -23,26 +23,53 @@
   	<div class="user-greeting">
 		<P>My Credit Cards</P>
 	</div>
-    <a href="apply-creditcard">Apply for a credit card</a>
+	
+	<a href="customer-dashboard">Back to Main dashboard</a>
+		<a href="account-dashboard">View Account dashboard</a>
+    	<a href="creditcard-dashboard">View Credit card dashboard</a> 
+		<form th:action="@{/logout}" method="post">
+			<div class="buttons">
+				<button type="submit" class="login-button">Logout</button>
+			</div>
+		</form>
+	
+<!--     <a href="apply-creditcard">Apply for a credit card</a> -->
 
-    <a href="create-card-transaction">Create Card Transaction</a>
+<!--     <a href="create-card-transaction">Create Card Transaction</a> -->
 
-    <a href="pay-creditcard-balance">Pay bills</a>
-    <a href="account-dashboard">Account dashboard</a>
-    <a href="creditcard-dashboard">Credit card dashboard</a> 
-    <a href="customer-dashboard">Main dashboard</a>
-    <a href="#">Set credit limit (FOR ADMIN)</a>
-    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
-    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
-    <form th:action="@{/logout}" method="post">
-		<div class="buttons">
-			<button type="submit" class="login-button">Logout</button>
-		</div>
-	</form>
+<!--     <a href="pay-creditcard-balance">Pay bills</a> -->
+<!--     <a href="account-dashboard">Account dashboard</a> -->
+<!--     <a href="creditcard-dashboard">Credit card dashboard</a>  -->
+<!--     <a href="customer-dashboard">Main dashboard</a> -->
+<!--     <a href="#">Set credit limit (FOR ADMIN)</a> -->
+<!--     <a href="create-card-type">Create Card Type (FOR ADMIN)</a> -->
+<!--     <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a> -->
+<!--     <form th:action="@{/logout}" method="post"> -->
+<!-- 		<div class="buttons"> -->
+<!-- 			<button type="submit" class="login-button">Logout</button> -->
+<!-- 		</div> -->
+<!-- 	</form> -->
     <!-- Add other menu items here -->
   </div>
   
   <div class="content-area main-content">
+  
+  <div class="actions-container">
+			<!-- Create Debit Account Button -->
+			<form th:action="@{/apply-creditcard}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="Apply for a Credit Card">
+			</form>
+			<form th:action="@{/request-limit}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="Update Credit Limit">
+			</form>
+			<form th:action="@{/create-card-transaction}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="Create Card Transaction">
+			</form>
+		</div>
+  
     <div>
       <table>
         <thead>

@@ -3,6 +3,7 @@ package com.fdmgroup.creditocube.model;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,11 +37,14 @@ public class CreditCard {
 
 	private double cardLimit; // changed from int to double as cardLimit is a currency value
 
+	@Column(name = "card_is_active")
+	private boolean isActive;
+
 	@OneToOne(mappedBy = "card")
 	private Bill bill;
 
 	public CreditCard() {
-
+		setActive(true);
 	}
 
 	public CreditCard(Customer customer, String cardNumber, int balance, int cardLimit, CardType cardType) {
@@ -50,6 +54,7 @@ public class CreditCard {
 		this.balance = balance;
 		this.cardLimit = cardLimit;
 		this.cardType = cardType;
+		this.isActive = true;
 	}
 
 	public long getCardId() {
@@ -133,6 +138,14 @@ public class CreditCard {
 		} else {
 			return cardNumber;
 		}
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 }

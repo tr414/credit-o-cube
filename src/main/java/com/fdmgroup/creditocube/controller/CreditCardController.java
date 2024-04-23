@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,6 +61,8 @@ public class CreditCardController {
 
 	@Autowired
 	private CreditCardTransactionService creditCardTransactionService;
+
+	private static Logger logger = LogManager.getLogger(CreditCardController.class);
 
 	// credit card dashboard
 	@GetMapping("/creditcard-dashboard")
@@ -186,6 +190,13 @@ public class CreditCardController {
 			return "apply-creditcard";
 		}
 
+		if (customer.getFirstName() == null || customer.getLastName() == null || customer.getEmail() == null
+				|| customer.getPhoneNumber() == null || customer.getNric() == null || customer.getAddress() == null
+				|| customer.getSalary() == null || customer.getGender() == null || customer.getDob() == null) {
+			System.out.println("Customer details are not filled up");
+			return ("apply-creditcard");
+		}
+
 		String cardNumber = creditCardService.generateCreditCardNumber();
 		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
 		if (cardLimit > customer.getSalary()) {
@@ -208,9 +219,8 @@ public class CreditCardController {
 		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
 		creditCardService.createCreditCard(newCard);
 		billService.createBillForNewCard(newCard);
-		
+
 		model.addAttribute("success", "Successfully created a new credit card.");
-		billService.createBillForNewCard(newCard);
 		return "redirect:/creditcard-dashboard";
 	}
 
@@ -228,7 +238,7 @@ public class CreditCardController {
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
 		}
-	
+
 		// set customer and their accounts as session attributes to retrieve in view
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
@@ -249,7 +259,7 @@ public class CreditCardController {
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 		String paymentOption = request.getParameter("paymentOption");
-		
+
 		System.out.println(paymentOption);
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
@@ -272,8 +282,10 @@ public class CreditCardController {
 				break;
 
 			} else {
-				System.out.println("Debit account number invalid - you have no such debit accounts with account number "
-						+ debitAccountNumber);
+				logger.info(
+						"Debit account number selected does not belong to customer, or there is no such debit account number");
+//				System.out.println("Debit account number invalid - you have no such debit accounts with account number "
+//						+ debitAccountNumber);
 				return ("pay-creditcard-balance");
 			}
 		}
@@ -284,6 +296,7 @@ public class CreditCardController {
 		CreditCard cardToBePaidOff = creditCardService.findCardByCardNumber(creditCardNumber).get();
 
 		// if they choose to pay off a credit card that doesnt exist, exit this method
+
 //		for (CreditCard card : creditCardsOfCustomer) {
 //			if (String.valueOf(card.getCardNumber()).equals(creditCardNumber)) {
 //				cardToBePaidOff = card;
@@ -303,12 +316,14 @@ public class CreditCardController {
 
 			amountPayable = cardToBePaidOff.getBill().getMinimumAmountDue();
 			billService.recordMinimumAmountPayment(bill);
-			System.out.println("Paid minimum");
+			logger.debug("Customer selected to pay minimum amount");
+//			System.out.println("Paid minimum");
 		} else if (paymentOption.equals("outstanding")) {
 			// pay the outstanding bill
 			amountPayable = cardToBePaidOff.getBill().getOutstandingAmount();
 			billService.recordOutstandingAmountPayment(bill);
-			System.out.println("Paid Outstanding");
+			logger.debug("Customer selected to pay outstanding amount");
+//			System.out.println("Paid Outstanding");
 
 		} else if (paymentOption.equals("paymentAmount")) {
 			// make sure that payMent amount is not more than the current balance
@@ -323,7 +338,8 @@ public class CreditCardController {
 		} else {
 			billService.recordCreditBalancePayment(bill);
 			amountPayable = cardToBePaidOff.getBalance();
-			System.out.println("Paid Balance");
+			logger.debug("Customer selected to pay current balance");
+//			System.out.println("Paid Balance");
 
 		}
 
@@ -331,7 +347,7 @@ public class CreditCardController {
 		if (amountPayable > 0 && fromAccount.getAccountBalance() > amountPayable) {
 			// do withdrawal
 			debitAccountService.changeAccountBalance(fromAccount, amountPayable, false);
-			System.out.println("amountPayable: " + amountPayable);
+//			System.out.println("amountPayable: " + amountPayable);
 
 			// Debit account transaction
 			DebitAccountTransaction newTransaction = new DebitAccountTransaction();
@@ -352,10 +368,13 @@ public class CreditCardController {
 
 			cardToBePaidOff.setBalance(cardToBePaidOff.getBalance() - amountPayable);
 			creditCardService.updateCard(cardToBePaidOff);
-			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
+
+//			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
+			logger.debug("Withdrawn $" + amountPayable + "from debit account to pay credit card");
 			return "redirect:/creditcard-dashboard";
 		} else {
-			System.out.println("No amount to be paid");
+			logger.debug("Amount payable is equal to zero, or account balance is too low");
+//			System.out.println("No amount to be paid");
 			return ("pay-creditcard-balance");
 		}
 
@@ -371,7 +390,7 @@ public class CreditCardController {
 		CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
 		Bill bill = billService.findBillByCreditCard(card).orElse(null);
 
-		Customer customer = optionalCustomer.get();
+//		Customer customer = optionalCustomer.get();
 
 		model.addAttribute("bill", bill);
 		return "view-card-bill";

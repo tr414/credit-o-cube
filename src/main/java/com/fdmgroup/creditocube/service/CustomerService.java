@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fdmgroup.creditocube.controller.CreditCardController;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.repository.CustomerRepository;
 
@@ -24,13 +27,15 @@ public class CustomerService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	private static Logger logger = LogManager.getLogger(CreditCardController.class);
+
 	// Persists a new Customer, with attributes already set before persisting
 	public Optional<Customer> createCustomer(Customer customer) {
 		if (customer != null) {
 			customerRepo.save(customer);
 			return Optional.of(customer);
 		} else {
-			System.out.println("Error: Customer not saved");
+			logger.info("Error: Customer not saved");
 			return Optional.empty();
 		}
 	}
@@ -53,14 +58,14 @@ public class CustomerService {
 
 		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getUser_id());
 		if (optionalCustomer.isEmpty()) {
-			System.out.println("Customer not found in database");
+			logger.info("Customer not found in database");
 			return;
 		}
 		Customer targetCustomer = optionalCustomer.get();
-		System.out.println("Customer info obtained from database");
+		logger.debug("Customer info obtained from database");
 
 		if (targetCustomer.getDebitAccounts().size() > 0) {
-			System.out.println("Customer has existing debit accounts - do not delete");
+			logger.info("Customer has existing debit accounts - do not delete");
 			return;
 		} else {
 			customerRepo.delete(targetCustomer);
@@ -116,7 +121,8 @@ public class CustomerService {
 	}
 
 	public Customer updateCustomerDetails(String username, String rawPassword, String firstName, String lastName,
-			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
+			String email, String phoneNumber, String nric, String address, Double salary, String gender,
+			LocalDate dob) {
 
 		Customer customer = customerRepo.findCustomerByUsername(username).get();
 
@@ -145,7 +151,8 @@ public class CustomerService {
 	}
 
 	public boolean detailVerification(String username, String rawPassword, String firstName, String lastName,
-			String email, String phoneNumber, String nric, String address, Double salary, String gender, LocalDate dob) {
+			String email, String phoneNumber, String nric, String address, Double salary, String gender,
+			LocalDate dob) {
 
 		// Check if new password is more than or equal to 8 characters long
 		if (rawPassword.length() < 8) {
@@ -243,11 +250,11 @@ public class CustomerService {
 	}
 
 	public boolean existsByUsername(String username) {
-        return customerRepo.findCustomerByUsername(username).isPresent();
-    }
-	
+		return customerRepo.findCustomerByUsername(username).isPresent();
+	}
+
 	public boolean existsByNRIC(String nric) {
-	    return customerRepo.findCustomerByNric(nric).size() > 0;
+		return customerRepo.findCustomerByNric(nric).size() > 0;
 	}
 
 }
