@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Deposit / Withdraw</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
 <link rel="stylesheet" href="../css/account-dashboard.css">
 
@@ -21,7 +21,7 @@
 
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
-			<p>Deposit / Withdraw your funds here</p>
+			<p>Deposit or withdraw your money here</p>
 		</div>
 		<a href="customer-dashboard">Back to Main Dashboard</a><a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
@@ -74,17 +74,19 @@
 				<p
 					th:text="'Current Balance: $'+${session.selectedAccount.accountBalance}"></p>
 				<form th:action="update-account-balance" method="POST">
-					<h4>Deposit / Withdraw</h4>
+					<h4>Enter amount to deposit or withdraw:</h4>
 					<input type="hidden"
 						th:value="${session.selectedAccount.accountId}" name="accountId">
-					<input type="number" name="amount">
-					<button type="submit" name="transaction" value="deposit">Deposit</button>
-					<button type="submit" name="transaction" value="withdraw">Withdraw</button>
+					<input type="number" name="amount" placeholder="Amount in SGD">
+					<button class="debit-action-buttons" type="submit"
+						name="transaction" value="deposit">Deposit</button>
+					<button class="debit-action-buttons" type="submit"
+						name="transaction" value="withdraw">Withdraw</button>
 				</form>
 			</div>
 
 			<div th:if="${session.selectedAccount == null}">
-				<p>Please choose an account from the dropdown menu below.</p>
+				<p>Please choose an account from the dropdown menu above.</p>
 			</div>
 		</div>
 

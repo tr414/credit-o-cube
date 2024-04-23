@@ -2,14 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Wireframe</title>
-  <link rel="stylesheet" href="../css/header-sidebar.css">
-  <link rel="stylesheet" href="../css/creditcard-dashboard.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Wireframe</title>
+<link rel="stylesheet" href="../css/header-sidebar.css">
+<link rel="stylesheet" href="../css/creditcard-dashboard.css">
+<script src="../js/sidebar.js" defer></script>
 </head>
 
 <body>
+
 
   <div class="top-bar">
     <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
@@ -18,32 +20,30 @@
     </a>
   </div>
 
-  <div class="side-menu menu-active" id="sideMenu">
-  	<div class="user-greeting">
-		<P>My Credit Cards</P>
-	</div>
+
 	
-	<a href="customer-dashboard">Back to Main dashboard</a>
-		<a href="account-dashboard">View Account dashboard</a>
-    	
+
+
+	<div class="side-menu menu-active" id="sideMenu">
+		<div class="user-greeting">
+			<P>My Credit Cards</P>
+		</div>
+
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a>
+
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
 				<button type="submit" class="login-button">Logout</button>
 			</div>
 		</form>
-	
 
+		<!-- Add other menu items here -->
+	</div>
 
-    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
-    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
+	<div class="content-area main-content">
 
-
-    <!-- Add other menu items here -->
-  </div>
-  
-  <div class="content-area main-content">
-  
-  <div class="actions-container">
+		<div class="actions-container">
 			<!-- Create Debit Account Button -->
 			<form th:action="@{/apply-creditcard}" method="get">
 				<input type="submit" class="credit-action-buttons"
@@ -63,59 +63,70 @@
 				<input type="submit" class="credit-action-buttons"
 					value="Create Card Transaction">
 			</form>
+			<form th:action="@{/show-inactive-cards}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="View Deactivated Cards">
+			</form>
 		</div>
-  
-    <div>
-      <table>
-        <thead>
-          <tr>
-            
-            <th>Credit Card Number</th>
-            <th>Card Balance</th>
-            <th>Credit Limit</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="card : ${credit_cards}">
-            
-            <!-- <td th:text="${card.getFormattedCreditCardNumber()} + ' -- ' + ${card.cardType.name}"></td> -->
-            <td>
-            	<p th:text="${card.getFormattedCreditCardNumber()} "></p><br>
-            	<p th:text="${card.cardType.name}" ></p>
-            </td>
-            <td th:text="${card.balance}" class="price-element"></td>
-            <td th:text="${card.cardLimit}" class="price-element"></td>
-            <td>
-              <form th:action="@{/card-transactions}" method="POST">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">View Transaction History</button>
-              </form>
-              <form th:action="@{/view-card-bill}" method="POST">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">View Card Bill</button>
-              </form>
-               <form th:action="@{/open-card-payment}" method="POST">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">Pay Card Bill/Balance</button>
-              </form>
-               <form th:action="@{/generate-bill}" method="POST">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">Generate Bill</button>
-              </form>
-               <form th:action="@{/simulate-late-payment}" method="POST">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">Simulate Late Payment</button>
-              </form>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <script src="../js/sidebar.js"></script>
+		<div>
+			<table>
+				<thead>
+					<tr>
 
+						<th>Credit Card Number</th>
+						<th>Card Balance</th>
+						<th>Credit Limit</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="card : ${credit_cards}">
+
+						<!-- <td th:text="${card.getFormattedCreditCardNumber()} + ' -- ' + ${card.cardType.name}"></td> -->
+						<td>
+							<p th:text="${card.getFormattedCreditCardNumber()} "></p> <br>
+							<p th:text="${card.cardType.name}"></p>
+						</td>
+						<td th:text="${card.balance}" class="price-element"></td>
+						<td th:text="${card.cardLimit}" class="price-element"></td>
+						<td>
+							<form th:action="@{/card-transactions}" method="POST">
+								<input type="hidden" th:value="${card.cardId}" name="cardId">
+								<button type="submit" class="credit-action-buttons">View
+									Transaction History</button>
+							</form>
+							<form th:action="@{/view-card-bill}" method="POST">
+								<input type="hidden" th:value="${card.cardId}" name="cardId">
+								<button type="submit" class="credit-action-buttons">View
+									Card Bill</button>
+							</form>
+							<form th:action="@{/open-card-payment}" method="POST">
+								<input type="hidden" th:value="${card.cardId}" name="cardId">
+								<button type="submit" class="credit-action-buttons">Pay
+									Card Bill/Balance</button>
+							</form>
+							<form th:action="@{/close-credit-card}" method="POST">
+								<input type="hidden" th:value="${card.cardId}" name="cardId">
+								<button type="submit" class="credit-action-buttons">Close
+									Credit Card</button>
+							</form>
+							<form th:action="@{/generate-bill}" method="POST">
+								<input type="hidden" th:value="${card.cardId}" name="cardId">
+								<button type="submit" class="credit-action-buttons">Generate
+									Bill</button>
+							</form>
+							<form th:action="@{/simulate-late-payment}" method="POST">
+								<input type="hidden" th:value="${card.cardId}" name="cardId">
+								<button type="submit" class="credit-action-buttons">Simulate
+									Late Payment</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </body>
 
 </html>

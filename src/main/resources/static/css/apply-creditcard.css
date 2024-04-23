@@ -45,109 +45,146 @@
 
 /* Styling for the card selection area */
 .card-selection {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 20px;
-    gap: 20px; /* Space between cards */
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	padding: 20px;
+	gap: 20px; /* Space between cards */
 }
 
 /* Individual card info styling */
 .card-info {
-    border: 2px solid #ccc; /* Subtle border */
-    padding: 10px;
-    border-radius: 8px; /* Rounded corners */
-    width: 300px; /* Fixed width for consistency */
-    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transitions for hover effects */
-    cursor: pointer; /* Indicates the element is selectable */
+	border: 2px solid #ccc; /* Subtle border */
+	padding: 10px;
+	border-radius: 8px; /* Rounded corners */
+	width: 300px; /* Fixed width for consistency */
+	transition: transform 0.3s, box-shadow 0.3s;
+	/* Smooth transitions for hover effects */
+	cursor: pointer; /* Indicates the element is selectable */
 }
 
 .card-info:hover {
-    transform: scale(1.05); /* Slightly enlarge the card on hover */
-    box-shadow: 0 0 8px 8px rgba(0, 81, 186, 0.5); /* Soft shadow for 3D effect */
+	transform: scale(1.05); /* Slightly enlarge the card on hover */
+	box-shadow: 0 0 8px 8px rgba(0, 81, 186, 0.5);
+	/* Soft shadow for 3D effect */
 }
 
 /* Styling for the images inside the card selection */
 .card-info img {
+
     width: 300px !important; /* Adjust the max-width as needed for the desired size */
     height: auto !important; /* Maintain aspect ratio */
     display: block !important; /* Makes it a block-level element */
     margin: auto !important; /* Centers the image in its container */
     border-bottom: 1px solid #eee !important; /* Line separating image from details */
+
 }
 
 /* Details section within card info */
 .card-details {
-    padding: 10px;
-    background-color: #fff; /* White background for contrast */
-    text-align: left; /* Align text to the left for readability */
+	padding: 10px;
+	background-color: #fff; /* White background for contrast */
+	text-align: left; /* Align text to the left for readability */
 }
 
 .card-details h3 {
-    margin-top: 0; /* Removes default margin */
-    color: #333; /* Dark color for text */
-    font-size: 20px; /* Prominent font size for visibility */
+	margin-top: 0; /* Removes default margin */
+	color: #333; /* Dark color for text */
+	font-size: 20px; /* Prominent font size for visibility */
 }
 
 .card-details p {
-    color: #666; /* Lighter text color for descriptions */
-    font-size: 16px; /* Adequate size for readability */
-    line-height: 1.5; /* Line height for better reading experience */
+	color: #666; /* Lighter text color for descriptions */
+	font-size: 16px; /* Adequate size for readability */
+	line-height: 1.5; /* Line height for better reading experience */
 }
 
 /* Styling for the application form and its elements */
 #creditCardApplication {
-    margin-top: 20px; /* Space above the form */
-    background: #f9f9f9; /* Light background for the form area */
-    padding: 20px;
-    border-radius: 8px; /* Rounded corners for the form */
+	margin-top: 20px; /* Space above the form */
+	background: #f9f9f9; /* Light background for the form area */
+	padding: 20px;
+	border-radius: 8px; /* Rounded corners for the form */
 }
 
 /* Styling for the submit button */
 .apply-card-button {
-    background-color: #0051ba; /* Green color for positive action */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 18px;
-    border-radius: 5px; /* Slightly rounded corners for the button */
-    cursor: pointer; /* Indicates the button is clickable */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
+	background-color: #0051ba; /* Green color for positive action */
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	font-size: 18px;
+	border-radius: 5px; /* Slightly rounded corners for the button */
+	cursor: pointer; /* Indicates the button is clickable */
+	transition: background-color 0.3s;
+	/* Smooth transition for hover effect */
 }
 
 .apply-card-button:hover {
-    background-color: #0077cc; /* Slightly darker green on hover */
+	background-color: #0077cc; /* Slightly darker green on hover */
 }
 
 /* Input fields styling */
 input[type="text"] {
-    width: calc(100% - 22px); /* Full width taking padding into account */
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px; /* Rounded corners for inputs */
+	width: calc(100% - 22px); /* Full width taking padding into account */
+	padding: 10px;
+	margin-top: 5px;
+	border: 1px solid #ccc;
+	border-radius: 5px; /* Rounded corners for inputs */
 }
 
 input[type="radio"] {
-    display: none; /* Hide the radio button */
+	display: none; /* Hide the radio button */
 }
-
 
 /* Labels styling for better readability */
 label {
-    display: block; /* Makes label a block for better structure */
-    margin-top: 20px; /* Spacing above labels */
-    color: #333;
-    font-size: 18px;
+	display: block; /* Makes label a block for better structure */
+	margin-top: 20px; /* Spacing above labels */
+	color: #333;
+	font-size: 18px;
 }
 
 .card-info.selected {
-    border-color: #0051ba; /* Change border color when selected */
-    box-shadow: 0 0 10px rgba(0, 81, 186, 0.75); /* Optional: stronger shadow for selected card */
+	border-color: #0051ba; /* Change border color when selected */
+	box-shadow: 0 0 10px rgba(0, 81, 186, 0.75);
+	/* Optional: stronger shadow for selected card */
 }
 
+.actions-container {
+	display: flex;
+	justify-content: center;
+	gap: 50px; /* This will create 10px space between each button */
+	margin: 50px auto;
+	/* Other styles */
+}
 
-/* /* Error and success message styling */ */
+.actions-container .credit-action-buttons {
+	background-color: white;
+	color: #0051ba;
+	border: #0051ba solid 1px;
+}
+
+.actions-container .credit-action-buttons:hover {
+	background-color: #0051ba;
+	/* Change background to the same color as the text */
+	color: white; /* Change text color to white for contrast */
+	border-color: #003585;
+	/* Slightly darker shade of the original blue for the border */
+}
+
+.credit-action-buttons {
+	background-color: #0051ba; /* Blue background to match the theme */
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 10px 15px;
+}
+
+/* /* Error and success message styling */
+*
+/
 /* div[th:if] { */
 /*     padding: 10px; */
 /*     margin-top: 10px; */
@@ -160,7 +197,10 @@ label {
 /*     border: 1px solid #ff0000; Red border for errors */
 /* } */
 
-/* div[th:if="${success}"] { */
+/* div[th:if="${success}"] {
 /*     background-color: #ddffdd; Light green for success background */
 /*     border: 1px solid #00b300; Green border for successes */
-/* } */
+/
+*
+ 
+}

@@ -99,7 +99,9 @@ public class CreditCardTransactionController {
 		}
 		Customer customer = optionalCustomer.get();
 
-		List<CreditCard> customerCards = cardService.findAllCardsForCustomer(customer);
+//		List<CreditCard> customerCards = cardService.findAllCardsForCustomer(customer);
+		List<CreditCard> customerCards = cardService.findAllActiveCreditCardsForCustomer(customer);
+
 		List<Merchant> merchantCodes = merchantRepo.findAll();
 
 		model.addAttribute("merchants", merchantCodes);
@@ -186,8 +188,10 @@ public class CreditCardTransactionController {
 					description = String.format("Payment made to merchant code %s in category %s", merchantCode,
 							merchantCategory);
 				}
+				System.out.println("Transaction in sgd: " + description);
 				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback,
 						transactionDate, transactionAmount, description));
+				System.out.println("Transaction created");
 			} else {
 				return "redirect:creditcard-dashboard";
 			}
