@@ -21,7 +21,7 @@
 
   <div class="side-menu menu-active" id="sideMenu">
   	<div class="user-greeting">
-		<P>My Credit Cards</P>
+		<P>Inactive Cards</P>
 	</div>
 	
 	<a href="customer-dashboard">Back to Main dashboard</a>
@@ -33,22 +33,22 @@
 			</div>
 		</form>
 	
-<!--     <a href="apply-creditcard">Apply for a credit card</a> -->
+     <a href="apply-creditcard">Apply for a credit card</a>
 
-<!--     <a href="create-card-transaction">Create Card Transaction</a> -->
+     <a href="create-card-transaction">Create Card Transaction</a>
 
-<!--     <a href="pay-creditcard-balance">Pay bills</a> -->
-<!--     <a href="account-dashboard">Account dashboard</a> -->
-<!--     <a href="creditcard-dashboard">Credit card dashboard</a>  -->
-<!--     <a href="customer-dashboard">Main dashboard</a> -->
-<!--     <a href="#">Set credit limit (FOR ADMIN)</a> -->
-<!--     <a href="create-card-type">Create Card Type (FOR ADMIN)</a> -->
-<!--     <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a> -->
-<!--     <form th:action="@{/logout}" method="post"> -->
-<!-- 		<div class="buttons"> -->
-<!-- 			<button type="submit" class="login-button">Logout</button> -->
-<!-- 		</div> -->
-<!-- 	</form> -->
+     <a href="pay-creditcard-balance">Pay bills</a> 
+     <a href="account-dashboard">Account dashboard</a> 
+     <a href="creditcard-dashboard">Credit card dashboard</a>  
+     <a href="customer-dashboard">Main dashboard</a> 
+     <a href="#">Set credit limit (FOR ADMIN)</a> 
+     <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
+     <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
+     <form th:action="@{/logout}" method="post">
+ 		<div class="buttons"> 
+ 			<button type="submit" class="login-button">Logout</button>
+ 		</div>
+ 	</form>
     <!-- Add other menu items here -->
   </div>
   
@@ -68,9 +68,9 @@
 				<input type="submit" class="credit-action-buttons"
 					value="Create Card Transaction">
 			</form>
-			<form th:action="@{/show-inactive-cards}" method="get">
+			<form th:action="@{/creditcard-dashboard}" method="get">
 				<input type="submit" class="credit-action-buttons"
-					value="View Deactivated Cards">
+					value="View Active Cards">
 			</form>
 		</div>
   
@@ -86,7 +86,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="card : ${credit_cards}">
+          <tr th:each="card : ${inactive_credit_cards}">
             
             <td th:text="${card.getFormattedCreditCardNumber()}"></td>
             <td th:text="${card.balance}" class="price-element"></td>
@@ -96,18 +96,6 @@
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit" class="credit-action-buttons">View Transaction History</button>
               </form>
-              <form th:action="@{/view-card-bill}" method="POST">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">View Card Bill</button>
-              </form>
-               <form th:action="@{/open-card-payment}" method="POST">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">Pay Card Bill/Balance</button>
-              </form>
-				<form th:action="@{/close-credit-card}" method="POST">
-				  <input type="hidden" th:value="${card.cardId}" name="cardId">
-				  <button type="submit" class="credit-action-buttons">Close Credit Card</button>
-				</form>
             </td>
           </tr>
         </tbody>

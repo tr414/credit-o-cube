@@ -139,7 +139,7 @@ public class BillService {
 	// This function is called on the 15th of every month at 6 am. It will go
 	// through every card, and generate the credit card bill for that
 	// billing cycle
-	@Scheduled(cron = "0 17 14 22 4 *")
+	@Scheduled(cron = "0 0 6 15 * *")
 	public void generateAllCardBills() {
 		List<CreditCard> creditCards = cardService.findAllCreditCards();
 
@@ -172,6 +172,7 @@ public class BillService {
 
 		if (generatedBillOptional.isEmpty()) {
 			// What to do
+			System.out.println("No bill generated");
 		}
 
 		Bill generatedBill = generatedBillOptional.get();

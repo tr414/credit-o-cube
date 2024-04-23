@@ -16,3 +16,5 @@ priceElements.forEach(element => {
   const price = parseFloat(element.textContent);
   element.textContent = '$ ' + price.toFixed(2);
 });
+
+

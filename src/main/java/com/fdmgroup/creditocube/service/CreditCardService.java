@@ -226,5 +226,27 @@ public class CreditCardService {
 	}
 
 	// close credit card
+	public void closeCreditCard(CreditCard card) {
+		// close only if the card balance is zero
+		if (card.getBalance() == 0.0) {
+			card.setActive(false);
+			creditCardRepository.save(card);
+		} else {
+			logger.info("Card balance is not zero, cannot close card");
+		}
+
+	}
+
+	public List<CreditCard> findAllActiveCreditCardsForCustomer(Customer sessionCustomer) {
+		// TODO Auto-generated method stub
+		long customerId = sessionCustomer.getUser_id();
+		return creditCardRepository.findAllActiveCreditCardsofCustomer(customerId);
+	}
+
+	public List<CreditCard> findAllInactiveCreditCardsForCustomer(Customer sessionCustomer) {
+		// TODO Auto-generated method stub
+		long customerId = sessionCustomer.getUser_id();
+		return creditCardRepository.findAllInactiveCreditCardsofCustomer(customerId);
+	}
 
 }
