@@ -76,13 +76,16 @@
 		</div>
   
     <div>
-      <table>
+      <table id="myTable">
         <thead>
           <tr>
             
-            <th>Credit Card Number</th>
-            <th>Card Balance</th>
-            <th>Credit Limit</th>
+            <th>Credit Card Number<span class="sort-icon"
+				onclick="sortTable(0)">▼</span></th>
+            <th>Card Balance<span class="sort-icon"
+				onclick="sortTable(0)">▼</span></th>
+            <th>Credit Limit<span class="sort-icon"
+				onclick="sortTable(0)">▼</span></th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -128,8 +131,10 @@
     </div>
   </div>
 
-	<script src="../js/sidebar.js">
-	</script>
+	<script src="../js/sidebar.js">	</script>
+
+	<script src="../js/sort-tables.js" defer></script>
+
 </body>
 
 </html>
