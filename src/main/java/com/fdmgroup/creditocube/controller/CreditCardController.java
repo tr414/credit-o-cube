@@ -475,5 +475,42 @@ public class CreditCardController {
 		return "show-inactive-cards";
 
 	}
+	
+	@GetMapping("/update-credit-limit")
+	public String showUpdateCreditLimitForm(@RequestParam long cardId, Model model, HttpServletRequest request) {
+	    Optional<CreditCard> card = creditCardService.findCardByCardId(cardId);
+	    if (!card.isPresent()) {
+	        return "redirect:/creditcard-dashboard";  // redirect if the card is not found
+	    }
+	    model.addAttribute("creditCard", card.get());
+	    return "update-credit-limit";
+	}
+
+	@PostMapping("/update-credit-limit")
+	public String updateCreditLimit(@RequestParam long cardId, @RequestParam double creditLimit, Model model) {
+	    Optional<CreditCard> cardOpt = creditCardService.findCardByCardId(cardId);
+	    if (!cardOpt.isPresent()) {
+	        model.addAttribute("errorMessage", "Credit card not found!");
+	        return "redirect:/creditcard-dashboard"; // Or to an error page
+	    }
+	    
+	    CreditCard creditCard = cardOpt.get();
+	    // Accessing the customer's salary
+	    double customerSalary = creditCard.getCustomer().getSalary();
+
+	    if (creditLimit > customerSalary) {
+	        model.addAttribute("errorMessage", "Credit limit cannot exceed your salary.");
+	        model.addAttribute("creditCard", creditCard);  // Ensure creditCard is still available for the form if returning to it
+	        return "update-credit-limit"; // Stay on the page, show an error
+	    }
+
+	    // Proceed to update if valid
+	    creditCard.setCardLimit(creditLimit);
+	    creditCardService.updateCard(creditCard);
+	    model.addAttribute("successMessage", "Credit limit updated successfully!");
+	    return "redirect:/creditcard-dashboard"; // Redirect back to the dashboard after update
+	}
+
+
 
 }

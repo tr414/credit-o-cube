@@ -21,6 +21,16 @@ td {
 	color: #333; /* Dark grey for text */
 }
 
+/* Add spacing between action buttons in the table */
+td form {
+  margin-bottom: 5px; /* Adjust the space between the forms as needed */
+}
+
+td form:last-child {
+  margin-bottom: 0; /* No space after the last button to align with table row */
+}
+
+
 tbody tr:hover {
 	background-color: #e1f0ff; /* Light blue for hover effect */
 }
@@ -54,6 +64,7 @@ tbody tr:hover {
 	border-radius: 5px;
 	cursor: pointer;
 	padding: 10px 15px;
+	margin: 4px 4px; /* Add horizontal margins between buttons */
 }
 
 .credit-action-buttons:hover {
@@ -122,4 +133,12 @@ form.payment-form fieldset.form-section legend {
     font-size: 20px; /* Adjust the font size as desired */
     padding: 0 5px; /* Optional: Adds padding around the text */
     margin-bottom: 10px; /* Optional: Adds space below the legend */
+}
+
+
+/* Bolden the content in specific table columns */
+#myTable td:nth-child(1),
+#myTable td:nth-child(2),
+#myTable td:nth-child(3) {
+  font-weight: bold; /* This will make the text bold */
 }

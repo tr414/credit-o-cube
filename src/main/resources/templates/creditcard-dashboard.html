@@ -55,10 +55,12 @@
 					value="View all Credit Cards">
 			</form>
 			
-			<form th:action="@{/request-limit}" method="get">
-				<input type="submit" class="credit-action-buttons"
-					value="Update Credit Limit">
-			</form>
+			<!-- Update Credit Limit button -->
+			<!--  <form th:action="@{/update-credit-limit}" method="get">
+			<input type="hidden" th:value="${card.cardId}" name="cardId">
+			<input type="submit" class="credit-action-buttons" value="Update Credit Limit">
+			</form> -->
+			
 			<form th:action="@{/create-card-transaction}" method="get">
 				<input type="submit" class="credit-action-buttons"
 					value="Create Card Transaction">
@@ -94,6 +96,15 @@
             <td th:text="${card.balance}" class="price-element"></td>
             <td th:text="${card.cardLimit}" class="price-element"></td>
             <td>
+            
+			<!-- Inserting Update Credit Limit for each card??? -->
+			<!-- Update Credit Limit button -->
+			<form th:action="@{/update-credit-limit}" method="get">
+			<input type="hidden" th:value="${card.cardId}" name="cardId">
+			<button type="submit" class="credit-action-buttons">Update Credit Limit</button>
+			</form>
+			
+            
               <form th:action="@{/card-transactions}" method="POST">
               	<input type="hidden" th:value="${card.cardId}" name="cardId">
                 <button type="submit" class="credit-action-buttons">View Transaction History</button>

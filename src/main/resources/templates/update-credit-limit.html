@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Credit Limit</title>
+</head>
+<body>
+    <div class="update-container">
+        <h2>Update Credit Limit</h2>
+        <div th:if="${errorMessage}" th:text="${errorMessage}"></div>
+        <form th:action="@{/update-credit-limit}" th:object="${creditCard}" method="post">
+            <div>
+                <label for="creditLimit">New Credit Limit:</label>
+                <input type="text" id="creditLimit" name="creditLimit" th:value="${creditCard.cardLimit}" required>
+            </div>
+            <div>
+                <input type="hidden" name="cardId" th:value="${creditCard.cardId}">
+                <button type="submit">Update Limit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
