@@ -163,6 +163,11 @@ public class DebitAccountTransactionService {
 			relatedTransactions.addAll(debitAccountTransactionRepository.findByFromAccount(account.getAccountId()));
 		}
 
+		if (relatedTransactions.size() == 0) {
+			logger.debug("Customer has no transactions");
+			return relatedTransactions;
+		}
+
 		List<DebitAccountTransaction> relatedTransactionsNoDuplicates = new ArrayList<>(
 				new HashSet<>(relatedTransactions));
 		logger.debug("Removed duplicate transactions");
