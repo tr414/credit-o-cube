@@ -2,60 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Wireframe</title>
-  <link rel="stylesheet" href="../css/header-sidebar.css">
-  <link rel="stylesheet" href="../css/creditcard-dashboard.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Wireframe</title>
+<link rel="stylesheet" href="../css/header-sidebar.css">
+<link rel="stylesheet" href="../css/creditcard-dashboard.css">
+<script src="../js/sidebar.js" defer></script>
 </head>
 
 <body>
 
-  <div class="top-bar">
-    <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
-    <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-    
-	
-	
-  </div>
+	<div class="top-bar">
+		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
+			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
 
-  <div class="side-menu menu-active" id="sideMenu">
-  	<div class="user-greeting">
-		<P>My Credit Cards</P>
+
+
 	</div>
-	
-	<a href="customer-dashboard">Back to Main dashboard</a>
-		<a href="account-dashboard">View Account dashboard</a>
-    	<a href="creditcard-dashboard">View Credit card dashboard</a> 
+
+	<div class="side-menu menu-active" id="sideMenu">
+		<div class="user-greeting">
+			<P>My Credit Cards</P>
+		</div>
+
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a>
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
 				<button type="submit" class="login-button">Logout</button>
 			</div>
 		</form>
-	
 
+		<!-- Add other menu items here -->
+	</div>
 
-<!--     <a href="pay-creditcard-balance">Pay bills</a> -->
-<!--     <a href="account-dashboard">Account dashboard</a> -->
-<!--     <a href="creditcard-dashboard">Credit card dashboard</a>  -->
-<!--     <a href="customer-dashboard">Main dashboard</a> -->
-<!--     <a href="#">Set credit limit (FOR ADMIN)</a> -->
-<!--     <a href="create-card-type">Create Card Type (FOR ADMIN)</a> -->
-<!--     <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a> -->
-<!--     <form th:action="@{/logout}" method="post"> -->
-<!-- 		<div class="buttons"> -->
-<!-- 			<button type="submit" class="login-button">Logout</button> -->
-<!-- 		</div> -->
-<!-- 	</form> -->
+	<div class="content-area main-content">
 
-
-
-    <!-- Add other menu items here -->
-  </div>
-  
-  <div class="content-area main-content">
-  
-  <div class="actions-container">
+		<div class="actions-container">
 			<!-- Create Debit Account Button -->
 			<form th:action="@{/apply-creditcard}" method="get">
 				<input type="submit" class="credit-action-buttons"
@@ -134,6 +117,7 @@
 	<script src="../js/sidebar.js">	</script>
 
 	<script src="../js/sort-tables.js" defer></script>
+
 
 </body>
 

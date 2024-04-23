@@ -21,4 +21,6 @@ public interface CreditCardTransactionRepository extends JpaRepository<CreditCar
 	public List<CreditCardTransaction> findTransactionsByMonth(@Param("month") int month,
 			@Param("card") CreditCard card);
 
+	List<CreditCardTransaction> findByTransactionCardIsAndTransactionDateAfterAndTransactionDateBefore(CreditCard card,
+			LocalDateTime start, LocalDateTime end);
 }

@@ -1,66 +1,88 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apply for Credit Card</title>
-  <link rel="stylesheet" href="../css/header-sidebar.css">
-  <link rel="stylesheet" href="../css/apply-creditcard.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply for Credit Card</title>
+<link rel="stylesheet" href="../css/header-sidebar.css">
+<link rel="stylesheet" href="../css/apply-creditcard.css">
+<script src="../js/sidebar.js" defer></script>
+<script src="../js/apply-creditcard-select.js" defer></script>
 </head>
 <body>
-  <div class="top-bar">
-    <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
-    <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-  </div>
+	<div class="top-bar">
+		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
+			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
+	</div>
 
-  <div class="side-menu menu-active" id="sideMenu">
-    <div class="user-greeting"><p>My Credit Cards</p></div>
-    <a href="customer-dashboard">Back to Main dashboard</a>
-    <a href="account-dashboard">View Account dashboard</a>
-    <a href="creditcard-dashboard">View Credit card dashboard</a> 
-    <form th:action="@{/logout}" method="post">
-      <div class="buttons">
-        <button type="submit" class="login-button">Logout</button>
-      </div>
-    </form>
-    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
-  </div>
-
-  <div class="main-content">
-    <div class="sub-container">
-      <h1>Apply for a New Credit Card</h1>
-      
-      <div th:if="${error}" style="color: red;">
-        <p th:text="${error}"></p>
-      </div>
-      <div th:if="${success}" style="color: green;">
-        <p th:text="${success}"></p>
-      </div>
-
-      <form id="creditCardApplication" th:action="@{/apply-creditcard}" method="post">
-        <div class="card-selection">
-  			<th:block th:each="cardType : ${cardTypes}">
-    			<label class="card-info">
-<!--       				Hidden radio button -->
-        				<input type="radio" name="cardType" th:value="${cardType.name}" required>
-        				<img th:src="@{'/img/' + ${cardType.imageUrl}}" alt="Card Image" style="width: 100px; height: auto;">
-      					<div class="card-details">
-        					<h3 th:text="${cardType.name}">Card Type Name</h3>
-        					<p th:text="${cardType.requirements}">Requirements</p>
-      					</div>
-    			</label>
-  			</th:block>
+	<div class="side-menu menu-active" id="sideMenu">
+		<div class="user-greeting">
+			<p>My Credit Cards</p>
 		</div>
+		<a href="customer-dashboard">Back to Main dashboard</a> <a
+			href="account-dashboard">View Account dashboard</a>
+		<form th:action="@{/logout}" method="post">
+			<div class="buttons">
+				<button type="submit" class="login-button">Logout</button>
+			</div>
+		</form>
+		<a href="create-card-type">Create Card Type (FOR ADMIN)</a>
+	</div>
 
-        <label for="creditCardLimit">Credit Card Limit:</label>
-        <input type="text" id="creditCardLimit" name="creditCardLimit" required><br><br>
-        
-        <button type="submit" class="apply-card-button">Submit Application</button>
-      </form>
-    </div>
-  </div>
+	<div class="main-content content-area">
+		<div class="actions-container">
+			<!-- Create Debit Account Button -->
+			<form th:action="@{/apply-creditcard}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="Apply for a Credit Card">
+			</form>
+			<form th:action="@{/request-limit}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="Update Credit Limit">
+			</form>
+			<form th:action="@{/create-card-transaction}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="Create Card Transaction">
+			</form>
+			<form th:action="@{/show-inactive-cards}" method="get">
+				<input type="submit" class="credit-action-buttons"
+					value="View Deactivated Cards">
+			</form>
+		</div>
+		<div class="sub-container">
+			<h1>Apply for a New Credit Card</h1>
 
-  <script src="../js/sidebar.js"></script>
-  <script src="../js/apply-creditcard-select.js"></script>
+			<div th:if="${error}" style="color: red;">
+				<p th:text="${error}"></p>
+			</div>
+			<div th:if="${success}" style="color: green;">
+				<p th:text="${success}"></p>
+			</div>
+
+			<form id="creditCardApplication" th:action="@{/apply-creditcard}"
+				method="post">
+				<div class="card-selection">
+					<th:block th:each="cardType : ${cardTypes}">
+						<label class="card-info"> <!--       				Hidden radio button -->
+							<input type="radio" name="cardType" th:value="${cardType.name}"
+							required> <img th:src="@{'/img/' + ${cardType.imageUrl}}"
+							alt="Card Image" style="width: 100px; height: auto;">
+							<div class="card-details">
+								<h3 th:text="${cardType.name}">Card Type Name</h3>
+								<p th:text="${cardType.requirements}">Requirements</p>
+							</div>
+						</label>
+					</th:block>
+				</div>
+
+				<label for="creditCardLimit">Credit Card Limit:</label> <input
+					type="text" id="creditCardLimit" name="creditCardLimit" required><br>
+				<br>
+
+				<button type="submit" class="apply-card-button">Submit
+					Application</button>
+			</form>
+		</div>
+	</div>
 </body>
 </html>

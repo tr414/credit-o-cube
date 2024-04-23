@@ -74,6 +74,7 @@ public class BillService {
 		// Return this newly generated bill
 		if (cardBillOptional.isEmpty()) {
 			Bill newCardBill = new Bill(card, 0, 0, true);
+			newCardBill.setBillIssueTime(LocalDateTime.now());
 			return createBill(newCardBill);
 		}
 
@@ -92,8 +93,14 @@ public class BillService {
 		cardBill.setMinimumAmountDue(minimumAmountDue);
 		cardBill.setTotalAmountDue(totalAmountDue);
 		cardBill.setOutstandingAmount(totalAmountDue);
-		cardBill.setPaid(false);
 
+		if (cardBill.getOutstandingAmount() > 0) {
+			cardBill.setPaid(false);
+		} else {
+			cardBill.setPaid(true);
+		}
+		cardBill.setBillIssueTime(LocalDateTime.now());
+		
 		try {
 			return updateBill(cardBill);
 		} catch (Exception e) {
@@ -298,6 +305,14 @@ public class BillService {
 		generatedBill.setPaid(true);
 		updateBill(generatedBill);
 
+	}
+
+	public List<CreditCardTransaction> findBillingCycleTransactions(Bill bill) {
+		
+		LocalDateTime billIssueTime = bill.getBillIssueTime();
+		LocalDateTime billingCycleStartTime = billIssueTime.minusMonths(1).withMinute(0).withHour(6);
+		
+		return cardTransactionService.findBillTransactionsBetween(bill, billingCycleStartTime, billIssueTime);
 	}
 
 }

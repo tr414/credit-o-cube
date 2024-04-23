@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fdmgroup.creditocube.model.Bill;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
 import com.fdmgroup.creditocube.model.InstallmentPayment;
@@ -93,6 +94,12 @@ public class CreditCardTransactionService {
 
 	public List<CreditCardTransaction> findTransactionsByMonth(int month, CreditCard card) {
 		return repo.findTransactionsByMonth(month, card);
+	}
+
+	public List<CreditCardTransaction> findBillTransactionsBetween(Bill bill, LocalDateTime billingCycleStartTime,
+			LocalDateTime billIssueTime) {
+		
+		return repo.findByTransactionCardIsAndTransactionDateAfterAndTransactionDateBefore(bill.getCard(), billingCycleStartTime, billIssueTime);
 	}
 
 }
