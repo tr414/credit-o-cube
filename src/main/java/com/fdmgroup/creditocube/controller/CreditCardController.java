@@ -190,6 +190,13 @@ public class CreditCardController {
 			return "apply-creditcard";
 		}
 
+		if (customer.getFirstName() == null || customer.getLastName() == null || customer.getEmail() == null
+				|| customer.getPhoneNumber() == null || customer.getNric() == null || customer.getAddress() == null
+				|| customer.getSalary() == null || customer.getGender() == null || customer.getDob() == null) {
+			System.out.println("Customer details are not filled up");
+			return ("apply-creditcard");
+		}
+
 		String cardNumber = creditCardService.generateCreditCardNumber();
 		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
 		if (cardLimit > customer.getSalary()) {
@@ -214,7 +221,6 @@ public class CreditCardController {
 		billService.createBillForNewCard(newCard);
 
 		model.addAttribute("success", "Successfully created a new credit card.");
-		billService.createBillForNewCard(newCard);
 		return "redirect:/creditcard-dashboard";
 	}
 

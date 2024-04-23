@@ -223,44 +223,41 @@ tbody tr:hover {
 }
 
 .account-selection {
-	margin-top: 50px;
-	text-align: center;
-	padding: 20px;
-	background-color: #f4f7fc;
-}
-
-.transaction-history-form {
-	max-width: 500px;
-	margin: 20px auto;
-	padding: 20px;
-	background-color: #ffffff;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	border-radius: 8px;
-}
-
-.transaction-history-form form {
 	display: flex;
-	flex-direction: column;
+	/* Use flexbox to align label and select box side by side */
+	align-items: center; /* Align items vertically */
+	justify-content: start; /* Align content to the start */
+	margin-top: 50px; /* Adjust as necessary */
+	margin-bottom: 20px; /* Space above the table */
+	padding: 0 20px;
+	/* Same horizontal padding as your content-area for alignment */
+}
+
+.account-selection select {
+	margin-right: 15px; /* Adjust the value to suit your design */
+	padding: 5px;
+	/* other styles... */
+}
+
+.account-selection label {
+	margin-right: 10px; /* Space between label and select box */
+	font-weight: bold; /* Optional: makes the text bold */
+}
+
+.account-selection form {
+	display: flex; /* Align label, select box, and button in a row */
 	align-items: center;
 }
 
 .transaction-history-form select {
-	width: 100%;
-	padding: 10px;
-	margin-bottom: 20px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	background-color: #fff;
+	/* Other styles remain unchanged */
+	max-width: 300px;
 }
 
 .transaction-history-form button {
-	font-size: 16px;
-	padding: 10px 20px;
-	background-color: #0051ba;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+	/* Styles for the button */
+	margin-left: 80px; /* Space between the select box and the button */
+	/* Other properties... */
 }
 
 .transaction-history-form button:hover {
@@ -299,4 +296,10 @@ tbody tr:hover {
 
 .table-scrollable tbody tr:hover {
 	background-color: #e1f0ff;
+}
+
+.sort-icon {
+	cursor: pointer;
+	user-select: none;
+	/* Prevents the text from being selectable which makes the UI cleaner */
 }

@@ -27,6 +27,28 @@ tbody tr:hover {
     background-color: #e1f0ff; /* Light blue for hover effect */
 }
 
+.actions-container {
+	display: flex;
+	justify-content: center;
+	gap: 50px; /* This will create 10px space between each button */
+	margin: 50px auto;
+	/* Other styles */
+}
+
+.actions-container .credit-action-buttons {
+	background-color: white;
+	color: #0051ba;
+	border: #0051ba solid 1px;
+}
+
+.actions-container .credit-action-buttons:hover {
+	background-color: #0051ba;
+	/* Change background to the same color as the text */
+	color: white; /* Change text color to white for contrast */
+	border-color: #003585;
+	/* Slightly darker shade of the original blue for the border */
+}
+
 .credit-action-buttons {
   background-color: #0051ba; /* Blue background to match the theme */
   color: white;
@@ -35,7 +57,10 @@ tbody tr:hover {
   border-radius: 5px;
   cursor: pointer;
   margin: 5px 0; /* A bit of margin for spacing */
+  
 }
+
+
 
 .credit-action-buttons:hover {
   background-color: #003c8f; /* Darker blue on hover */
