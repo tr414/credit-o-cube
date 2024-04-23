@@ -22,8 +22,8 @@ public class CreditCardTransactionService {
 
 	@Autowired
 	private CreditCardTransactionRepository repo;
-	
-	@Autowired 
+
+	@Autowired
 	private InstallmentPaymentService installmentService;
 
 	public Optional<CreditCardTransaction> createCreditCardTransaction(CreditCardTransaction transaction) {
@@ -66,22 +66,34 @@ public class CreditCardTransactionService {
 		createCreditCardTransaction(latePaymentTransaction);
 		LOGGER.info("Added late payment fee transaction to card number: {}", card.getCardNumber());
 	}
-	
+
 	public void createInterestFeeTransaction(CreditCard card, double interestPaymentFees) {
-		CreditCardTransaction interestFeeTransaction = new CreditCardTransaction(card, LocalDateTime.now(), interestPaymentFees, "Interest on bill outstanding amount");
+		CreditCardTransaction interestFeeTransaction = new CreditCardTransaction(card, LocalDateTime.now(),
+				interestPaymentFees, "Interest on bill outstanding amount");
 		createCreditCardTransaction(interestFeeTransaction);
-		LOGGER.info("Added interest fee on outstanding bill amount transaction to card number: {}", card.getCardNumber());
+		LOGGER.info("Added interest fee on outstanding bill amount transaction to card number: {}",
+				card.getCardNumber());
 	}
 
 	public void createCashbackTransaction(CreditCard card, double cashback) {
-		CreditCardTransaction cashbackTransaction = new CreditCardTransaction(card, LocalDateTime.now(), cashback, "Cashback credited on monthly spending");
+		CreditCardTransaction cashbackTransaction = new CreditCardTransaction(card, LocalDateTime.now(), cashback,
+				"Cashback credited on monthly spending");
 		createCreditCardTransaction(cashbackTransaction);
-		
+
 	}
 
 	public void createInstallmentPayment(CreditCard card, double transactionAmount) {
 		InstallmentPayment installmentPayment = new InstallmentPayment(card, transactionAmount, 6);
-		installmentService.createInstallmentPayment(installmentPayment);		
+		installmentService.createInstallmentPayment(installmentPayment);
+	}
+
+	public List<CreditCardTransaction> findByTransactionDate(LocalDateTime startDateTime, LocalDateTime endDateTime,
+			CreditCard card) {
+		return repo.findByTransactionDate(startDateTime, endDateTime, card);
+	}
+
+	public List<CreditCardTransaction> findTransactionsByMonth(int month, CreditCard card) {
+		return repo.findTransactionsByMonth(month, card);
 	}
 
 	public List<CreditCardTransaction> findBillTransactionsBetween(Bill bill, LocalDateTime billingCycleStartTime,

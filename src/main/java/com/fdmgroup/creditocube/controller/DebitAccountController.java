@@ -1,6 +1,7 @@
 package com.fdmgroup.creditocube.controller;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -377,6 +379,64 @@ public class DebitAccountController {
 		debitAccountTransactionService.createDebitAccountTransaction(newTransaction);
 
 		return "redirect:/account-dashboard";
+	}
+
+	@PostMapping("/find-by-date-debit")
+	public String findByDate(@RequestParam("dateFrom") Date dateFrom, @RequestParam("dateTo") Date dateTo,
+			@RequestParam long selectedAccountId, Model model, HttpServletRequest request) {
+		System.out.println(session.getAttribute("monthSearched"));
+		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
+
+		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account not found in database, redirecting to account-dashboard");
+			return "redirect:/view-transaction-history";
+		}
+
+		DebitAccount sessionAccount = optionalAccount.get();
+		logger.debug("Debit Account exists, details retrieved from database");
+
+		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
+				.findByTransactionDate(dateFrom, dateTo, sessionAccount);
+		model.addAttribute("accountTransactions", accountTransactions);
+		session.setAttribute("selectedAccount", sessionAccount);
+		session.setAttribute("accountTransactions", accountTransactions);
+		logger.debug("Account transactions are set as session attribute");
+		return "view-transaction-history";
+	}
+
+	@PostMapping("/find-by-month-debit")
+	public String findByMonth(@RequestParam("month") Integer month, Model model, HttpServletRequest request,
+			@RequestParam long selectedAccountId) {
+		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
+
+		if (optionalAccount.isEmpty()) {
+			logger.info("Debit account not found in database, redirecting to account-dashboard");
+			return "redirect:/view-transaction-history";
+		}
+
+		DebitAccount sessionAccount = optionalAccount.get();
+		logger.debug("Debit Account exists, details retrieved from database");
+
+		List<DebitAccountTransaction> accountTransactions;
+		for (int x = 1; x <= 13; x++) {
+			if (month == x && month != 13) {
+				accountTransactions = debitAccountTransactionService.findTransactionsByMonth(month, sessionAccount);
+				model.addAttribute("accountTransactions", accountTransactions);
+				session.setAttribute("selectedAccount", sessionAccount);
+				session.setAttribute("accountTransactions", accountTransactions);
+				logger.debug("Account transactions are set as session attribute");
+				return "view-transaction-history";
+
+			} else if (month == 13) {
+				accountTransactions = debitAccountTransactionService.findTransactionsOfAccount(sessionAccount);
+				model.addAttribute("accountTransactions", accountTransactions);
+				session.setAttribute("selectedAccount", sessionAccount);
+				session.setAttribute("accountTransactions", accountTransactions);
+			}
+		}
+		logger.debug("Directing to view-transaction-history.html");
+		return "view-transaction-history";
+
 	}
 
 }

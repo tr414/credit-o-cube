@@ -2,6 +2,7 @@ package com.fdmgroup.creditocube.service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -205,6 +206,15 @@ public class DebitAccountTransactionService {
 
 		return relatedTransactionsNoDuplicates;
 
+	}
+
+	public List<DebitAccountTransaction> findByTransactionDate(Date startDateTime, Date endDateTime,
+			DebitAccount fromAccount) {
+		return debitAccountTransactionRepository.findByTransactionDate(startDateTime, endDateTime, fromAccount);
+	}
+
+	public List<DebitAccountTransaction> findTransactionsByMonth(int month, DebitAccount fromAccount) {
+		return debitAccountTransactionRepository.findTransactionsByMonth(month, fromAccount);
 	}
 
 }

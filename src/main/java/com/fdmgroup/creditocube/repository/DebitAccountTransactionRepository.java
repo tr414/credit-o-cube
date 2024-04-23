@@ -1,5 +1,6 @@
 package com.fdmgroup.creditocube.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
 
 /**
@@ -38,4 +40,12 @@ public interface DebitAccountTransactionRepository extends JpaRepository<DebitAc
 	 */
 	@Query("SELECT d FROM DebitAccountTransaction d WHERE d.fromAccount.accountId = :account_Id")
 	public List<DebitAccountTransaction> findByFromAccount(@Param("account_Id") long accountId);
+
+	@Query("SELECT d FROM DebitAccountTransaction d WHERE d.debitAccountTransactionDate >= :startDateTime AND d.debitAccountTransactionDate <= :endDateTime AND d.fromAccount = :fromAccount")
+	List<DebitAccountTransaction> findByTransactionDate(@Param("startDateTime") Date startDateTime,
+			@Param("endDateTime") Date endDateTime, @Param("fromAccount") DebitAccount fromAccount);
+
+	@Query("SELECT d FROM DebitAccountTransaction d WHERE MONTH(debitAccountTransactionDate) = :month AND d.fromAccount = :fromAccount")
+	public List<DebitAccountTransaction> findTransactionsByMonth(@Param("month") int month,
+			@Param("fromAccount") DebitAccount fromAccount);
 }
