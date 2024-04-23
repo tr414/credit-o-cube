@@ -23,7 +23,8 @@
 			<p>MY TRANSACTION HISTORY</p>
 
 		</div>
-		<a href="account-dashboard">Back to Account Dashboard</a>
+		<a href="customer-dashboard">Back to Main Dashboard</a><a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
 				<button type="submit" class="login-button">Logout</button>
@@ -34,6 +35,29 @@
 
 
 	<div class="content-area main-content">
+		<div class="actions-container">
+			<!-- Create Debit Account Button -->
+			<form th:action="@{/go-to-create-debit-account}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Create Debit Account">
+			</form>
+			<form th:action="@{/account-dashboard}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="View all Debit Accounts">
+			</form>
+			<form th:action="@{/view-transaction-history}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="View transaction history">
+			</form>
+			<form th:action="@{/deposit-withdraw}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Deposit / Withdraw">
+			</form>
+			<form th:action="@{/transfer-to-account-number}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Transfer Money">
+			</form>
+		</div>
 		<div class="account-selection">
 			<form th:action="@{/view-transaction-history}" method="POST">
 				<label for="selectedAccountId">Choose an account:</label> <select
