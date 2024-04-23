@@ -51,7 +51,7 @@ public class CreditCardTransactionController {
 	private static Logger logger = LogManager.getLogger(CreditCardTransactionController.class);
 
 	@Value("${API_KEY}")
-	private String apiKey = "1234";
+	private String apiKey;
 
 	public CreditCardTransactionController() {
 		restClient = RestClient.builder().baseUrl("http://api.exchangeratesapi.io/v1/latest").build();
