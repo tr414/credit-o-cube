@@ -62,6 +62,14 @@ public class DebitAccountTransactionService {
 			return;
 		}
 
+		if (debitAccountTransaction.getFromAccount() != null) {
+			String fromAccountNumber = debitAccountTransaction.getFromAccount().getAccountNumber();
+			if (fromAccountNumber.equals(debitAccountTransaction.getToAccountNumber())) {
+				logger.info("Transaction from and to account are the same, abort transaction");
+				return;
+			}
+		}
+
 		logger.debug("Transaction details saved to database");
 		debitAccountTransactionRepository.save(debitAccountTransaction);
 	}
@@ -89,6 +97,14 @@ public class DebitAccountTransactionService {
 		if (optionalTransaction.isEmpty()) {
 			logger.info("Transaction not found in database, abort transaction");
 			return;
+		}
+
+		if (debitAccountTransaction.getFromAccount() != null) {
+			String fromAccountNumber = debitAccountTransaction.getFromAccount().getAccountNumber();
+			if (fromAccountNumber.equals(debitAccountTransaction.getToAccountNumber())) {
+				logger.info("Transaction from and to account are the same, abort transaction");
+				return;
+			}
 		}
 
 		// perform deep copy and save managed version of transaction
@@ -179,9 +195,9 @@ public class DebitAccountTransactionService {
 //				.before(new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000)));
 //		logger.debug("Remove transactions more than 7 days ago");
 
-		if (relatedTransactions.size() < 6) {
+		if (relatedTransactionsNoDuplicates.size() < 6) {
 			logger.debug("Customer has no transactions");
-			return relatedTransactions;
+			return relatedTransactionsNoDuplicates;
 		}
 
 		relatedTransactionsNoDuplicates.subList(5, relatedTransactionsNoDuplicates.size()).clear();

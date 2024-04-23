@@ -331,7 +331,11 @@ public class DebitAccountController {
 	 */
 	@PostMapping("/transfer-to-account-number")
 	public String transferToAccountNumber(@RequestParam long selectedAccountId, @RequestParam String toAccountNumber,
-			@RequestParam double amount) {
+			@RequestParam String toOwnAccountNumber, @RequestParam double amount) {
+
+		if (toAccountNumber == null || toAccountNumber.isEmpty() || toAccountNumber.isBlank()) {
+			toAccountNumber = toOwnAccountNumber;
+		}
 
 		// Find from-account in database
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
