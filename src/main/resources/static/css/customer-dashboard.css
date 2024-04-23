@@ -6,36 +6,50 @@
 /*   background-color: #f4f7fc; Light greyish-blue background that's lighter than the top-bar */
 /*   min-height: calc(100vh - 80px); Adjust height to take up the full page minus the top bar height */
 /* } */
-
 .sub-container {
-  background-color: #ffffff; /* White background for the sub-containers */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-  padding: 15px; /* Padding inside sub-containers */
-  margin-bottom: 20px; /* Space between sub-containers */
-  margin-top: 20px;
+	background-color: #ffffff; /* White background for the sub-containers */
+	border-radius: 8px; /* Rounded corners */
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+	padding: 15px; /* Padding inside sub-containers */
+	margin-bottom: 20px; /* Space between sub-containers */
+	margin-top: 20px;
 }
 
 .sub-container h2 {
-  color: #0051ba; /* Blue color for the headers that matches the top bar */
-  margin-bottom: 10px; /* Margin below the header */
-  margin-top: 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eaeaea; /* Light line below the title for definition */
+	color: #0051ba;
+	/* Blue color for the headers that matches the top bar */
+	margin-bottom: 10px; /* Margin below the header */
+	margin-top: 0;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #eaeaea;
+	/* Light line below the title for definition */
 }
 
 /* Style paragraphs in the sub-container for better readability */
 .sub-container p {
-  color: #333; /* Dark grey color for text */
-  line-height: 1.6; /* Line height for better readability */
+	color: #333; /* Dark grey color for text */
+	line-height: 1.6; /* Line height for better readability */
 }
 
 /* You may also want to style links inside the sub-container */
 .sub-container a {
-  color: #0051ba; /* Same blue color to keep it consistent with the theme */
-  text-decoration: none; /* No underline */
+	color: #0051ba;
+	/* Same blue color to keep it consistent with the theme */
+	text-decoration: none; /* No underline */
 }
 
 .sub-container a:hover {
-  text-decoration: underline; /* Underline on hover for links */
+	text-decoration: underline; /* Underline on hover for links */
+}
+
+table {
+	width: 100%; /* Full width tables for better layout */
+	border-collapse: collapse; /* Collapse borders */
+}
+
+table th, table td {
+	padding: 8px; /* Add padding to space out table content */
+	text-align: left; /* Align text to the left */
+	border-bottom: 1px solid #ddd;
+	/* Add a border to the bottom of each cell */
 }

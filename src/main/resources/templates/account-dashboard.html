@@ -11,7 +11,7 @@
 </head>
 <body>
 
-	
+
 
 
 	<!-- 	keep this for now -->
@@ -19,21 +19,17 @@
 		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
 			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
 		<!-- 		<button class="logout-button" onclick="window.location.href='login'">Logout</button> -->
-		
+
 	</div>
 
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
-			<p>
-				DEBIT ACCOUNTS
-			</p>
+			<p>DEBIT ACCOUNTS</p>
 			<p>What would you like to do today?</p>
 		</div>
-		<a href="transfer-to-account-number">Transfer funds</a> <a
-			href="deposit-withdraw">Deposit / Withdraw</a> <a
-			href="account-dashboard">Account dashboard</a> <a
-			href="creditcard-dashboard">Credit card dashboard</a> <a
-			href="customer-dashboard">Main dashboard</a>
+		<a href="customer-dashboard">Back to Main Dashboard</a><a
+			href="account-dashboard">View Account Dashboard</a> <a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
 				<button type="submit" class="login-button">Logout</button>
@@ -46,6 +42,21 @@
 
 	<!-- Main Content Area -->
 	<div class="content-area main-content">
+		<div class="actions-container">
+			<!-- Create Debit Account Button -->
+			<form th:action="@{/go-to-create-debit-account}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Create Debit Account">
+			</form>
+			<form th:action="@{/deposit-withdraw}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Deposit / Withdraw">
+			</form>
+			<form th:action="@{/transfer-to-account-number}" method="get">
+				<input type="submit" class="debit-action-buttons"
+					value="Transfer Funds">
+			</form>
+		</div>
 		<!-- Accounts Table -->
 		<div>
 			<table>
@@ -63,7 +74,7 @@
 							th:text="| ${account.accountNumber.substring(0,3)}-${account.accountNumber.substring(3,6)}-${account.accountNumber.substring(6)} |"></td>
 						<td th:text="${account.accountName}"></td>
 						<td th:text="${account.accountBalance}" class="price-element"></td>
-						
+
 						<td>
 							<form th:action="@{/view-transaction-history}" method="POST">
 								<input type="hidden" th:value="${account.accountId}"
@@ -84,12 +95,6 @@
 				</tbody>
 			</table>
 		</div>
-
-		<!-- Create Debit Account Button -->
-		<form th:action="@{/go-to-create-debit-account}" method="get">
-			<input type="submit" class="debit-action-buttons"
-				value="Create Debit Account">
-		</form>
 	</div>
 
 	<!-- JavaScript for Sidebar Toggle -->

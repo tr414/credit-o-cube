@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Pay Credit Card Balance</title>
+    <link rel="stylesheet" href="../css/header-sidebar.css">
+	<link rel="stylesheet" href="../css/creditcard-dashboard.css">
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("paymentOption").addEventListener("change", function() {
@@ -17,45 +19,91 @@
     </script>
 </head>
 <body>
+
+	<!-- Top Bar -->
+	<div class="top-bar">
+    <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
+    <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
+    
+	
+	
+  </div>
+
+  <div class="side-menu menu-active" id="sideMenu">
+  	<div class="user-greeting">
+		<P>My Credit Cards</P>
+	</div>
+    <a href="apply-creditcard">Apply for a credit card</a>
+
+    <a href="create-card-transaction">Create Card Transaction</a>
+
+    <a href="pay-creditcard-balance">Pay bills</a>
+    <a href="account-dashboard">Account dashboard</a>
+    <a href="creditcard-dashboard">Credit card dashboard</a> 
+    <a href="customer-dashboard">Main dashboard</a>
+    <a href="#">Set credit limit (FOR ADMIN)</a>
+    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
+    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
+    <form th:action="@{/logout}" method="post">
+		<div class="buttons">
+			<button type="submit" class="login-button">Logout</button>
+		</div>
+	</form>
+    <!-- Add other menu items here -->
+  </div>
+	
+	<div class="content-area main-content">
     <h2>Pay Credit Card Balance</h2>
-    <form th:action="@{/pay-creditcard-balance}" method="post" onkeydown="if(event.keyCode === 13){
+    <form th:action="@{/pay-creditcard-balance}" method="post" class="payment-form" onkeydown="if(event.keyCode === 13){
     	alert('Please use the button to submit the amount');
     	return false;
     }">
-        <div>
+    
+    	<fieldset class="form-section">
+        <legend>Payment Details</legend>
+    
+        <div class="input-group">
             <label for="debitAccountNumber">Debit Account Number:</label>
             <select id="debitAccountNumber" name="debitAccountNumber" required>
                 <option th:each="account : ${accounts}" th:value="${account.accountNumber}" th:text="${account.accountNumber}">Debit Account Number</option>
             </select>
         </div>
-        <div>
+        <div class="input-group">
             <label for="creditCardNumber">Credit Card Number:</label>
 
             <input th:value="${card.cardNumber}" readonly name="creditCardNumber">
 
         </div>
+        </fieldset>
        
-        <div>
+       <fieldset class="form-section">
+        <legend>Payment Options</legend>
+        <div class="input-group">
         	<label for="minimumAmount">Minimum Amount Due:</label>
         	<input type="number" name="minimumAmount" th:value="${bill.minimumAmountDue}" readonly>
-            <button type="submit" name="paymentOption" value="minimum">Pay Minimum Amount</button>
+            <button type="submit" class="credit-action-buttons" name="paymentOption" value="minimum">Pay Minimum Amount</button>
         </div>
-        <div>
+        <div class="input-group">
         	<label for="outstandingAmount">Outstanding Amount Due:</label>
         	<input type="number" name="outstandingAmount" th:value="${bill.outstandingAmount}" readonly>
-            <button type="submit" name="paymentOption" value="outstanding">Pay Outstanding Amount</button>
+            <button type="submit" class="credit-action-buttons" name="paymentOption" value="outstanding">Pay Outstanding Amount</button>
         </div>
-         <div>
+         <div class="input-group">
         	<label for="currentBalance">Current Card Balance:</label>
         	<input type="number" name="currentBalance" th:value="${card.balance}" readonly>
-            <button type="submit" name="paymentOption" value="balance">Pay Full Card Balance</button>
+            <button type="submit" class="credit-action-buttons" name="paymentOption" value="balance">Pay Full Card Balance</button>
         </div>
         <!--  only display this if the minimum amount is 0  -->
-		<div th:if="${bill.minimumAmountDue == 0}">
+		<div class="input-group" th:if="${bill.minimumAmountDue == 0}">
 		    <label for="paymentAmount">Custom Amount: </label>        	
 		    <input type="number" name="paymentAmount">
-		    <button type="submit" name="paymentOption" value="paymentAmount">Pay Amount</button>
+		    <button type="submit" class="credit-action-buttons" name="paymentOption" value="paymentAmount">Pay Amount</button>
 		</div>
+		</fieldset>
     </form>
+    </div>
+    
+    <!-- JavaScript for Sidebar Toggle -->
+	<script src="../js/sidebar.js"></script>
 </body>
 </html>

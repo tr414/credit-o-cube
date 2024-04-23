@@ -21,14 +21,15 @@
 
 	<div class="side-menu menu-active" id="sideMenu">
 		<div class="user-greeting">
-			<p>Hello, <span th:text="${firstName}">FirstName</span></p>
+			<p>
+				Hello, <span th:text="${firstName}">FirstName</span>
+			</p>
 			<p>What would you like to do today?</p>
 		</div>
-		<a href="/customer-details">View / change my particulars</a> <a
-			href="account-dashboard">Account dashboard</a> <a
-			href="creditcard-dashboard">Credit card dashboard</a> <a
-			href="deleteCustomerAccount" class="logout-button">Delete
-			Customer Account</a>
+		<a href="account-dashboard">View Account Dashboard</a> <a
+			href="creditcard-dashboard">View Credit Card Dashboard</a> <a
+			href="/customer-details">Update Particulars</a> <a
+			href="deleteCustomerAccount" class="logout-button">Delete Account</a>
 		<!-- 			<a href="login" class="logout-button">Logout</a> -->
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
@@ -43,10 +44,9 @@
 			<h2>
 				Welcome to Your Dashboard, <span th:text="${firstName}">FirstName</span>
 			</h2>
-			<p>Here you can find a quick overview of your debit accounts 
-				and the credit cards you own, 
-				and view recent debit account 
-				and credit card transactions.</p>
+			<p>Here you can find a quick overview of your debit accounts and
+				the credit cards you own, and view recent debit account and credit
+				card transactions.</p>
 		</div>
 
 		<div class="sub-container">
@@ -66,7 +66,7 @@
 				</tr>
 			</table>
 		</div>
-		
+
 		<div class="sub-container">
 			<h2>Credit Cards Overview</h2>
 			<p>Check out your credit cards and its details.</p>
@@ -104,7 +104,8 @@
 					<td
 						th:text="| ${transaction.toAccountNumber != null ? '***-***-' + transaction.toAccountNumber.substring(6) : '---'} |"></td>
 					<td th:text="${transaction.debitAccountTransactionType ?: '---'}"></td>
-					<td th:text="${transaction.debitAccountTransactionAmount}" class="price-element" ></td>
+					<td th:text="${transaction.debitAccountTransactionAmount}"
+						class="price-element"></td>
 				</tr>
 			</table>
 		</div>
@@ -112,9 +113,9 @@
 		<div class="sub-container">
 			<h2>Recent Credit Card Transactions</h2>
 			<p>A list of recent transactions from your credit cards.</p>
-<!-- 			<a href="/customer-details">Personal Details</a> <a -->
-<!-- 				href="creditcard-dashboard">Credit Cards</a> <a -->
-<!-- 				href="security-settings">Security Settings</a> -->
+			<!-- 			<a href="/customer-details">Personal Details</a> <a -->
+			<!-- 				href="creditcard-dashboard">Credit Cards</a> <a -->
+			<!-- 				href="security-settings">Security Settings</a> -->
 
 			<table>
 				<thead>
@@ -127,14 +128,16 @@
 				<tr th:each="transaction : ${creditTransactions}">
 					<td th:text="${transaction.getFormattedTransactionDate()}"></td>
 					<!-- <td th:text="${transaction.transactionCard.getFormattedCreditCardNumber()}"></td> -->
-					<td th:text="${transaction.transactionCard.getMaskedCreditCardNumber()}"></td>
-					<td th:text="${transaction.transactionAmount}" class="price-element"></td>
+					<td
+						th:text="${transaction.transactionCard.getMaskedCreditCardNumber()}"></td>
+					<td th:text="${transaction.transactionAmount}"
+						class="price-element"></td>
 				</tr>
 			</table>
-			
+
 		</div>
-		
-		
+
+
 	</div>
 
 </body>
