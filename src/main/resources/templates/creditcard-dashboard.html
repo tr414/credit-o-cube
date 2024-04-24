@@ -31,6 +31,8 @@
 
 		<a href="customer-dashboard">Back to Main Dashboard</a> <a
 			href="account-dashboard">View Account Dashboard</a>
+			<a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
 
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
@@ -50,10 +52,10 @@
 					value="Apply for a Credit Card">
 			</form>
 			
-			<form th:action="@{/creditcard-dashboard}" method="get">
-				<input type="submit" class="credit-action-buttons"
-					value="View all Credit Cards">
-			</form>
+<!-- 			<form th:action="@{/creditcard-dashboard}" method="get"> -->
+<!-- 				<input type="submit" class="credit-action-buttons" -->
+<!-- 					value="View all Credit Cards"> -->
+<!-- 			</form> -->
 			
 			<!-- Update Credit Limit button -->
 			<!--  <form th:action="@{/update-credit-limit}" method="get">

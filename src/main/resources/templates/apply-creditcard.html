@@ -18,9 +18,11 @@
 
   <div class="side-menu menu-active" id="sideMenu">
     <div class="user-greeting"><p>My Credit Cards</p></div>
-    <a href="creditcard-dashboard">Back to Credit card dashboard</a> 
-    <a href="customer-dashboard">Back to Main dashboard</a>
-    <a href="account-dashboard">View Account dashboard</a>
+    <a href="customer-dashboard">Back to Main Dashboard</a>
+		<a
+			href="account-dashboard">View Account Dashboard</a>
+		<a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
     
     <form th:action="@{/logout}" method="post">
       <div class="buttons">
@@ -28,6 +30,7 @@
       </div>
     </form>
     <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
+    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
   </div>
 
   <div class="main-content">
