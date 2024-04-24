@@ -25,6 +25,7 @@ import com.fdmgroup.creditocube.model.CreditCardTransaction;
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
 import com.fdmgroup.creditocube.model.DebitAccountTransaction;
+import com.fdmgroup.creditocube.model.Merchant;
 import com.fdmgroup.creditocube.service.BillService;
 import com.fdmgroup.creditocube.service.CardTypeService;
 import com.fdmgroup.creditocube.service.CreditCardService;
@@ -33,6 +34,7 @@ import com.fdmgroup.creditocube.service.CustomerService;
 import com.fdmgroup.creditocube.service.DebitAccountService;
 import com.fdmgroup.creditocube.service.DebitAccountTransactionService;
 import com.fdmgroup.creditocube.service.InstallmentPaymentService;
+import com.fdmgroup.creditocube.service.MerchantService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -67,6 +69,9 @@ public class CreditCardController {
 	@Autowired
 	private InstallmentPaymentService installmentService;
 
+	@Autowired
+	private MerchantService merchantService;
+
 	private static Logger logger = LogManager.getLogger(CreditCardController.class);
 
 	// credit card dashboard
@@ -81,7 +86,6 @@ public class CreditCardController {
 		}
 
 		// set customer and their accounts as session attributes to retrieve in view
-		// Customer customer = optionalCustomer.get();
 		Customer sessionCustomer = optionalCustomer.get();
 		session.setAttribute("customer", sessionCustomer);
 		model.addAttribute("customer", sessionCustomer);
@@ -378,6 +382,13 @@ public class CreditCardController {
 			newCreditCardTransaction
 					.setDescription("Made credit card payment +$" + String.format("%.2f", amountPayable));
 			newCreditCardTransaction.setTransactionCard(cardToBePaidOff);
+			Optional<Merchant> optionalMerchant = merchantService.findMerchantByMerchantCode("1");
+			Merchant credit;
+			if (optionalMerchant.isEmpty()) {
+				credit = null;
+			}
+			credit = optionalMerchant.get();
+			newCreditCardTransaction.setMerchant(credit);
 			creditCardTransactionService.createCreditCardTransaction(newCreditCardTransaction);
 
 			cardToBePaidOff.setBalance(cardToBePaidOff.getBalance() - amountPayable);
@@ -393,7 +404,6 @@ public class CreditCardController {
 		}
 
 	}
-
 
 	@PostMapping("/open-card-payment")
 	public String openCardPayment(Principal principal, Model model, HttpServletRequest request) {
@@ -475,42 +485,41 @@ public class CreditCardController {
 		return "show-inactive-cards";
 
 	}
-	
+
 	@GetMapping("/update-credit-limit")
 	public String showUpdateCreditLimitForm(@RequestParam long cardId, Model model, HttpServletRequest request) {
-	    Optional<CreditCard> card = creditCardService.findCardByCardId(cardId);
-	    if (!card.isPresent()) {
-	        return "redirect:/creditcard-dashboard";  // redirect if the card is not found
-	    }
-	    model.addAttribute("creditCard", card.get());
-	    return "update-credit-limit";
+		Optional<CreditCard> card = creditCardService.findCardByCardId(cardId);
+		if (!card.isPresent()) {
+			return "redirect:/creditcard-dashboard"; // redirect if the card is not found
+		}
+		model.addAttribute("creditCard", card.get());
+		return "update-credit-limit";
 	}
 
 	@PostMapping("/update-credit-limit")
 	public String updateCreditLimit(@RequestParam long cardId, @RequestParam double creditLimit, Model model) {
-	    Optional<CreditCard> cardOpt = creditCardService.findCardByCardId(cardId);
-	    if (!cardOpt.isPresent()) {
-	        model.addAttribute("errorMessage", "Credit card not found!");
-	        return "redirect:/creditcard-dashboard"; // Or to an error page
-	    }
-	    
-	    CreditCard creditCard = cardOpt.get();
-	    // Accessing the customer's salary
-	    double customerSalary = creditCard.getCustomer().getSalary();
+		Optional<CreditCard> cardOpt = creditCardService.findCardByCardId(cardId);
+		if (!cardOpt.isPresent()) {
+			model.addAttribute("errorMessage", "Credit card not found!");
+			return "redirect:/creditcard-dashboard"; // Or to an error page
+		}
 
-	    if (creditLimit > customerSalary) {
-	        model.addAttribute("errorMessage", "Credit limit cannot exceed your salary.");
-	        model.addAttribute("creditCard", creditCard);  // Ensure creditCard is still available for the form if returning to it
-	        return "update-credit-limit"; // Stay on the page, show an error
-	    }
+		CreditCard creditCard = cardOpt.get();
+		// Accessing the customer's salary
+		double customerSalary = creditCard.getCustomer().getSalary();
 
-	    // Proceed to update if valid
-	    creditCard.setCardLimit(creditLimit);
-	    creditCardService.updateCard(creditCard);
-	    model.addAttribute("successMessage", "Credit limit updated successfully!");
-	    return "redirect:/creditcard-dashboard"; // Redirect back to the dashboard after update
+		if (creditLimit > customerSalary) {
+			model.addAttribute("errorMessage", "Credit limit cannot exceed your salary.");
+			model.addAttribute("creditCard", creditCard); // Ensure creditCard is still available for the form if
+															// returning to it
+			return "update-credit-limit"; // Stay on the page, show an error
+		}
+
+		// Proceed to update if valid
+		creditCard.setCardLimit(creditLimit);
+		creditCardService.updateCard(creditCard);
+		model.addAttribute("successMessage", "Credit limit updated successfully!");
+		return "redirect:/creditcard-dashboard"; // Redirect back to the dashboard after update
 	}
-
-
 
 }

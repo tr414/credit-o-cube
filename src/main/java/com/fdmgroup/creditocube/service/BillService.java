@@ -75,6 +75,8 @@ public class BillService {
 		if (cardBillOptional.isEmpty()) {
 			Bill newCardBill = new Bill(card, 0, 0, true);
 			newCardBill.setBillIssueTime(LocalDateTime.now());
+			newCardBill.setPreviousBillIssueTime(LocalDateTime.now().minusDays(1));
+			newCardBill.setPreviousBillOutstandingAmount(0);
 			return createBill(newCardBill);
 		}
 
@@ -89,7 +91,9 @@ public class BillService {
 				.doubleValue();
 
 		double minimumAmountDue = new BigDecimal(totalAmountDue * 0.1).setScale(2, RoundingMode.HALF_UP).doubleValue();
-
+		
+		cardBill.setPreviousBillIssueTime(cardBill.getBillIssueTime());
+		cardBill.setPreviousBillOutstandingAmount(cardBill.getTotalAmountDue());
 		cardBill.setMinimumAmountDue(minimumAmountDue);
 		cardBill.setTotalAmountDue(totalAmountDue);
 		cardBill.setOutstandingAmount(totalAmountDue);
@@ -310,7 +314,7 @@ public class BillService {
 	public List<CreditCardTransaction> findBillingCycleTransactions(Bill bill) {
 		
 		LocalDateTime billIssueTime = bill.getBillIssueTime();
-		LocalDateTime billingCycleStartTime = billIssueTime.minusMonths(1).withMinute(0).withHour(6);
+		LocalDateTime billingCycleStartTime = bill.getPreviousBillIssueTime();
 		
 		return cardTransactionService.findBillTransactionsBetween(bill, billingCycleStartTime, billIssueTime);
 	}

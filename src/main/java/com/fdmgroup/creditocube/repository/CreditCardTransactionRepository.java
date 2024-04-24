@@ -13,6 +13,9 @@ import com.fdmgroup.creditocube.model.CreditCardTransaction;
 public interface CreditCardTransactionRepository extends JpaRepository<CreditCardTransaction, Long> {
 	List<CreditCardTransaction> findByTransactionCardIs(CreditCard card);
 
+	List<CreditCardTransaction> findByTransactionCardIsAndTransactionDateAfterAndTransactionDateBeforeOrderByTransactionDateDesc(CreditCard card, LocalDateTime start, LocalDateTime end);
+
+
 	@Query("SELECT t FROM CreditCardTransaction t WHERE t.transactionDate >= :startDateTime AND t.transactionDate <= :endDateTime AND t.transactionCard = :card")
 	List<CreditCardTransaction> findByTransactionDate(@Param("startDateTime") LocalDateTime startDateTime,
 			@Param("endDateTime") LocalDateTime endDateTime, @Param("card") CreditCard card);
@@ -23,4 +26,5 @@ public interface CreditCardTransactionRepository extends JpaRepository<CreditCar
 
 	List<CreditCardTransaction> findByTransactionCardIsAndTransactionDateAfterAndTransactionDateBefore(CreditCard card,
 			LocalDateTime start, LocalDateTime end);
+
 }
