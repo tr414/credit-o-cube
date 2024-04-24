@@ -66,9 +66,9 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td th:text="${bill.totalAmountDue}"></td>
-					<td th:text="${bill.outstandingAmount}"></td>
-					<td th:text="${bill.minimumAmountDue}"></td>
+					<td th:text="${bill.totalAmountDue}" class="price-element"></td>
+					<td th:text="${bill.outstandingAmount}" class="price-element"></td>
+					<td th:text="${bill.minimumAmountDue}" class="price-element"></td>
 					<td th:if="${bill.paid}">No</td>
 					<td th:if="${!bill.paid}">Yes</td>
 				</tr>

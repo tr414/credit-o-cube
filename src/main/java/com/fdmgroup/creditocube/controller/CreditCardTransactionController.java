@@ -76,7 +76,7 @@ public class CreditCardTransactionController {
 		if (stringCardId != null) {
 			cardId = new BigDecimal(request.getParameter("cardId"));
 		} else {
-			return "card-transactions";
+			return "redirect:creditcard-dashboard";
 		}
 
 		// amended code above to return optional rather than null - tim
