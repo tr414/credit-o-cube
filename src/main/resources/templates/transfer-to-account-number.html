@@ -3,36 +3,53 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1.0">
 <title>Transfer money</title>
-<link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/account-dashboard.css">
-<script src="../js/sidebar.js" defer></script>
+<link
+	rel="stylesheet"
+	href="../css/header-sidebar.css">
+<link
+	rel="stylesheet"
+	href="../css/account-dashboard.css">
+<script
+	src="../js/sidebar.js"
+	defer></script>
 </head>
 <body>
 	<!-- 	Top Bar -->
 	<!-- 	keep this for now -->
 	<div class="top-bar">
-		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> 
-		<a href="customer-dashboard" class="logo-link">
-		<img
-			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-	</a>
+		<span
+			class="menu-btn"
+			onclick="toggleMenu()">&#9776;</span>
+		<a
+			href="customer-dashboard"
+			class="logo-link"> <img
+			src="../img/CreditOCubeLogo.png"
+			alt="Logo"
+			class="center-logo">
+		</a>
 	</div>
 
-	<div class="side-menu menu-active" id="sideMenu">
+	<div
+		class="side-menu menu-active"
+		id="sideMenu">
 		<div class="user-greeting">
 			<p>Transfer money</p>
 
 		</div>
-		<a href="customer-dashboard">Back to Main Dashboard</a>
-		<a
-			href="account-dashboard">View Account Dashboard</a>
-		<a
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
-		<form th:action="@{/logout}" method="post">
+		<form
+			th:action="@{/logout}"
+			method="post">
 			<div class="buttons">
-				<button type="submit" class="login-button">Logout</button>
+				<button
+					type="submit"
+					class="login-button">Logout</button>
 			</div>
 		</form>
 	</div>
@@ -42,24 +59,40 @@
 	<div class="content-area main-content">
 		<div class="actions-container">
 			<!-- Create Debit Account Button -->
-			<form th:action="@{/go-to-create-debit-account}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/go-to-create-debit-account}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Create Debit Account">
 			</form>
-<!-- 			<form th:action="@{/account-dashboard}" method="get"> -->
-<!-- 				<input type="submit" class="debit-action-buttons" -->
-<!-- 					value="View all Debit Accounts"> -->
-<!-- 			</form> -->
-			<form th:action="@{/view-transaction-history}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<!-- 			<form th:action="@{/account-dashboard}" method="get"> -->
+			<!-- 				<input type="submit" class="debit-action-buttons" -->
+			<!-- 					value="View all Debit Accounts"> -->
+			<!-- 			</form> -->
+			<form
+				th:action="@{/view-transaction-history}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="View transaction history">
 			</form>
-			<form th:action="@{/deposit-withdraw}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/deposit-withdraw}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Deposit / Withdraw">
 			</form>
-			<form th:action="@{/transfer-to-account-number}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/transfer-to-account-number}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Transfer Money">
 			</form>
 		</div>
@@ -68,20 +101,36 @@
 			<div>
 				<p>Please choose an account from the dropdown menu below.</p>
 			</div>
-			<form th:action="@{/transfer-to-account-number}" method="POST">
+			<form
+				th:action="@{/transfer-to-account-number}"
+				method="POST">
 				<select name="selectedAccountId">
-					<option th:each="account : ${session.accounts}"
-						th:value="${account.accountId}" th:text="${account.accountName}"></option>
-				</select> <label for="amount">Amount</label> <input type="number"
-					name="amount"> <label>Transfer to another account
-					in this app</label> <select name="toOwnAccountNumber">
-					<option th:each="account : ${session.accounts}"
+					<option
+						th:each="account : ${session.accounts}"
+						th:value="${account.accountId}"
+						th:text="${account.accountName}"></option>
+				</select>
+				<label for="amount">Amount</label>
+				<input
+					type="number"
+					name="amount">
+				<label>Transfer to another account in this app</label>
+				<select name="toOwnAccountNumber">
+					<option
+						th:each="account : ${session.accounts}"
 						th:value="${account.accountNumber}"
 						th:text="${account.accountName}"></option>
-				</select> <label for="toAccountNumber">Transfer to External Account
-					Number</label> <input type="text" id="toAccountNumber"
-					name="toAccountNumber"> <br>
-				<button type="submit" class="debit-action-buttons">Submit</button>
+				</select>
+				<label for="toAccountNumber">Transfer to External Account
+					Number</label>
+				<input
+					type="text"
+					id="toAccountNumber"
+					name="toAccountNumber">
+				<br>
+				<button
+					type="submit"
+					class="debit-action-buttons">Submit</button>
 			</form>
 		</div>
 	</div>
