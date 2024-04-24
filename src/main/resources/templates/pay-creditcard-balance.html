@@ -84,17 +84,17 @@
         <legend>Payment Options</legend>
         <div class="input-group">
         	<label for="minimumAmount">Minimum Amount Due:</label>
-        	<input type="number" name="minimumAmount" th:value="${bill.minimumAmountDue}" readonly>
+        	<input type="number" name="minimumAmount" th:value="${bill.minimumAmountDue}" readonly class="price-element">
             <button type="submit" class="credit-action-buttons" name="paymentOption" value="minimum">Pay Minimum Amount</button>
         </div>
         <div class="input-group">
         	<label for="outstandingAmount">Outstanding Amount Due:</label>
-        	<input type="number" name="outstandingAmount" th:value="${bill.outstandingAmount}" readonly>
+        	<input type="number" name="outstandingAmount" th:value="${bill.outstandingAmount}" readonly class="price-element">
             <button type="submit" class="credit-action-buttons" name="paymentOption" value="outstanding">Pay Outstanding Amount</button>
         </div>
          <div class="input-group">
         	<label for="currentBalance">Current Card Balance:</label>
-        	<input type="number" name="currentBalance" th:value="${card.balance}" readonly>
+        	<input type="number" name="currentBalance" th:value="${card.balance}" readonly class="price-element">
             <button type="submit" class="credit-action-buttons" name="paymentOption" value="balance">Pay Full Card Balance</button>
         </div>
         <!--  only display this if the minimum amount is 0  -->
