@@ -149,4 +149,17 @@ public class CreditCardTransactionService {
 				bill.getCard(), billingCycleStartTime, billIssueTime);
 	}
 
+	public void createCashbackCarryForwardTransaction(CreditCard card, double cashbackCarriedForwardCredited) {
+		CreditCardTransaction cashbackTransaction = new CreditCardTransaction(card, LocalDateTime.now(), cashbackCarriedForwardCredited,
+				"Cashback carried forward credited to account");
+		Optional<Merchant> optionalMerchant = merchantService.findMerchantByMerchantCode("1");
+		if (optionalMerchant.isEmpty()) {
+			LOGGER.info("Merchant 1 not found");
+			return;
+		}
+
+		cashbackTransaction.setMerchant(optionalMerchant.get());
+		createCreditCardTransaction(cashbackTransaction);
+	}
+
 }

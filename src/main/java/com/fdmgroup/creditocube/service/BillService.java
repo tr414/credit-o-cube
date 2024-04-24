@@ -269,17 +269,46 @@ public class BillService {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
 		double monthlySpend = card.getMonthlySpend();
 		double cashbackAccrued = card.getCashback();
-
+		double cashbackCarriedForward = card.getCashbackCarriedForward();
+		double cashbackCredited = 0.0;
+		
+		// of the cashback carried forward, credit the entire amount to the card balance, or = to card balance, whichever is smaller
+		double cashbackCarriedForwardCredited =  cashbackCarriedForward <= card.getBalance() ? cashbackCarriedForward : card.getBalance();
+		
+		if ( cashbackCarriedForwardCredited > 0 ) {
+			cardTransactionService.createCashbackCarryForwardTransaction(card, cashbackCarriedForwardCredited);
+		}
+		
+		// reset the cashback carried forward based on how much has already been credited to the customer
+		cashbackCarriedForward = cashbackCarriedForward - cashbackCarriedForwardCredited;
+		
+		// deduct the cashback carried forward from the card balance
+		card.setBalance(card.getBalance() - cashbackCarriedForwardCredited);
+		card.setCashbackCarriedForward(cashbackCarriedForward);
+		
+		
+		
 		// if monthly spend exceeds minimum spend requirement, credit cashback for the
 		// month
 		// create a transaction to show that the cashback was credited
 		if (monthlySpend >= 600 && cashbackAccrued > 0) {
-			card.setBalance(card.getBalance() - cashbackAccrued);
-			cardTransactionService.createCashbackTransaction(card, cashbackAccrued);
+			if (cashbackAccrued > card.getBalance()) {
+				cashbackCredited = card.getBalance();
+			}
+			else {
+				cashbackCredited = cashbackAccrued;
+			}
+			card.setBalance(card.getBalance() - cashbackCredited);
+			
+			// If the full cashback accrued was not credited due to the card balance being too low, carry forward the card balance to the
+			// Next billing cycle
+			card.setCashbackCarriedForward(cashbackCarriedForward + cashbackAccrued - cashbackCredited);
+			cardTransactionService.createCashbackTransaction(card, cashbackCredited);
 		}
 
-		// once cashback has been credited, reset accrued cashback to 0, reset spending
+		// Since cashback will be credited to account, reset the card cashback once cashback has been credited reset spending
 		// in billing cycle to 0, and persist the new state of the card
+		// card.setCashbackCarriedForward(cashbackAccrued - cashbackCredited);
 		card.setCashback(0.0);
 		card.setMonthlySpend(0.0);
 		cardService.updateCard(card);

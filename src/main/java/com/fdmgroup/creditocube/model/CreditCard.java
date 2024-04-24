@@ -42,6 +42,8 @@ public class CreditCard {
 	
 	private double cashback;
 	
+	private double cashbackCarriedForward;
+	
 	private double monthlySpend;
 
 	@Column(name = "card_is_active")
@@ -54,6 +56,7 @@ public class CreditCard {
 		this.cashback = 0.0;
 		this.monthlySpend = 0.0;
 		setActive(true);
+		setCashbackCarriedForward(0.0);
 	}
 
 	public CreditCard(Customer customer, String cardNumber, int balance, int cardLimit, CardType cardType) {
@@ -65,6 +68,7 @@ public class CreditCard {
 		this.cashback = 0.0;
 		this.monthlySpend = 0.0;
 		this.isActive = true;
+		setCashbackCarriedForward(0.0);
 	}
 
 	public long getCardId() {
@@ -180,6 +184,14 @@ public class CreditCard {
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	public double getCashbackCarriedForward() {
+		return cashbackCarriedForward;
+	}
+
+	public void setCashbackCarriedForward(double cashbackCarriedForward) {
+		this.cashbackCarriedForward = cashbackCarriedForward;
 	}
 
 }
