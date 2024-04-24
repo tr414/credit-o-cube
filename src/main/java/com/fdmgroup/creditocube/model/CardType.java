@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+
 @Entity
 public class CardType {
 
@@ -25,6 +26,8 @@ public class CardType {
 
 	@OneToMany(mappedBy="cardType", cascade = CascadeType.ALL)
 	private List<Rewards> rewards;
+	
+	
 
 	public long getCard_type_ID() {
 		return card_type_ID;
@@ -77,6 +80,8 @@ public class CardType {
 	public void setRequirements(String requirements) {
 		this.requirements = requirements;
 	}
+	
+
 	
 	
 

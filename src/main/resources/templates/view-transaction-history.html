@@ -14,8 +14,11 @@
 	<!-- 	Top Bar -->
 	<!-- 	keep this for now -->
 	<div class="top-bar">
-		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
+		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> 
+		<a href="customer-dashboard" class="logo-link">
+		<img
 			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
+	</a>
 	</div>
 
 	<div class="side-menu menu-active" id="sideMenu">
@@ -59,14 +62,41 @@
 			</form>
 		</div>
 		<div class="account-selection">
-			<form th:action="@{/view-transaction-history}" method="POST">
+			<form th:action="find-by-month-debit" method="POST">
 				<label for="selectedAccountId">Choose an account:</label> <select
 					name="selectedAccountId" id="selectedAccountId">
 					<option th:each="account : ${session.accounts}"
 						th:value="${account.accountId}" th:text="${account.accountName}"></option>
 				</select>
-				<button type="submit" class="debit-action-buttons">Submit</button>
+				  <select id="month-filter" name="month">  
+				  <option value="month">Select Month</option>
+			        <option value="1">January</option>
+			        <option value="2">February</option>
+			        <option value="3">March</option>
+			        <option value="4">April</option>
+			        <option value="5">May</option>
+			        <option value="6">June</option>
+			        <option value="7">July</option>
+			        <option value="8">August</option>
+			        <option value="9">September</option>
+			        <option value="10">October</option>
+			        <option value="11">November</option>
+			        <option value="12">December</option>
+			        <option value="13"> View All</option>
+			    </select>
+			    <button type="submit" class="debit-action-buttons">Filter</button>
 			</form>
+			<div class="account-selection" th:if="${monthSearched}">
+			    <form th:action="@{/find-by-date-debit}" method="POST">
+			        Start Date:
+			        <input type="date" name="dateFrom" placeholder="Date From">
+			        End Date:
+			        <input type="date" name="dateTo" placeholder="Date To">
+			        <button type="submit">Search</button>
+			    </form>
+			</div>
+			
+
 		</div>
 		<!-- Conditional content for transaction history -->
 		<div class="table-scrollable"

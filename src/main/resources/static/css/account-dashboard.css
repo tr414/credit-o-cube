@@ -107,16 +107,12 @@ tbody tr:hover {
 }
 
 .debit-form-wrapper input[type="submit"] {
-	font-weight: bold; /* Makes the submit button text bold */
-	text-transform: uppercase;
-	/* Makes the submit button text uppercase for emphasis */
-	transition: background-color 0.3s, transform 0.2s;
-	/* Smoothens the hover effect transitions */
+	font-size: 16px;
 }
 
 .deposit-withdraw-wrapper {
 	max-width: 600px;
-	margin: 100px auto;
+	margin: auto;
 	padding: 20px;
 	background-color: #ffffff;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -137,7 +133,7 @@ tbody tr:hover {
 
 .deposit-withdraw-wrapper form {
 	margin-top: 20px;
-	text-align: center;
+	text-align: left;
 }
 
 .deposit-withdraw-wrapper input[type="number"] {
@@ -149,18 +145,7 @@ tbody tr:hover {
 }
 
 .deposit-withdraw-wrapper button {
-	padding: 10px 20px;
-	margin-right: 10px;
-	background-color: #0051ba;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	font-size: 16px;
-}
-
-.deposit-withdraw-wrapper button:hover {
-	background-color: #003c8f;
+	margin-left: 10px;
 }
 
 .deposit-withdraw-wrapper select {
@@ -172,61 +157,11 @@ tbody tr:hover {
 	margin-top: 20px;
 }
 
-.transfer-form-section {
-	max-width: 600px;
-	margin: 100px auto;
-	padding: 20px;
-	background-color: #ffffff;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-	border-radius: 10px;
-}
-
-.transfer-form-section p {
-	margin-bottom: 20px;
-	font-size: 16px;
-	color: #333;
-}
-
-.transfer-form-section form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.transfer-form-section select, .transfer-form-section input[type="number"],
-	.transfer-form-section input[type="text"] {
-	width: 90%; /* Adjust based on preference */
-	padding: 10px;
-	margin-bottom: 15px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-}
-
-.transfer-form-section label {
-	margin-bottom: 5px;
-	font-size: 16px;
-	display: block; /* Ensures the label appears above the input */
-}
-
-.transfer-form-section button {
-	padding: 10px 20px;
-	background-color: #0051ba;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	margin-top: 20px;
-}
-
-.transfer-form-section button:hover {
-	background-color: #003c8f;
-}
-
 .account-selection {
 	display: flex;
 	/* Use flexbox to align label and select box side by side */
 	align-items: center; /* Align items vertically */
-	justify-content: start; /* Align content to the start */
+	justify-content: center; /* Align content to the start */
 	margin-top: 50px; /* Adjust as necessary */
 	margin-bottom: 20px; /* Space above the table */
 	padding: 0 20px;
@@ -302,4 +237,49 @@ tbody tr:hover {
 	cursor: pointer;
 	user-select: none;
 	/* Prevents the text from being selectable which makes the UI cleaner */
+}
+
+.transfer-form-section {
+	background-color: #ffffff; /* Sets a white background for the form */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	/* Adds subtle shadow for depth */
+	border-radius: 8px; /* Rounds the corners of the wrapper */
+	padding: 20px;
+	max-width: 600px; /* Restricts the form's width to 600px */
+	margin: auto;
+}
+
+.transfer-form-section form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px; /* Adds space between form items */
+}
+
+.transfer-form-section label {
+	margin-bottom: 5px;
+	font-size: 16px;
+	color: #333;
+}
+
+.transfer-form-section select, .transfer-form-section input {
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.transfer-form-section input[type="text"], .transfer-form-section input[type="number"]
+	{
+	/* Ensures the input fields are full width within the form */
+	width: calc(100% - 20px); /* Adjust width, considering padding */
+}
+
+/* Additional style to handle spacing between inline elements */
+.transfer-form-section br {
+	display: none; /* Hide line breaks for a cleaner layout */
+}
+
+.transfer-form-section .debit-action-buttons {
+  font-size: 16px;
 }

@@ -3,6 +3,7 @@ package com.fdmgroup.creditocube.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClient;
 
 import com.fdmgroup.creditocube.model.CreditCard;
@@ -32,12 +34,16 @@ import com.fdmgroup.creditocube.service.CreditCardTransactionService;
 import com.fdmgroup.creditocube.service.CustomerService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CreditCardTransactionController {
 
 	@Autowired
 	CreditCardTransactionService transactionService;
+
+	@Autowired
+	HttpSession session;
 
 	@Autowired
 	CreditCardService cardService;
@@ -82,6 +88,7 @@ public class CreditCardTransactionController {
 
 		List<CreditCardTransaction> cardTransactions = transactionService.findAllCreditCardTransactions(card);
 		model.addAttribute("transactions", cardTransactions);
+		session.setAttribute("stringCardId", stringCardId);
 
 		return ("card-transactions");
 	}
@@ -267,6 +274,62 @@ public class CreditCardTransactionController {
 			return true;
 		}
 		return false;
+	}
+
+	@GetMapping("/find-by-date")
+	public String findByDate(@RequestParam("dateFrom") LocalDate dateFrom, @RequestParam("dateTo") LocalDate dateTo,
+			Model model, HttpServletRequest request) {
+		String stringCardId = (String) session.getAttribute("stringCardId");
+		BigDecimal cardId;
+		if (stringCardId != null) {
+			cardId = new BigDecimal(stringCardId);
+		} else {
+			return "card-transactions";
+		}
+
+		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
+		if (optionalCard.isEmpty()) {
+			return "redirect:/creditcard-dashboard";
+		}
+		CreditCard card = optionalCard.get();
+		LocalDateTime endDateTime = dateTo.atTime(23, 59, 59, 999999999);
+		LocalDateTime startDateTime = dateFrom.atTime(0, 0, 0, 0);
+
+		List<CreditCardTransaction> transactions = transactionService.findByTransactionDate(startDateTime, endDateTime,
+				card);
+		model.addAttribute("transactions", transactions);
+		return "card-transactions";
+	}
+
+	@GetMapping("/find-by-month")
+	public String findByMonth(@RequestParam("month") Integer month, Model model, HttpServletRequest request) {
+		String stringCardId = (String) session.getAttribute("stringCardId");
+		BigDecimal cardId;
+		if (stringCardId != null) {
+			cardId = new BigDecimal(stringCardId);
+		} else {
+			return "card-transactions";
+		}
+
+		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
+		if (optionalCard.isEmpty()) {
+			return "redirect:/creditcard-dashboard";
+		}
+		CreditCard card = optionalCard.get();
+
+		List<CreditCardTransaction> transactionsThatMonth;
+		for (int x = 1; x <= 12; x++) {
+			if (month == x) {
+				transactionsThatMonth = transactionService.findTransactionsByMonth(month, card);
+				model.addAttribute("transactions", transactionsThatMonth);
+				return "card-transactions";
+
+			} else {
+				System.out.println("No transactions this month");
+			}
+		}
+		return "card-transactions";
+
 	}
 
 }
