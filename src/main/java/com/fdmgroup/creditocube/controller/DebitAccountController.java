@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.DebitAccount;
@@ -85,7 +86,8 @@ public class DebitAccountController {
 	 *         account.
 	 */
 	@PostMapping("/create-debit-account")
-	public String createDebitAccount(Principal principal, HttpServletRequest request) {
+	public String createDebitAccount(Principal principal, HttpServletRequest request,
+			RedirectAttributes redirectAttrs) {
 
 		// Get request parameters
 		String accountName = request.getParameter("account-name");
@@ -104,6 +106,15 @@ public class DebitAccountController {
 
 		// Get the authenticated customer session object.
 		Customer sessionCustomer = optionalCustomer.get();
+		List<DebitAccount> accountList = debitAccountService.findAllDebitAccountsForCustomer(sessionCustomer);
+
+		// Validation checks and spit out error messages
+		if (accountList.size() >= 5) {
+			logger.info("Customer has 5 or more debit accounts, abort creating debit account");
+			redirectAttrs.addFlashAttribute("moreThanFiveAccounts",
+					"You already have 5 or more debit accounts, please close an existing account before creating a new one");
+			return "redirect:/account-dashboard";
+		}
 
 		// Create a new debit account for the customer.
 		DebitAccount newAccount = new DebitAccount(sessionCustomer);
@@ -111,6 +122,15 @@ public class DebitAccountController {
 		newAccount.setAccountBalance(balance);
 		newAccount.setActive(true);
 		newAccount.setAccountNumber(debitAccountService.generateUniqueDebitAccountNumber());
+
+		// check account balance is positive
+		if (newAccount.getAccountBalance() <= 0) {
+			logger.info(
+					"Customer tried to create debit account with non-positive balance, abort creating debit account");
+			redirectAttrs.addFlashAttribute("newAccountNegativeBalance",
+					"Please deposit a positive amount into the account");
+			return "redirect:/account-dashboard";
+		}
 
 		debitAccountService.createAccount(newAccount);
 		logger.debug("New Debit Account created: " + newAccount.getAccountName());
@@ -136,7 +156,8 @@ public class DebitAccountController {
 	 * @return A redirect to the dashboard page after closing the debit account.
 	 */
 	@PostMapping("/deleteDebitAccount")
-	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam long accountId) {
+	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam long accountId,
+			RedirectAttributes redirectAttrs) {
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerById(customer.getUser_id());
@@ -160,6 +181,11 @@ public class DebitAccountController {
 
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
 		logger.debug("Debit Account exists, details retrieved from database");
+
+		if (targetDebitAccount.getAccountBalance() != 0) {
+			redirectAttrs.addFlashAttribute("accountStillHasBalance",
+					"The account you are trying to deactivate still has a balance, please withdraw remaining balance first");
+		}
 
 		debitAccountService.closeDebitAccount(targetDebitAccount);
 

@@ -3,37 +3,56 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1.0">
 <title>Transaction History</title>
-<link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/account-dashboard.css">
-<script src="../js/sidebar.js" defer></script>
-<script src="../js/sort-tables.js" defer></script>
+<link
+	rel="stylesheet"
+	href="../css/header-sidebar.css">
+<link
+	rel="stylesheet"
+	href="../css/account-dashboard.css">
+<script
+	src="../js/sidebar.js"
+	defer></script>
+<script
+	src="../js/sort-tables.js"
+	defer></script>
 </head>
 <body>
 	<!-- 	Top Bar -->
 	<!-- 	keep this for now -->
 	<div class="top-bar">
-		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> 
-		<a href="customer-dashboard" class="logo-link">
-		<img
-			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-	</a>
+		<span
+			class="menu-btn"
+			onclick="toggleMenu()">&#9776;</span>
+		<a
+			href="customer-dashboard"
+			class="logo-link"> <img
+			src="../img/CreditOCubeLogo.png"
+			alt="Logo"
+			class="center-logo">
+		</a>
 	</div>
 
-	<div class="side-menu menu-active" id="sideMenu">
+	<div
+		class="side-menu menu-active"
+		id="sideMenu">
 		<div class="user-greeting">
 			<p>MY TRANSACTION HISTORY</p>
 
 		</div>
-		<a href="customer-dashboard">Back to Main Dashboard</a>
-		<a
-			href="account-dashboard">View Account Dashboard</a>
-		<a
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
-		<form th:action="@{/logout}" method="post">
+		<form
+			th:action="@{/logout}"
+			method="post">
 			<div class="buttons">
-				<button type="submit" class="login-button">Logout</button>
+				<button
+					type="submit"
+					class="login-button">Logout</button>
 			</div>
 		</form>
 	</div>
@@ -43,55 +62,110 @@
 	<div class="content-area main-content">
 		<div class="actions-container">
 			<!-- Create Debit Account Button -->
-			<form th:action="@{/go-to-create-debit-account}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/go-to-create-debit-account}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Create Debit Account">
 			</form>
 
-			<form th:action="@{/deposit-withdraw}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/deposit-withdraw}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Deposit / Withdraw">
 			</form>
-			<form th:action="@{/transfer-to-account-number}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/transfer-to-account-number}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Transfer Money">
 			</form>
 		</div>
 		<div class="account-selection">
-			<form th:action="find-by-date-debit" method="POST">
-			<input type="hidden" th:value="${account.accountId}" name="selectedAccountId">
-			  	Filter Transactions:
-					Start Date:
-					<input type="date" name="dateFrom" placeholder="Date From">End Date:
-					<input type="date" name="dateTo" placeholder="Date From">
+			<form
+				th:action="find-by-date-debit"
+				method="POST">
+				<input
+					type="hidden"
+					th:value="${account.accountId}"
+					name="selectedAccountId">
+				Filter Transactions: Start Date:
+				<input
+					type="date"
+					name="dateFrom"
+					placeholder="Date From">
+				End Date:
+				<input
+					type="date"
+					name="dateTo"
+					placeholder="Date From">
 
-			    <button type="submit" class="debit-action-buttons">Filter</button>
+				<button
+					type="submit"
+					class="debit-action-buttons">Filter</button>
 			</form>
-			<form th:action="find-by-transaction-type" method="POST">
-			    <input type="hidden" th:value="${account.accountId}" name="selectedAccountId">
-			    Filter Transactions:
-			    <select name="transactionType">
-			        <option value="deposit">Deposit</option>
-			        <option value="withdraw">Withdraw</option>
-			        <option value="transfer">Transfer</option>
-			        <option value="all">View All Transactions</option>
-			    </select>
-			    <button type="submit" class="debit-action-buttons">Filter</button>
+			<form
+				th:action="find-by-transaction-type"
+				method="POST">
+				<input
+					type="hidden"
+					th:value="${account.accountId}"
+					name="selectedAccountId">
+				Filter Transactions: <select name="transactionType">
+					<option value="deposit">Deposit</option>
+					<option value="withdraw">Withdraw</option>
+					<option value="transfer">Transfer</option>
+					<option value="all">View All Transactions</option>
+				</select>
+				<button
+					type="submit"
+					class="debit-action-buttons">Filter</button>
 			</form>
 		</div>
 		<!-- Conditional content for transaction history -->
-		<div class="table-scrollable"
+		<div
+			class="table-scrollable"
 			th:if="${session.selectedAccount != null}">
 			<table id="myTable">
 				<thead>
 					<tr>
-						<th>Transaction Date <span class="sort-icon"
-							onclick="sortTable(0)">▼</span></th>
-						<th>From <span class="sort-icon" onclick="sortTable(1)">▼</span></th>
-						<th>To <span class="sort-icon" onclick="sortTable(2)">▼</span></th>
-						<th>Transaction Type <span class="sort-icon"
-							onclick="sortTable(3)">▼</span></th>
-						<th>Amount <span class="sort-icon" onclick="sortTable(4)">▼</span></th>
+						<th>
+							Transaction Date
+							<span
+								class="sort-icon"
+								onclick="sortTable(0)">▼</span>
+						</th>
+						<th>
+							From
+							<span
+								class="sort-icon"
+								onclick="sortTable(1)">▼</span>
+						</th>
+						<th>
+							To
+							<span
+								class="sort-icon"
+								onclick="sortTable(2)">▼</span>
+						</th>
+						<th>
+							Transaction Type
+							<span
+								class="sort-icon"
+								onclick="sortTable(3)">▼</span>
+						</th>
+						<th>
+							Amount
+							<span
+								class="sort-icon"
+								onclick="sortTable(4)">▼</span>
+						</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -99,12 +173,12 @@
 					<tr th:each="transaction : ${session.accountTransactions}">
 						<td
 							th:text="${#dates.format(transaction.debitAccountTransactionDate, 'dd-MMM-yyyy HH:mm')}"></td>
-						<!-- <td th:text="${transaction.fromAccount?.accountNumber ?: '---'}"></td> -->
 						<td th:text="${transaction.getFormattedFromAccountNumber()}"></td>
 						<td th:text="${transaction.getFormattedToAccountNumber()}"></td>
 						<td th:text="${transaction.debitAccountTransactionType}"></td>
 						<td
-							th:text="${transaction.debitAccountTransactionAmount} + ' SGD'"></td>
+							th:text="${transaction.debitAccountTransactionAmount}"
+							class="price-element"></td>
 					</tr>
 				</tbody>
 			</table>
