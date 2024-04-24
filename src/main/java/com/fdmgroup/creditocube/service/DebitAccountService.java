@@ -378,7 +378,7 @@ public class DebitAccountService {
 
 		double currentBalance = targetAccount.getAccountBalance();
 		double newBalance = currentBalance + amount;
-		if (newBalance == 0)
+		if (newBalance < 0)
 			newBalance = 0.0;
 		logger.debug("Account balance is updated with $ " + newBalance);
 		targetAccount.setAccountBalance(newBalance);
