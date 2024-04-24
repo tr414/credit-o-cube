@@ -1,6 +1,10 @@
 package com.fdmgroup.creditocube.controller;
 
+import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -273,7 +277,7 @@ public class DebitAccountController {
 	}
 
 	@GetMapping("/view-transaction-history")
-	public String goToViewTransactionHistoryPage() {
+	public String goToViewTransactionHistoryPage(Model model) {
 		logger.debug("Directing to view-transaction-history.html");
 		return "view-transaction-history";
 	}
@@ -286,9 +290,8 @@ public class DebitAccountController {
 	 *         debit account.
 	 */
 	@PostMapping("/view-transaction-history")
-	public String reloadviewTransactionHistoryPage(@RequestParam long selectedAccountId) {
+	public String reloadviewTransactionHistoryPage(@RequestParam long selectedAccountId, Model model) {
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
-
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account not found in database, redirecting to account-dashboard");
 			return "redirect:/account-dashboard";
@@ -301,6 +304,8 @@ public class DebitAccountController {
 				.findTransactionsOfAccount(sessionAccount);
 		session.setAttribute("selectedAccount", sessionAccount);
 		session.setAttribute("accountTransactions", accountTransactions);
+		System.out.println(sessionAccount.getAccountName());
+		model.addAttribute("account", sessionAccount);
 		logger.debug("Account transactions are set as session attribute");
 
 		logger.debug("Directing to view-transaction-history.html");
@@ -382,10 +387,22 @@ public class DebitAccountController {
 	}
 
 	@PostMapping("/find-by-date-debit")
-	public String findByDate(@RequestParam("dateFrom") Date dateFrom, @RequestParam("dateTo") Date dateTo,
-			@RequestParam long selectedAccountId, Model model, HttpServletRequest request) {
-		System.out.println(session.getAttribute("monthSearched"));
+	public String findByDate(@RequestParam("dateFrom") LocalDate dateFromString,
+			@RequestParam("dateTo") LocalDate dateToString,
+			@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
+			HttpServletRequest request) {
+		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
+		System.out.println(selectedAccountId);
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
+
+		// default time zone
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+
+		// creating the instance of LocalDate using the day, month, year info
+
+		// local date + atStartOfDay() + default time zone + toInstant() = Date
+		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
+		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
 
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account not found in database, redirecting to account-dashboard");
@@ -401,12 +418,14 @@ public class DebitAccountController {
 		session.setAttribute("selectedAccount", sessionAccount);
 		session.setAttribute("accountTransactions", accountTransactions);
 		logger.debug("Account transactions are set as session attribute");
+		model.addAttribute("account", sessionAccount);
 		return "view-transaction-history";
 	}
 
-	@PostMapping("/find-by-month-debit")
-	public String findByMonth(@RequestParam("month") Integer month, Model model, HttpServletRequest request,
-			@RequestParam long selectedAccountId) {
+	@PostMapping("/find-by-transaction-type")
+	public String findByTransactionType(@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
+			HttpServletRequest request, @RequestParam("transactionType") String transactionType) {
+		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 
 		if (optionalAccount.isEmpty()) {
@@ -416,27 +435,21 @@ public class DebitAccountController {
 
 		DebitAccount sessionAccount = optionalAccount.get();
 		logger.debug("Debit Account exists, details retrieved from database");
-
-		List<DebitAccountTransaction> accountTransactions;
-		for (int x = 1; x <= 13; x++) {
-			if (month == x && month != 13) {
-				accountTransactions = debitAccountTransactionService.findTransactionsByMonth(month, sessionAccount);
-				model.addAttribute("accountTransactions", accountTransactions);
-				session.setAttribute("selectedAccount", sessionAccount);
-				session.setAttribute("accountTransactions", accountTransactions);
-				logger.debug("Account transactions are set as session attribute");
-				return "view-transaction-history";
-
-			} else if (month == 13) {
+		List<DebitAccountTransaction> allTransactions = debitAccountTransactionService
+				.findTransactionsOfAccount(sessionAccount);
+		List<DebitAccountTransaction> accountTransactions = new ArrayList<>();
+		for (DebitAccountTransaction transaction : allTransactions) {
+			if (transaction.getDebitAccountTransactionType().equals(transactionType)) {
+				accountTransactions.add(transaction);
+			} else if (transactionType.equals("all")) {
 				accountTransactions = debitAccountTransactionService.findTransactionsOfAccount(sessionAccount);
-				model.addAttribute("accountTransactions", accountTransactions);
-				session.setAttribute("selectedAccount", sessionAccount);
-				session.setAttribute("accountTransactions", accountTransactions);
+
 			}
 		}
-		logger.debug("Directing to view-transaction-history.html");
-		return "view-transaction-history";
 
+		session.setAttribute("accountTransactions", accountTransactions);
+		model.addAttribute("account", sessionAccount);
+		return "view-transaction-history";
 	}
 
 }
