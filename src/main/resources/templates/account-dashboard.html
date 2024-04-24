@@ -3,38 +3,57 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1.0">
 <title>Account Dashboard</title>
-<link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/account-dashboard.css">
+<link
+	rel="stylesheet"
+	href="../css/header-sidebar.css">
+<link
+	rel="stylesheet"
+	href="../css/account-dashboard.css">
 
 <!-- JavaScript for Sidebar Toggle -->
-<script src="../js/sidebar.js" defer></script>
-<script src="../js/sort-tables.js" defer></script>
+<script
+	src="../js/sidebar.js"
+	defer></script>
+<script
+	src="../js/sort-tables.js"
+	defer></script>
 
 </head>
 <body>
 	<div class="top-bar">
-		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> 
-		<a href="customer-dashboard" class="logo-link">
-		<img
-			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
+		<span
+			class="menu-btn"
+			onclick="toggleMenu()">&#9776;</span>
+		<a
+			href="customer-dashboard"
+			class="logo-link"> <img
+			src="../img/CreditOCubeLogo.png"
+			alt="Logo"
+			class="center-logo">
 		</a>
 	</div>
 
-	<div class="side-menu menu-active" id="sideMenu">
+	<div
+		class="side-menu menu-active"
+		id="sideMenu">
 		<div class="user-greeting">
 			<p>DEBIT ACCOUNTS</p>
 			<p>What would you like to do today?</p>
 		</div>
-		<a href="customer-dashboard">Back to Main Dashboard</a>
-		<a
-			href="account-dashboard">View Account Dashboard</a>
-		<a
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
-		<form th:action="@{/logout}" method="post">
+		<form
+			th:action="@{/logout}"
+			method="post">
 			<div class="buttons">
-				<button type="submit" class="login-button">Logout</button>
+				<button
+					type="submit"
+					class="login-button">Logout</button>
 			</div>
 		</form>
 	</div>
@@ -46,32 +65,72 @@
 	<div class="content-area main-content">
 		<div class="actions-container">
 			<!-- Create Debit Account Button -->
-			<form th:action="@{/go-to-create-debit-account}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/go-to-create-debit-account}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Create Debit Account">
 			</form>
 
 
-			<form th:action="@{/deposit-withdraw}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/deposit-withdraw}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Deposit / Withdraw">
 			</form>
-			<form th:action="@{/transfer-to-account-number}" method="get">
-				<input type="submit" class="debit-action-buttons"
+			<form
+				th:action="@{/transfer-to-account-number}"
+				method="get">
+				<input
+					type="submit"
+					class="debit-action-buttons"
 					value="Transfer Money">
 			</form>
+
 		</div>
+		<span
+			th:if="${accountStillHasBalance}"
+			th:text="${accountStillHasBalance}"
+			class="error-message"
+			th:style="${accountStillHasBalance} ? 'display: block;' : 'display: none;'"></span>
+		<span
+			th:if="${moreThanFiveAccounts}"
+			th:text="${moreThanFiveAccounts}"
+			class="error-message"
+			th:style="${moreThanFiveAccounts} ? 'display: block;' : 'display: none;'"></span>
+		<span
+			th:if="${newAccountNegativeBalance}"
+			th:text="${newAccountNegativeBalance}"
+			class="error-message"
+			th:style="${newAccountNegativeBalance} ? 'display: block;' : 'display: none;'"></span>
 		<!-- Accounts Table -->
 		<div>
 			<table id="myTable">
 				<thead>
 					<tr>
-						<th>Account Number <span class="sort-icon"
-							onclick="sortTable(0)">▼</span></th>
-						<th>Account Name <span class="sort-icon"
-							onclick="sortTable(0)">▼</span></th>
-						<th>Account Balance <span class="sort-icon"
-							onclick="sortTable(0)">▼</span></th>
+						<th>
+							Account Number
+							<span
+								class="sort-icon"
+								onclick="sortTable(0)">▼</span>
+						</th>
+						<th>
+							Account Name
+							<span
+								class="sort-icon"
+								onclick="sortTable(0)">▼</span>
+						</th>
+						<th>
+							Account Balance
+							<span
+								class="sort-icon"
+								onclick="sortTable(0)">▼</span>
+						</th>
 						<th colspan="2">Actions</th>
 					</tr>
 				</thead>
@@ -80,24 +139,36 @@
 						<td
 							th:text="| ${account.accountNumber.substring(0,3)}-${account.accountNumber.substring(3,6)}-${account.accountNumber.substring(6)} |"></td>
 						<td th:text="${account.accountName}"></td>
-						<td th:text="${account.accountBalance}" class="price-element"></td>
+						<td
+							th:text="${account.accountBalance}"
+							class="price-element"></td>
 						<!-- ... -->
 						<td>
 							<div class="button-container">
-							
-								<form th:action="@{/view-transaction-history}" method="POST">
-									<input type="hidden" th:value="${account.accountId}"
+
+								<form
+									th:action="@{/view-transaction-history}"
+									method="POST">
+									<input
+										type="hidden"
+										th:value="${account.accountId}"
 										name="selectedAccountId">
-									<button type="submit" class="debit-action-buttons">View
-										Transaction History</button>
+									<button
+										type="submit"
+										class="debit-action-buttons">View Transaction History</button>
 								</form>
-								<form th:action="@{/deleteDebitAccount}" method="POST">
-									<input type="hidden" th:value="${account.accountId}"
+								<form
+									th:action="@{/deleteDebitAccount}"
+									method="POST">
+									<input
+										type="hidden"
+										th:value="${account.accountId}"
 										name="accountId">
-									<button type="submit" class="debit-action-buttons">Close
-										Account</button>
+									<button
+										type="submit"
+										class="debit-action-buttons">Close Account</button>
 								</form>
-								
+
 							</div>
 						</td>
 						<!-- ... -->
