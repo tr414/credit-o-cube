@@ -224,7 +224,7 @@ public class CreditCardService {
 
 	public boolean customerAlreadyHasCardType(Customer customer, CardType cardType) {
 		return creditCardRepository.findAllByCustomer(customer).stream()
-				.anyMatch(card -> card.getCardType().equals(cardType));
+				.anyMatch(card -> card.getCardType().equals(cardType) && card.isActive());
 	}
 
 	// close credit card

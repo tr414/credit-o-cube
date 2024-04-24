@@ -120,6 +120,11 @@
 			th:text="${cardStillHasBalance}"
 			class="error-message"
 			th:style="${cardStillHasBalance} ? 'display: block;' : 'display: none;'"></span>
+		<div
+			th:if="${success}"
+			style="color: green;">
+			<p th:text="${success}"></p>
+		</div>
 
 
 		<div>

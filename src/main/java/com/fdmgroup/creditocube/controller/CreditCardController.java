@@ -187,7 +187,7 @@ public class CreditCardController {
 //	}
 
 	@PostMapping("/apply-creditcard")
-	public String registerCreditCard(Principal principal, HttpServletRequest request, Model model) {
+	public String registerCreditCard(Principal principal, HttpServletRequest request, RedirectAttributes redirectAttrs) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
@@ -199,41 +199,42 @@ public class CreditCardController {
 
 		// if they already hold 3 or more cards, cannot make new ones
 		if (activeCardList.size() >= 3) {
-			model.addAttribute("error", "You cannot have more than 3 credit cards.");
-			return "apply-creditcard";
+			redirectAttrs.addFlashAttribute("error", "You cannot have more than 3 credit cards.");
+			return "redirect:/apply-creditcard";
 		}
 
 		if (customer.getFirstName() == null || customer.getLastName() == null || customer.getEmail() == null
 				|| customer.getPhoneNumber() == null || customer.getNric() == null || customer.getAddress() == null
 				|| customer.getSalary() == null || customer.getGender() == null || customer.getDob() == null) {
-			System.out.println("Customer details are not filled up");
-			return ("apply-creditcard");
+//			System.out.println("Customer details are not filled up");
+			redirectAttrs.addFlashAttribute("error", "Please fill up your personal details");
+			return ("redirect:/apply-creditcard");
 		}
 
 		String cardNumber = creditCardService.generateCreditCardNumber();
 		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
 		if (cardLimit > customer.getSalary()) {
-			model.addAttribute("error", "Card limit must be less than your salary.");
-			return "apply-creditcard";
+			redirectAttrs.addFlashAttribute("error", "Card limit must be less than your salary.");
+			return "redirect:/apply-creditcard";
 		}
 
 		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
 		if (optionalCardType.isEmpty()) {
-			model.addAttribute("error", "Invalid card type selected.");
-			return "apply-creditcard";
+			redirectAttrs.addFlashAttribute("error", "Invalid card type selected.");
+			return "redirect:/apply-creditcard";
 		}
 
 		CardType cardType = optionalCardType.get();
 		if (creditCardService.customerAlreadyHasCardType(customer, cardType)) {
-			model.addAttribute("error", "You already have a credit card of this type.");
-			return "apply-creditcard";
+			redirectAttrs.addFlashAttribute("error", "You already have a credit card of this type.");
+			return "redirect:/apply-creditcard";
 		}
 
 		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
 		creditCardService.createCreditCard(newCard);
 		billService.createBillForNewCard(newCard);
 
-		model.addAttribute("success", "Successfully created a new credit card.");
+		redirectAttrs.addFlashAttribute("success", "Successfully created a new credit card.");
 		return "redirect:/creditcard-dashboard";
 	}
 
