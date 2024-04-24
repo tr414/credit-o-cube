@@ -22,27 +22,23 @@
   </div>
 
   <div class="side-menu menu-active" id="sideMenu">
-  	<div class="user-greeting">
-		<P>My Credit Cards</P>
-	</div>
-    <a href="apply-creditcard">Apply for a credit card</a>
-
-    <a href="create-card-transaction">Create Card Transaction</a>
-
-    <a href="pay-creditcard-balance">Pay bills</a>
-    <a href="account-dashboard">Account dashboard</a>
-    <a href="creditcard-dashboard">Credit card dashboard</a> 
-    <a href="customer-dashboard">Main dashboard</a>
-    <a href="#">Set credit limit (FOR ADMIN)</a>
-    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
-    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
-    <form th:action="@{/logout}" method="post">
-		<div class="buttons">
-			<button type="submit" class="login-button">Logout</button>
+		<div class="user-greeting">
+			<P>My Credit Cards</P>
 		</div>
-	</form>
-    <!-- Add other menu items here -->
-  </div>
+
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a>
+			<a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
+
+		<form th:action="@{/logout}" method="post">
+			<div class="buttons">
+				<button type="submit" class="login-button">Logout</button>
+			</div>
+		</form>
+
+		<!-- Add other menu items here -->
+	</div>
 
 
 
