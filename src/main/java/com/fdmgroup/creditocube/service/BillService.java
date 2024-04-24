@@ -59,6 +59,10 @@ public class BillService {
 		return billRepo.findByCardIs(card);
 	}
 
+	public Optional<Bill> findBillById(long id) {
+		return billRepo.findById(id);
+	}
+
 	public Optional<Bill> generateBill(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
 
@@ -91,7 +95,7 @@ public class BillService {
 				.doubleValue();
 
 		double minimumAmountDue = new BigDecimal(totalAmountDue * 0.1).setScale(2, RoundingMode.HALF_UP).doubleValue();
-		
+
 		cardBill.setPreviousBillIssueTime(cardBill.getBillIssueTime());
 		cardBill.setPreviousBillOutstandingAmount(cardBill.getTotalAmountDue());
 		cardBill.setMinimumAmountDue(minimumAmountDue);
@@ -104,7 +108,7 @@ public class BillService {
 			cardBill.setPaid(true);
 		}
 		cardBill.setBillIssueTime(LocalDateTime.now());
-		
+
 		try {
 			return updateBill(cardBill);
 		} catch (Exception e) {
@@ -312,10 +316,10 @@ public class BillService {
 	}
 
 	public List<CreditCardTransaction> findBillingCycleTransactions(Bill bill) {
-		
+
 		LocalDateTime billIssueTime = bill.getBillIssueTime();
 		LocalDateTime billingCycleStartTime = bill.getPreviousBillIssueTime();
-		
+
 		return cardTransactionService.findBillTransactionsBetween(bill, billingCycleStartTime, billIssueTime);
 	}
 

@@ -90,8 +90,6 @@ public class CreditCardController {
 		session.setAttribute("customer", sessionCustomer);
 		model.addAttribute("customer", sessionCustomer);
 
-//		List<CreditCard> creditCards = creditCardService.findAllCardsForCustomer(sessionCustomer);
-//		model.addAttribute("credit_cards", creditCards);
 		List<CreditCard> activeCreditCards = creditCardService.findAllActiveCreditCardsForCustomer(sessionCustomer);
 		model.addAttribute("credit_cards", activeCreditCards);
 		return "creditcard-dashboard";
@@ -307,7 +305,12 @@ public class CreditCardController {
 		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
-		CreditCard cardToBePaidOff = creditCardService.findCardByCardNumber(creditCardNumber).get();
+		Optional<CreditCard> optionalCard = creditCardService.findCardByCardNumber(creditCardNumber);
+
+		if (optionalCard.isEmpty()) {
+			return "redirect:/creditcard-dashboard";
+		}
+		CreditCard cardToBePaidOff = optionalCard.get();
 
 		// if they choose to pay off a credit card that doesnt exist, exit this method
 
@@ -412,8 +415,12 @@ public class CreditCardController {
 			return "redirect:/login";
 		}
 		long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
-		CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
-		Bill bill = billService.findBillByCreditCard(card).orElse(null);
+
+		Optional<CreditCard> optionalCreditCard = creditCardService.findCardByCardId(cardId);
+		CreditCard card = optionalCreditCard.get();
+
+		Optional<Bill> optionalBill = billService.findBillByCreditCard(card);
+		Bill bill = optionalBill.get();
 
 		Customer customer = optionalCustomer.get();
 
