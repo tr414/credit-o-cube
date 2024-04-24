@@ -64,7 +64,7 @@ public class DebitAccountService {
 		// determine if account exists in database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
-		if (optionalAccount.isPresent()) {
+		if (optionalAccount.isPresent() && optionalAccount.get().isActive()) {
 			logger.info("Account already exists: " + optionalAccount.get().getAccountId()
 					+ " abort creating debit account");
 			return;
@@ -136,7 +136,7 @@ public class DebitAccountService {
 
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
 
-		if (optionalAccount.isEmpty()) {
+		if (optionalAccount.isEmpty() || !optionalAccount.get().isActive()) {
 			logger.info("Debit account not found, returning empty Optional");
 			return Optional.empty();
 		} else {
@@ -155,7 +155,7 @@ public class DebitAccountService {
 	public Optional<DebitAccount> findDebitAccountByAccountId(long id) {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(id);
 
-		if (optionalAccount.isEmpty()) {
+		if (optionalAccount.isEmpty() || !optionalAccount.get().isActive()) {
 			logger.info("Debit account not found, returning empty Optional");
 			return Optional.empty();
 		} else {
@@ -209,7 +209,7 @@ public class DebitAccountService {
 		// Check if the account exists in the database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
-		if (optionalAccount.isEmpty()) {
+		if (optionalAccount.isEmpty() || !optionalAccount.get().isActive()) {
 			logger.info("Debit account is not found in database, abort deletion");
 			return;
 		}
@@ -265,7 +265,7 @@ public class DebitAccountService {
 		// Check if the account exists in the database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
-		if (optionalAccount.isEmpty()) {
+		if (optionalAccount.isEmpty() || !optionalAccount.get().isActive()) {
 			logger.info("Debit account is not found in database, abort transaction");
 			return;
 		}
@@ -319,7 +319,7 @@ public class DebitAccountService {
 		// Check if fromAccount exists in the database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(fromAccount.getAccountId());
 
-		if (optionalAccount.isEmpty()) {
+		if (optionalAccount.isEmpty() || !optionalAccount.get().isActive()) {
 			logger.info("Debit account is not found in database, abort transaction");
 			return false;
 		}
@@ -344,7 +344,7 @@ public class DebitAccountService {
 
 		Optional<DebitAccount> optionalToAccount = debitAccountRepository.findByAccountNumber(toAccountNumber);
 
-		if (optionalToAccount.isEmpty()) {
+		if (optionalToAccount.isEmpty() || !optionalToAccount.get().isActive()) {
 			logger.debug("Target toAccount not found in database, assume toAccount is in another bank");
 			return false;
 		} else {
@@ -369,7 +369,7 @@ public class DebitAccountService {
 		// Check if the account exists in the database
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findById(account.getAccountId());
 
-		if (optionalAccount.isEmpty()) {
+		if (optionalAccount.isEmpty() || !optionalAccount.get().isActive()) {
 			logger.info("Debit account is not found in database, abort transaction");
 			return account;
 		}
@@ -409,7 +409,7 @@ public class DebitAccountService {
 	 */
 	private boolean accountNumberExists(String accountNumber) {
 		Optional<DebitAccount> optionalAccount = debitAccountRepository.findByAccountNumber(accountNumber);
-		return optionalAccount.isPresent();
+		return (optionalAccount.isPresent() && optionalAccount.get().isActive());
 	}
 
 }
