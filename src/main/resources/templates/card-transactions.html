@@ -49,13 +49,17 @@
 	<div class="content-area main-content">
 	
 	 <div class="form-group">
-  	Filter Transactions:
-	<form action="#" th:action="find-by-date" method="POST">
-		<input type="hidden" th:value="${cardId}" name="cardId">
-		Start Date:
-		<input type="date" name="dateFrom" placeholder="Date From">End Date:
-		<input type="date" name="dateTo" placeholder="Date From">
-		<button type="submit">Search</button>
+
+
+  	<h1>Filter Transactions</h1>
+  	<h2>Filter By Date:</h2>
+	<form action="#" th:action="find-by-date" method="POST">Start Date:
+	
+	<input type="hidden" th:value="${cardId}" name="cardId">
+	
+	<input type="date" name="dateFrom" placeholder="Date From">End Date:
+	<input type="date" name="dateTo" placeholder="Date From">
+	<button type="submit">Search</button>
 	</form> 
 
 
