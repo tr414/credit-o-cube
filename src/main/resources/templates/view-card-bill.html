@@ -90,6 +90,11 @@
 					<td th:text="${transaction.transactionAmount}" class="price-element"></td>
 					<td th:text="${transaction.description}"></td>
 				</tr>
+				<tr>
+					<td>--/--/----</td>
+					<td th:text="${bill.previousBillOutstandingAmount}"></td>
+					<td>Balance outstanding at the start of billing cycle</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

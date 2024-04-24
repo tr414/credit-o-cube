@@ -87,7 +87,7 @@ public class CreditCardTransactionService {
 	public List<CreditCardTransaction> findBillTransactionsBetween(Bill bill, LocalDateTime billingCycleStartTime,
 			LocalDateTime billIssueTime) {
 		
-		return repo.findByTransactionCardIsAndTransactionDateAfterAndTransactionDateBefore(bill.getCard(), billingCycleStartTime, billIssueTime);
+		return repo.findByTransactionCardIsAndTransactionDateAfterAndTransactionDateBeforeOrderByTransactionDateDesc(bill.getCard(), billingCycleStartTime, billIssueTime);
 	}
 
 }

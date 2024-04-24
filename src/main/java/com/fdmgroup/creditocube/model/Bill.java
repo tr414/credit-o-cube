@@ -20,6 +20,8 @@ public class Bill {
 	@JoinColumn(name = "fk_card_id")
 	private CreditCard card;
 	
+	private LocalDateTime previousBillIssueTime;
+	
 	private LocalDateTime billIssueTime;
 
 	private double totalAmountDue;
@@ -27,6 +29,8 @@ public class Bill {
 	private double minimumAmountDue;
 
 	private double outstandingAmount;
+	
+	private double previousBillOutstandingAmount;
 
 	// private LocalDateTime dueDate;
 
@@ -98,6 +102,22 @@ public class Bill {
 
 	public void setBillIssueTime(LocalDateTime billIssueTime) {
 		this.billIssueTime = billIssueTime;
+	}
+
+	public LocalDateTime getPreviousBillIssueTime() {
+		return previousBillIssueTime;
+	}
+
+	public void setPreviousBillIssueTime(LocalDateTime previousBillIssueTime) {
+		this.previousBillIssueTime = previousBillIssueTime;
+	}
+
+	public double getPreviousBillOutstandingAmount() {
+		return previousBillOutstandingAmount;
+	}
+
+	public void setPreviousBillOutstandingAmount(double previousBillOutstandingAmount) {
+		this.previousBillOutstandingAmount = previousBillOutstandingAmount;
 	}
 	
 	
