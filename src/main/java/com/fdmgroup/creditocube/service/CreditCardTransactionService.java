@@ -1,6 +1,8 @@
 package com.fdmgroup.creditocube.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.fdmgroup.creditocube.model.Bill;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
+import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.InstallmentPayment;
 import com.fdmgroup.creditocube.model.Merchant;
 import com.fdmgroup.creditocube.repository.CreditCardTransactionRepository;
@@ -30,6 +33,9 @@ public class CreditCardTransactionService {
 	@Autowired
 	private MerchantService merchantService;
 
+	@Autowired
+	private CustomerService customerService;
+
 	public Optional<CreditCardTransaction> createCreditCardTransaction(CreditCardTransaction transaction) {
 		Optional<CreditCardTransaction> createdTransaction;
 
@@ -46,6 +52,35 @@ public class CreditCardTransactionService {
 
 	public List<CreditCardTransaction> findAllCreditCardTransactions(CreditCard card) {
 		return repo.findByTransactionCardIs(card);
+	}
+
+	public List<CreditCardTransaction> findAllCreditCardTransactionsForCustomer(Customer customer) {
+		List<CreditCardTransaction> transactionList = new ArrayList<>();
+
+		Optional<Customer> optionalCustomer = customerService.findCustomerById(customer.getUser_id());
+		if (optionalCustomer.isEmpty()) {
+			return transactionList;
+		}
+
+		Customer targetCustomer = optionalCustomer.get();
+		for (CreditCard card : customer.getCreditCards()) {
+			transactionList.addAll(repo.findByTransactionCardIs(card));
+		}
+
+		Comparator<CreditCardTransaction> latestFirst = (transaction1, transaction2) -> {
+			return transaction2.getTransactionDate().compareTo(transaction1.getTransactionDate());
+		};
+
+		transactionList.sort(latestFirst);
+
+		if (transactionList.size() < 6) {
+
+			return transactionList;
+		}
+
+		transactionList.subList(5, transactionList.size()).clear();
+
+		return transactionList;
 	}
 
 	public Optional<CreditCardTransaction> updateCreditCardTransaction(CreditCardTransaction transaction) {

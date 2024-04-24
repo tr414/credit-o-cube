@@ -2,7 +2,6 @@ package com.fdmgroup.creditocube.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -216,10 +215,9 @@ public class CustomerController {
 		model.addAttribute("recentTransactions", recentTransactions);
 		List<CreditCard> cards = creditCardService.findAllActiveCreditCardsForCustomer(customer);
 		model.addAttribute("cards", cards);
-		List<CreditCardTransaction> creditTransactions = new ArrayList<>();
-		for (CreditCard card : customer.getCreditCards()) {
-			creditTransactions.addAll(creditCardTransactionService.findAllCreditCardTransactions(card));
-		}
+		List<CreditCardTransaction> creditTransactions = creditCardTransactionService
+				.findAllCreditCardTransactionsForCustomer(customer);
+
 		model.addAttribute("creditTransactions", creditTransactions);
 		return "customer-dashboard";
 	}

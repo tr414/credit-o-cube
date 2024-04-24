@@ -117,7 +117,7 @@ public class CreditCardTransaction {
 	}
 
 	public String getFormattedTransactionDate() {
-		String date = transactionDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		String date = transactionDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm"));	//ofLocalizedDateTime( new FormatStyle(dateStyle, timeStyle)));
 //				+ transactionDate.format(DateTimeFormatter.ISO_TIME);
 		return date;
 	}
