@@ -2,6 +2,7 @@ package com.fdmgroup.creditocube.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,13 @@ public class CreditCardTransactionService {
 		for (CreditCard card : customer.getCreditCards()) {
 			transactionList.addAll(repo.findByTransactionCardIs(card));
 		}
+
+		Comparator<CreditCardTransaction> latestFirst = (transaction1, transaction2) -> {
+			return transaction2.getTransactionDate().compareTo(transaction1.getTransactionDate());
+		};
+
+		transactionList.sort(latestFirst);
+
 		if (transactionList.size() < 6) {
 
 			return transactionList;
