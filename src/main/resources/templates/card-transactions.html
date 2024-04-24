@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credit Card Transaction History</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/creditcard-dashboard.css">
+<link rel="stylesheet" href="../css/card-transactions.css">
 
 </head>
 <body>
@@ -47,12 +47,14 @@
 	<div class="content-area main-content">
 	
 	 <div class="form-group">
-  	Filter Transactions:
+  	<h1>Filter Transactions</h1>
+  	<h2>Filter By Date:</h2>
 	<form action="#" th:action="find-by-date" method="get">Start Date:
 	<input type="date" name="dateFrom" placeholder="Date From">End Date:
 	<input type="date" name="dateTo" placeholder="Date From">
 	<button type="submit">Search</button>
-	</form> Filter By Month:
+	</form> 
+	<h2>Filter By Month:</h2>
 	  <form th:action="find-by-month" method="get"> 
 	  <select id="month-filter" name="month">  
 	  <option value="">Select Month</option>
