@@ -98,18 +98,13 @@ public class CreditCardTransactionController {
 	public String getCreateCardTransaction(Model model, Principal principal) {
 		String username = principal.getName();
 
-		// Customer customer =
-		// customerService.findCustomerByUsername(username).orElse(null);
-		// amended code above to return optional rather than null - tim
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(username);
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
 		}
 		Customer customer = optionalCustomer.get();
 
-//		List<CreditCard> customerCards = cardService.findAllCardsForCustomer(customer);
 		List<CreditCard> customerCards = cardService.findAllActiveCreditCardsForCustomer(customer);
-
 		List<Merchant> merchantCodes = merchantService.findAllMerchants();
 
 		model.addAttribute("merchants", merchantCodes);
