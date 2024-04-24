@@ -1,0 +1,88 @@
+/* General Settings for the content area */
+.content-area {
+    margin-top: 75px; /* Adequate spacing from the fixed header */
+    padding: 20px; /* Padding around the content */
+    background-color: #ffffff; /* White background for clarity */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+/* Titles styling for clarity and emphasis */
+h1, h2 {
+    color: #333; /* Brand color for emphasis */
+    margin: 10px 0; /* Space around titles */
+    text-align: center; /* Center-aligns titles */
+}
+
+/* Styling for forms and form elements */
+.form-group {
+    margin-bottom: 20px; /* Spacing between form groups */
+    
+}
+
+.form-group form {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f2f2f2; /* Light grey background */
+    border-radius: 5px; /* Rounded corners for the form container */
+}
+
+.form-group input[type="date"],
+.form-group select {
+    padding: 8px;
+    margin: 0 10px; /* Spacing for form elements */
+    border: 1px solid #ccc; /* Subtle border */
+    border-radius: 4px; /* Rounded corners for inputs */
+}
+
+.form-group button {
+    padding: 10px 20px;
+    background-color: #0051ba; /* Brand color for button */
+    color: white;
+    border: none;
+    border-radius: 5px; /* Rounded corners for buttons */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s;
+}
+
+.form-group button:hover {
+    background-color: #003885; /* Darker shade on hover for better interaction */
+}
+
+/* Table styling */
+table {
+    width: 100%; /* Full width tables */
+    border-collapse: collapse; /* Collapses borders */
+    margin-top: 20px; /* Spacing from form */
+}
+
+table thead {
+    background-color: #0051ba; /* Brand color for header */
+    color: #ffffff;
+}
+
+table th, table td {
+    text-align: center;
+    padding: 12px; /* Padding for cells */
+    border-bottom: 1px solid #ddd; /* Light border for each row */
+}
+
+table th.sort-icon {
+    cursor: pointer; /* Indicates sortable column */
+    color: #ffffff;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+    .form-group form {
+        flex-direction: column;
+    }
+
+    .form-group input[type="date"],
+    .form-group select,
+    .form-group button {
+        width: 100%; /* Full width on mobile for inputs and buttons */
+        margin-top: 10px; /* Spacing for stacked form elements */
+    }
+}
