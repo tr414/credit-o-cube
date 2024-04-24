@@ -126,3 +126,17 @@ body {
     margin: 0 auto; /* Center the logo within the link */
     width: auto;
 }
+
+.error-message {
+	color: #d8000c;
+	background-color: #ffd2d2;
+	padding: 5px;
+	border-radius: 5px;
+	font-size: 0.9em;
+	/* position: absolute; */
+	/* bottom: -5px;  *//* Positioning the error message below the input */
+	/* left: 0; */
+	/* right: 0; */ /* Ensures the width matches the input field */
+	text-align: center; /* Centers the text in the error message */
+	display: none; /* Hide by default, display when there's an error */
+}

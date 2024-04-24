@@ -3,40 +3,59 @@
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1.0">
 <title>Dashboard Wireframe</title>
-<link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/creditcard-dashboard.css">
-<script src="../js/sidebar.js" defer></script>
+<link
+	rel="stylesheet"
+	href="../css/header-sidebar.css">
+<link
+	rel="stylesheet"
+	href="../css/creditcard-dashboard.css">
+<script
+	src="../js/sidebar.js"
+	defer></script>
 </head>
 
 <body>
 
 
-  <div class="top-bar">
-    <span class="menu-btn" onclick="toggleMenu()">&#9776;</span>
-    <a href="customer-dashboard" class="logo-link">
-    <img src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
-    </a>
-  </div>
+	<div class="top-bar">
+		<span
+			class="menu-btn"
+			onclick="toggleMenu()">&#9776;</span>
+		<a
+			href="customer-dashboard"
+			class="logo-link"> <img
+			src="../img/CreditOCubeLogo.png"
+			alt="Logo"
+			class="center-logo">
+		</a>
+	</div>
 
 
-	
 
 
-	<div class="side-menu menu-active" id="sideMenu">
+
+	<div
+		class="side-menu menu-active"
+		id="sideMenu">
 		<div class="user-greeting">
 			<P>My Credit Cards</P>
 		</div>
 
 		<a href="customer-dashboard">Back to Main Dashboard</a> <a
-			href="account-dashboard">View Account Dashboard</a>
-			<a
+			href="account-dashboard">View Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
 
-		<form th:action="@{/logout}" method="post">
+		<form
+			th:action="@{/logout}"
+			method="post">
 			<div class="buttons">
-				<button type="submit" class="login-button">Logout</button>
+				<button
+					type="submit"
+					class="login-button">Logout</button>
 			</div>
 		</form>
 
@@ -47,121 +66,213 @@
 
 		<div class="actions-container">
 			<!-- Create Debit Account Button -->
-			<form th:action="@{/apply-creditcard}" method="get">
-				<input type="submit" class="credit-action-buttons"
+			<form
+				th:action="@{/apply-creditcard}"
+				method="get">
+				<input
+					type="submit"
+					class="credit-action-buttons"
 					value="Apply for a Credit Card">
 			</form>
-			
-<!-- 			<form th:action="@{/creditcard-dashboard}" method="get"> -->
-<!-- 				<input type="submit" class="credit-action-buttons" -->
-<!-- 					value="View all Credit Cards"> -->
-<!-- 			</form> -->
-			
+
+			<!-- 			<form th:action="@{/creditcard-dashboard}" method="get"> -->
+			<!-- 				<input type="submit" class="credit-action-buttons" -->
+			<!-- 					value="View all Credit Cards"> -->
+			<!-- 			</form> -->
+
 			<!-- Update Credit Limit button -->
 			<!--  <form th:action="@{/update-credit-limit}" method="get">
 			<input type="hidden" th:value="${card.cardId}" name="cardId">
 			<input type="submit" class="credit-action-buttons" value="Update Credit Limit">
 			</form> -->
-			
-			<form th:action="@{/create-card-transaction}" method="get">
-				<input type="submit" class="credit-action-buttons"
+
+			<form
+				th:action="@{/create-card-transaction}"
+				method="get">
+				<input
+					type="submit"
+					class="credit-action-buttons"
 					value="Create Card Transaction">
 			</form>
-<!-- 			<form th:action="@{/show-inactive-cards}" method="get"> -->
-<!-- 				<input type="submit" class="credit-action-buttons" -->
-<!-- 					value="View Deactivated Cards"> -->
-<!-- 			</form> -->
+			<!-- 			<form th:action="@{/show-inactive-cards}" method="get"> -->
+			<!-- 				<input type="submit" class="credit-action-buttons" -->
+			<!-- 					value="View Deactivated Cards"> -->
+			<!-- 			</form> -->
+
 		</div>
-  
-    <div>
-      <table id="myTable">
-        <thead>
-          <tr>
-            
-            <th>Credit Card Number<span class="sort-icon"
-				onclick="sortTable(0)">▼</span></th>
-            <th>Card Balance<span class="sort-icon"
-				onclick="sortTable(1)">▼</span></th>
-            <th>Credit Limit<span class="sort-icon"
-				onclick="sortTable(2)">▼</span></th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="card : ${credit_cards}">
-            
-            <!-- <td th:text="${card.getFormattedCreditCardNumber()} + ' -- ' + ${card.cardType.name}"></td> -->
-            <td>
-            	<p th:text="${card.getFormattedCreditCardNumber()} "></p><br>
-            	<p th:text="${card.cardType.name}" ></p>
-            </td>
-            <td th:text="${card.balance}" class="price-element"></td>
-            <td th:text="${card.cardLimit}" class="price-element"></td>
-            
-            <!-- from here -->
-            <td>
-            <div class="actions-row">
-            
-			
-			
-            <!-- View Transaction History button -->
-              <form th:action="@{/card-transactions}" method="POST" class="form-button">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">View Transaction History</button>
-              </form>
-              
-              <!-- View Card Bill button -->
-              <form th:action="@{/view-card-bill}" method="POST" class="form-button">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">View Card Bill</button>
-              </form>
-              
-              <!-- Pay Card Bill/Balance button -->
-               <form th:action="@{/open-card-payment}" method="POST" class="form-button">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">Pay Card Bill/Balance</button>
-              </form>
-              </div>
-              
-              <div class="actions-row">
-              <!-- Update Credit Limit button -->
-			<form th:action="@{/update-credit-limit}" method="get" class="form-button">
-			<input type="hidden" th:value="${card.cardId}" name="cardId">
-			<button type="submit" class="credit-action-buttons">Update Credit Limit</button>
-			</form>
-              <!-- Close Credit Card button -->
-				<form th:action="@{/close-credit-card}" method="POST" class="form-button">
-				  <input type="hidden" th:value="${card.cardId}" name="cardId">
-				  <button type="submit" class="credit-action-buttons">Close Credit Card</button>
-				</form>
-				
-              </div>
-              
-<!--               <div class="actions-row"> -->
-<!--               Generate Bill button -->
-<!--                <form th:action="@{/generate-bill}" method="POST" class="form-button"> -->
-<!--               	<input type="hidden" th:value="${card.cardId}" name="cardId"> -->
-<!--                 <button type="submit" class="non-credit-action-buttons">Generate Bill</button> -->
-<!--               </form> -->
-<!--               Simulate Late Payment button -->
-<!--                <form th:action="@{/simulate-late-payment}" method="POST" class="form-button"> -->
-<!--               	<input type="hidden" th:value="${card.cardId}" name="cardId"> -->
-<!--                 <button type="submit" class="non-credit-action-buttons">Simulate Late Payment</button> -->
-<!--               </form> -->
-              
-<!--               </div> -->
-            </td>
-            <!-- to here -->
-            
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+		<span
+			th:if="${insufficientBalance}"
+			th:text="${insufficientBalance}"
+			class="error-message"
+			th:style="${insufficientBalance} ? 'display: block;' : 'display: none;'"></span>
+		<span
+			th:if="${invalidPaymentAmount}"
+			th:text="${invalidPaymentAmount}"
+			class="error-message"
+			th:style="${invalidPaymentAmount} ? 'display: block;' : 'display: none;'"></span>
+		<span
+			th:if="${invalidDebitAccount}"
+			th:text="${invalidDebitAccount}"
+			class="error-message"
+			th:style="${invalidDebitAccount} ? 'display: block;' : 'display: none;'"></span>
+		<span
+			th:if="${cardStillHasBalance}"
+			th:text="${cardStillHasBalance}"
+			class="error-message"
+			th:style="${cardStillHasBalance} ? 'display: block;' : 'display: none;'"></span>
 
-	<script src="../js/sidebar.js">	</script>
 
-	<script src="../js/sort-tables.js" defer></script>
+		<div>
+			<table id="myTable">
+				<thead>
+					<tr>
+
+						<th>
+							Credit Card Number
+							<span
+								class="sort-icon"
+								onclick="sortTable(0)">▼</span>
+						</th>
+						<th>
+							Card Balance
+							<span
+								class="sort-icon"
+								onclick="sortTable(1)">▼</span>
+						</th>
+						<th>
+							Credit Limit
+							<span
+								class="sort-icon"
+								onclick="sortTable(2)">▼</span>
+						</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="card : ${credit_cards}">
+
+						<!-- <td th:text="${card.getFormattedCreditCardNumber()} + ' -- ' + ${card.cardType.name}"></td> -->
+						<td>
+							<p th:text="${card.getFormattedCreditCardNumber()} "></p>
+							<br>
+							<p th:text="${card.cardType.name}"></p>
+						</td>
+						<td
+							th:text="${card.balance}"
+							class="price-element"></td>
+						<td
+							th:text="${card.cardLimit}"
+							class="price-element"></td>
+
+						<!-- from here -->
+						<td>
+							<div class="actions-row">
+
+
+
+								<!-- View Transaction History button -->
+								<form
+									th:action="@{/card-transactions}"
+									method="POST"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">View Transaction
+										History</button>
+								</form>
+
+								<!-- View Card Bill button -->
+								<form
+									th:action="@{/view-card-bill}"
+									method="POST"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">View Card Bill</button>
+								</form>
+
+								<!-- Pay Card Bill/Balance button -->
+								<form
+									th:action="@{/open-card-payment}"
+									method="POST"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">Pay Card Bill/Balance</button>
+								</form>
+							</div>
+
+							<div class="actions-row">
+								<!-- Update Credit Limit button -->
+								<form
+									th:action="@{/update-credit-limit}"
+									method="get"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">Update Credit Limit</button>
+								</form>
+								<!-- Close Credit Card button -->
+								<form
+									th:action="@{/close-credit-card}"
+									method="POST"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">Close Credit Card</button>
+								</form>
+
+							</div>
+
+							<!--               <div class="actions-row"> -->
+							<!--               Generate Bill button -->
+							<!--                <form th:action="@{/generate-bill}" method="POST" class="form-button"> -->
+							<!--               	<input type="hidden" th:value="${card.cardId}" name="cardId"> -->
+							<!--                 <button type="submit" class="non-credit-action-buttons">Generate Bill</button> -->
+							<!--               </form> -->
+							<!--               Simulate Late Payment button -->
+							<!--                <form th:action="@{/simulate-late-payment}" method="POST" class="form-button"> -->
+							<!--               	<input type="hidden" th:value="${card.cardId}" name="cardId"> -->
+							<!--                 <button type="submit" class="non-credit-action-buttons">Simulate Late Payment</button> -->
+							<!--               </form> -->
+
+							<!--               </div> -->
+						</td>
+						<!-- to here -->
+
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script src="../js/sidebar.js">
+		
+	</script>
+
+	<script
+		src="../js/sort-tables.js"
+		defer></script>
 
 
 </body>
