@@ -195,6 +195,8 @@ public class DebitAccountService {
 			return accountListInCustomer;
 		}
 
+		accountListInCustomer.removeIf(account -> account.isActive() == false);
+
 		logger.debug("Returning debit accounts of customer");
 		return accountListInCustomer;
 
@@ -238,13 +240,14 @@ public class DebitAccountService {
 
 		// Remove the target debit account from the customer's list of accounts
 		accountHolder.getDebitAccounts().remove(targetAccount);
+		targetAccount.setActive(false);
 
 		// Save the updated customer to the database
 		customerRepository.save(accountHolder);
 		logger.debug("Customer details updated");
 
 		// Delete the target debit account from the database
-		targetAccount.setActive(false);
+//		targetAccount.setActive(false);
 		debitAccountRepository.save(targetAccount);
 		logger.debug("Debit account set as inactive");
 

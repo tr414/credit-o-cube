@@ -3,7 +3,6 @@ package com.fdmgroup.creditocube.controller;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -237,31 +236,6 @@ public class CreditCardController {
 		return "redirect:/creditcard-dashboard";
 	}
 
-	@GetMapping("/pay-creditcard-balance")
-	public String payCreditcardBalance(Model model, Principal principal) {
-
-		List<String> payamentOptions = new ArrayList<>();
-		payamentOptions.add("Pay Current Balance"); // pays the full bill
-		payamentOptions.add("Pay minimum"); // pays the minimum they can without getting penalised
-		payamentOptions.add("Pay Custom Amount"); // pays a custom amount
-		// if they choose pay a custom amount, i need to get the payment amount
-		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
-
-		// If the user is not found, redirect to the login page.
-		if (optionalCustomer.isEmpty()) {
-			return "redirect:/login";
-		}
-
-		// set customer and their accounts as session attributes to retrieve in view
-		Customer sessionCustomer = optionalCustomer.get();
-		session.setAttribute("customer", sessionCustomer);
-		model.addAttribute("customer", sessionCustomer);
-		model.addAttribute("accounts", sessionCustomer.getDebitAccounts());
-		// model.addAttribute("payamentOptions", payamentOptions);
-		return "pay-creditcard-balance"; // Name of your Thymeleaf template
-
-	}
-
 	@PostMapping("/pay-creditcard-balance")
 	public String payCreditcardBalance(Principal principal, HttpServletRequest request, Model model,
 			@RequestParam("debitAccountNumber") String debitAccountNumber,
@@ -282,7 +256,10 @@ public class CreditCardController {
 		Customer sessionCustomer = optionalCustomer.get();
 
 		// find debit accounts of customer
-		List<DebitAccount> debitAccountsOfCustomer = sessionCustomer.getDebitAccounts();
+		List<DebitAccount> debitAccountsOfCustomer = debitAccountService
+				.findAllDebitAccountsForCustomer(sessionCustomer);
+		debitAccountsOfCustomer.removeIf(account -> account.isActive() == false);
+		debitAccountsOfCustomer.forEach(account -> System.out.println(account.getAccountNumber()));
 		DebitAccount fromAccount = null;
 
 		// verify that debit account exists
@@ -427,7 +404,9 @@ public class CreditCardController {
 		model.addAttribute("bill", bill);
 		model.addAttribute("card", card);
 		model.addAttribute("customer", customer);
-		model.addAttribute("accounts", customer.getDebitAccounts());
+		List<DebitAccount> availableAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
+		availableAccounts.removeIf(account -> account.isActive() == false);
+		model.addAttribute("accounts", availableAccounts);
 		return "pay-creditcard-balance";
 	}
 
