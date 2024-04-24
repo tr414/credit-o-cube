@@ -82,7 +82,9 @@
 				onclick="sortTable(0)">▼</span></th>
             <th>Card Balance<span class="sort-icon"
 				onclick="sortTable(0)">▼</span></th>
-            <th>Credit Limit<span class="sort-icon"
+<!--             <th>Credit Limit<span class="sort-icon" -->
+<!-- 				onclick="sortTable(0)">▼</span></th> -->
+			<th>Available Credit<span class="sort-icon"
 				onclick="sortTable(0)">▼</span></th>
             <th>Actions</th>
           </tr>
@@ -96,7 +98,8 @@
             	<p th:text="${card.cardType.name}" ></p>
             </td>
             <td th:text="${card.balance}" class="price-element"></td>
-            <td th:text="${card.cardLimit}" class="price-element"></td>
+<!--             <td th:text="${card.cardLimit}" class="price-element"></td> -->
+            <td th:text="${card.cardLimit - card.balance}" class="price-element"></td>
             <td>
             
 			<!-- Inserting Update Credit Limit for each card??? -->

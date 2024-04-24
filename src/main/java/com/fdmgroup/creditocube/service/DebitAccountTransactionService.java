@@ -209,8 +209,9 @@ public class DebitAccountTransactionService {
 	}
 
 	public List<DebitAccountTransaction> findByTransactionDate(Date startDateTime, Date endDateTime,
-			DebitAccount fromAccount) {
-		return debitAccountTransactionRepository.findByTransactionDate(startDateTime, endDateTime, fromAccount);
+			DebitAccount fromAccount, String toAccountNumber) {
+		return debitAccountTransactionRepository.findByTransactionDate(startDateTime, endDateTime, fromAccount,
+				toAccountNumber);
 	}
 
 	public List<DebitAccountTransaction> findTransactionsByMonth(int month, DebitAccount fromAccount) {
