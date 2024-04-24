@@ -3,6 +3,7 @@ package com.fdmgroup.creditocube.service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,6 +94,16 @@ public class MerchantService {
 	}
 
 	public List<Merchant> findAllMerchants() {
-		return merchantRepository.findAll();
+		List<Merchant> merchantList = new ArrayList<>();
+		merchantList = merchantRepository.findAll();
+		merchantList.removeIf(merchant -> merchant.getMerchantCode().equals("1"));
+		merchantList.removeIf(merchant -> !merchant.isActive());
+
+		return merchantList;
 	}
+
+	public Optional<Merchant> findMerchantByMerchantCode(String merchantCode) {
+		return merchantRepository.findByMerchantCode(merchantCode);
+	}
+
 }

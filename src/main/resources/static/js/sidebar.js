@@ -14,7 +14,7 @@ function toggleMenu() {
 const priceElements = document.querySelectorAll('.price-element');
 priceElements.forEach(element => {
   const price = parseFloat(element.textContent);
-  element.textContent = '$ ' + price.toFixed(2);
+  element.textContent = '$' + price.toFixed(2);
 });
 
 

@@ -13,6 +13,7 @@ import com.fdmgroup.creditocube.model.Bill;
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
 import com.fdmgroup.creditocube.model.InstallmentPayment;
+import com.fdmgroup.creditocube.model.Merchant;
 import com.fdmgroup.creditocube.repository.CreditCardTransactionRepository;
 
 @Service
@@ -25,6 +26,9 @@ public class CreditCardTransactionService {
 
 	@Autowired
 	private InstallmentPaymentService installmentService;
+
+	@Autowired
+	private MerchantService merchantService;
 
 	public Optional<CreditCardTransaction> createCreditCardTransaction(CreditCardTransaction transaction) {
 		Optional<CreditCardTransaction> createdTransaction;
@@ -78,6 +82,13 @@ public class CreditCardTransactionService {
 	public void createCashbackTransaction(CreditCard card, double cashback) {
 		CreditCardTransaction cashbackTransaction = new CreditCardTransaction(card, LocalDateTime.now(), cashback,
 				"Cashback credited on monthly spending");
+		Optional<Merchant> optionalMerchant = merchantService.findMerchantByMerchantCode("1");
+		if (optionalMerchant.isEmpty()) {
+			LOGGER.info("Merchant 1 not found");
+			return;
+		}
+
+		cashbackTransaction.setMerchant(optionalMerchant.get());
 		createCreditCardTransaction(cashbackTransaction);
 
 	}
@@ -98,8 +109,9 @@ public class CreditCardTransactionService {
 
 	public List<CreditCardTransaction> findBillTransactionsBetween(Bill bill, LocalDateTime billingCycleStartTime,
 			LocalDateTime billIssueTime) {
-		
-		return repo.findByTransactionCardIsAndTransactionDateAfterAndTransactionDateBeforeOrderByTransactionDateDesc(bill.getCard(), billingCycleStartTime, billIssueTime);
+
+		return repo.findByTransactionCardIsAndTransactionDateAfterAndTransactionDateBeforeOrderByTransactionDateDesc(
+				bill.getCard(), billingCycleStartTime, billIssueTime);
 	}
 
 }

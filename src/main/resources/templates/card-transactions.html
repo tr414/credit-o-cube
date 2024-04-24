@@ -86,7 +86,13 @@
 			<tbody>
 					<tr th:each="transaction : ${transactions}">
 					<td th:text="${transaction.getFormattedTransactionDate()}"></td>
-					<td th:text="${transaction.transactionAmount}" class="price-element"></td>
+					<td>
+						<span th:if="${transaction.merchant != null && transaction.merchant.merchantCode == '1'}">+</span>
+						<span th:unless="${transaction.merchant != null && transaction.merchant.merchantCode == '1'}">–</span>
+						<span th:text="${transaction.transactionAmount}" class="price-element"></span>
+					</td>
+					
+					
 					<td th:text="${transaction.description}"></td>
 				</tr>
 			</tbody>

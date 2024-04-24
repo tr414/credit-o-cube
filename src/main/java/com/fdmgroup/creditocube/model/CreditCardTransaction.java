@@ -25,7 +25,7 @@ public class CreditCardTransaction {
 
 	@ManyToOne
 	@JoinColumn(name = "MERCHANT_ID_FK")
-	private Merchant merchantCode;
+	private Merchant merchant;
 
 	private double cashbackAmount;
 
@@ -41,7 +41,7 @@ public class CreditCardTransaction {
 
 	public CreditCardTransaction(CreditCard transactionCard, LocalDateTime transactionDate, double transactionAmount,
 			String description) {
-		super();
+
 		this.transactionCard = transactionCard;
 		this.transactionDate = transactionDate;
 		this.transactionAmount = transactionAmount;
@@ -50,13 +50,14 @@ public class CreditCardTransaction {
 
 	public CreditCardTransaction(CreditCard transactionCard, Merchant merchantCode, double cashbackAmount,
 			LocalDateTime transactionDate, double transactionAmount, String description) {
-		super();
-		this.transactionCard = transactionCard;
-		this.merchantCode = merchantCode;
+
+		this(transactionCard, transactionDate, transactionAmount, description);
+//		this.transactionCard = transactionCard;
+		this.merchant = merchantCode;
 		this.cashbackAmount = cashbackAmount;
-		this.transactionDate = transactionDate;
-		this.transactionAmount = transactionAmount;
-		this.description = description;
+//		this.transactionDate = transactionDate;
+//		this.transactionAmount = transactionAmount;
+//		this.description = description;
 	}
 
 	public long getTransactionId() {
@@ -75,12 +76,12 @@ public class CreditCardTransaction {
 		this.transactionCard = transactionCard;
 	}
 
-	public Merchant getMerchantCode() {
-		return merchantCode;
+	public Merchant getMerchant() {
+		return merchant;
 	}
 
-	public void setMerchantCode(Merchant merchantCode) {
-		this.merchantCode = merchantCode;
+	public void setMerchant(Merchant merchantCode) {
+		this.merchant = merchantCode;
 	}
 
 	public double getCashbackAmount() {
