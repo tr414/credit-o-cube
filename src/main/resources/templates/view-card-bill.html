@@ -96,7 +96,13 @@
 				</tr>
 				<tr>
 					<td>--/--/----</td>
-					<td th:text="${bill.previousBillOutstandingAmount}"></td>
+					<!-- <td th:text="${bill.previousBillOutstandingAmount}"></td> -->
+					<td>
+						
+						<span th:if="${bill.previousBillOutstandingAmount!=0}">–</span>
+						<span th:text="${bill.previousBillOutstandingAmount}" class="price-element"></span>
+					</td>
+					
 					<td>Balance outstanding at the start of billing cycle</td>
 				</tr>
 			</tbody>
