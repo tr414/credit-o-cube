@@ -50,14 +50,8 @@
 				<input type="submit" class="debit-action-buttons"
 					value="Create Debit Account">
 			</form>
-<!-- 			<form th:action="@{/account-dashboard}" method="get"> -->
-<!-- 				<input type="submit" class="debit-action-buttons" -->
-<!-- 					value="View all Debit Accounts"> -->
-<!-- 			</form> -->
-			<form th:action="@{/view-transaction-history}" method="get">
-				<input type="submit" class="debit-action-buttons"
-					value="View transaction history">
-			</form>
+
+
 			<form th:action="@{/deposit-withdraw}" method="get">
 				<input type="submit" class="debit-action-buttons"
 					value="Deposit / Withdraw">
@@ -94,6 +88,10 @@
 								<button type="submit" class="debit-action-buttons">Close
 									Account</button>
 							</form>
+							  <form th:action="@{/view-transaction-history}" method="POST">
+				              	<input type="hidden" th:value="${account.accountId}" name="selectedAccountId">
+				                <button type="submit" class="debit-action-buttons">View Transaction History</button>
+				              </form>
 						</td>
 					</tr>
 				</tbody>
