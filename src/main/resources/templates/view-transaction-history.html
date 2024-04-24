@@ -26,7 +26,10 @@
 			<p>MY TRANSACTION HISTORY</p>
 
 		</div>
-		<a href="customer-dashboard">Back to Main Dashboard</a><a
+		<a href="customer-dashboard">Back to Main Dashboard</a>
+		<a
+			href="account-dashboard">View Account Dashboard</a>
+		<a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
@@ -44,14 +47,7 @@
 				<input type="submit" class="debit-action-buttons"
 					value="Create Debit Account">
 			</form>
-			<form th:action="@{/account-dashboard}" method="get">
-				<input type="submit" class="debit-action-buttons"
-					value="View all Debit Accounts">
-			</form>
-			<form th:action="@{/view-transaction-history}" method="get">
-				<input type="submit" class="debit-action-buttons"
-					value="View transaction history">
-			</form>
+
 			<form th:action="@{/deposit-withdraw}" method="get">
 				<input type="submit" class="debit-action-buttons"
 					value="Deposit / Withdraw">
@@ -62,41 +58,26 @@
 			</form>
 		</div>
 		<div class="account-selection">
-			<form th:action="find-by-month-debit" method="POST">
-				<label for="selectedAccountId">Choose an account:</label> <select
-					name="selectedAccountId" id="selectedAccountId">
-					<option th:each="account : ${session.accounts}"
-						th:value="${account.accountId}" th:text="${account.accountName}"></option>
-				</select>
-				  <select id="month-filter" name="month">  
-				  <option value="month">Select Month</option>
-			        <option value="1">January</option>
-			        <option value="2">February</option>
-			        <option value="3">March</option>
-			        <option value="4">April</option>
-			        <option value="5">May</option>
-			        <option value="6">June</option>
-			        <option value="7">July</option>
-			        <option value="8">August</option>
-			        <option value="9">September</option>
-			        <option value="10">October</option>
-			        <option value="11">November</option>
-			        <option value="12">December</option>
-			        <option value="13"> View All</option>
+			<form th:action="find-by-date-debit" method="POST">
+			<input type="hidden" th:value="${account.accountId}" name="selectedAccountId">
+			  	Filter Transactions:
+					Start Date:
+					<input type="date" name="dateFrom" placeholder="Date From">End Date:
+					<input type="date" name="dateTo" placeholder="Date From">
+
+			    <button type="submit" class="debit-action-buttons">Filter</button>
+			</form>
+			<form th:action="find-by-transaction-type" method="POST">
+			    <input type="hidden" th:value="${account.accountId}" name="selectedAccountId">
+			    Filter Transactions:
+			    <select name="transactionType">
+			        <option value="deposit">Deposit</option>
+			        <option value="withdraw">Withdraw</option>
+			        <option value="transfer">Transfer</option>
+			        <option value="all">View All Transactions</option>
 			    </select>
 			    <button type="submit" class="debit-action-buttons">Filter</button>
 			</form>
-			<div class="account-selection" th:if="${monthSearched}">
-			    <form th:action="@{/find-by-date-debit}" method="POST">
-			        Start Date:
-			        <input type="date" name="dateFrom" placeholder="Date From">
-			        End Date:
-			        <input type="date" name="dateTo" placeholder="Date To">
-			        <button type="submit">Search</button>
-			    </form>
-			</div>
-			
-
 		</div>
 		<!-- Conditional content for transaction history -->
 		<div class="table-scrollable"

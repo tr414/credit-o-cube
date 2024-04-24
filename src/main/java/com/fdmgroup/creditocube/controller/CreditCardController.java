@@ -3,7 +3,6 @@ package com.fdmgroup.creditocube.controller;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,8 +89,6 @@ public class CreditCardController {
 		session.setAttribute("customer", sessionCustomer);
 		model.addAttribute("customer", sessionCustomer);
 
-//		List<CreditCard> creditCards = creditCardService.findAllCardsForCustomer(sessionCustomer);
-//		model.addAttribute("credit_cards", creditCards);
 		List<CreditCard> activeCreditCards = creditCardService.findAllActiveCreditCardsForCustomer(sessionCustomer);
 		model.addAttribute("credit_cards", activeCreditCards);
 		return "creditcard-dashboard";
@@ -239,31 +236,6 @@ public class CreditCardController {
 		return "redirect:/creditcard-dashboard";
 	}
 
-	@GetMapping("/pay-creditcard-balance")
-	public String payCreditcardBalance(Model model, Principal principal) {
-
-		List<String> payamentOptions = new ArrayList<>();
-		payamentOptions.add("Pay Current Balance"); // pays the full bill
-		payamentOptions.add("Pay minimum"); // pays the minimum they can without getting penalised
-		payamentOptions.add("Pay Custom Amount"); // pays a custom amount
-		// if they choose pay a custom amount, i need to get the payment amount
-		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
-
-		// If the user is not found, redirect to the login page.
-		if (optionalCustomer.isEmpty()) {
-			return "redirect:/login";
-		}
-
-		// set customer and their accounts as session attributes to retrieve in view
-		Customer sessionCustomer = optionalCustomer.get();
-		session.setAttribute("customer", sessionCustomer);
-		model.addAttribute("customer", sessionCustomer);
-		model.addAttribute("accounts", sessionCustomer.getDebitAccounts());
-		// model.addAttribute("payamentOptions", payamentOptions);
-		return "pay-creditcard-balance"; // Name of your Thymeleaf template
-
-	}
-
 	@PostMapping("/pay-creditcard-balance")
 	public String payCreditcardBalance(Principal principal, HttpServletRequest request, Model model,
 			@RequestParam("debitAccountNumber") String debitAccountNumber,
@@ -284,7 +256,10 @@ public class CreditCardController {
 		Customer sessionCustomer = optionalCustomer.get();
 
 		// find debit accounts of customer
+
 		List<DebitAccount> debitAccountsOfCustomer = debitAccountService.findAllDebitAccountsForCustomer(sessionCustomer);
+		debitAccountsOfCustomer.removeIf(account -> account.isActive() == false);
+	
 		Optional<DebitAccount> fromAccountOptional =  debitAccountService.findDebitAccountByAccountNumber(debitAccountNumber);
 		
 		if (fromAccountOptional.isEmpty()) {
@@ -294,29 +269,40 @@ public class CreditCardController {
 		
 		DebitAccount fromAccount = fromAccountOptional.get();
 		
-		System.out.println(fromAccount.getAccountName());
-		
+// Tim's code
+//		List<DebitAccount> debitAccountsOfCustomer = debitAccountService
+//				.findAllDebitAccountsForCustomer(sessionCustomer);
+//		debitAccountsOfCustomer.removeIf(account -> account.isActive() == false);
+//		debitAccountsOfCustomer.forEach(account -> System.out.println(account.getAccountNumber()));
+//		DebitAccount fromAccount = null;
+
+
 		// verify that debit account exists
 		// if they choose a debit account number for a debit account that doesnt exist,
 		// exit this method
-		for (DebitAccount debitAccount : debitAccountsOfCustomer) {
-			if (String.valueOf(debitAccount.getAccountNumber()).equals(debitAccountNumber)) {
-				fromAccount = debitAccount;
-				break;
-
-			} else {
-				logger.info(
-						"Debit account number selected does not belong to customer, or there is no such debit account number");
-				System.out.println("Debit account number invalid - you have no such debit accounts with account number "
-						+ debitAccountNumber);
-				return ("pay-creditcard-balance");
-			}
-		}
+//		for (DebitAccount debitAccount : debitAccountsOfCustomer) {
+//			if (String.valueOf(debitAccount.getAccountNumber()).equals(debitAccountNumber)) {
+//				fromAccount = debitAccount;
+//				break;
+//
+//			} else {
+//				logger.info(
+//						"Debit account number selected does not belong to customer, or there is no such debit account number");
+//				System.out.println("Debit account number invalid - you have no such debit accounts with account number "
+//						+ debitAccountNumber);
+//				return ("pay-creditcard-balance");
+//			}
+//		}
 
 		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
-		CreditCard cardToBePaidOff = creditCardService.findCardByCardNumber(creditCardNumber).get();
+		Optional<CreditCard> optionalCard = creditCardService.findCardByCardNumber(creditCardNumber);
+
+		if (optionalCard.isEmpty()) {
+			return "redirect:/creditcard-dashboard";
+		}
+		CreditCard cardToBePaidOff = optionalCard.get();
 
 		// if they choose to pay off a credit card that doesnt exist, exit this method
 
@@ -441,15 +427,21 @@ public class CreditCardController {
 			return "redirect:/login";
 		}
 		long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
-		CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
-		Bill bill = billService.findBillByCreditCard(card).orElse(null);
+
+		Optional<CreditCard> optionalCreditCard = creditCardService.findCardByCardId(cardId);
+		CreditCard card = optionalCreditCard.get();
+
+		Optional<Bill> optionalBill = billService.findBillByCreditCard(card);
+		Bill bill = optionalBill.get();
 
 		Customer customer = optionalCustomer.get();
 
 		model.addAttribute("bill", bill);
 		model.addAttribute("card", card);
 		model.addAttribute("customer", customer);
-		model.addAttribute("accounts", customer.getDebitAccounts());
+		List<DebitAccount> availableAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
+		availableAccounts.removeIf(account -> account.isActive() == false);
+		model.addAttribute("accounts", availableAccounts);
 		return "pay-creditcard-balance";
 	}
 

@@ -88,7 +88,8 @@ public class CreditCardTransactionController {
 
 		List<CreditCardTransaction> cardTransactions = transactionService.findAllCreditCardTransactions(card);
 		model.addAttribute("transactions", cardTransactions);
-		session.setAttribute("stringCardId", stringCardId);
+		model.addAttribute("cardId", cardId);
+//		session.setAttribute("stringCardId", stringCardId);
 
 		return ("card-transactions");
 	}
@@ -97,18 +98,13 @@ public class CreditCardTransactionController {
 	public String getCreateCardTransaction(Model model, Principal principal) {
 		String username = principal.getName();
 
-		// Customer customer =
-		// customerService.findCustomerByUsername(username).orElse(null);
-		// amended code above to return optional rather than null - tim
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(username);
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
 		}
 		Customer customer = optionalCustomer.get();
 
-//		List<CreditCard> customerCards = cardService.findAllCardsForCustomer(customer);
 		List<CreditCard> customerCards = cardService.findAllActiveCreditCardsForCustomer(customer);
-
 		List<Merchant> merchantCodes = merchantService.findAllMerchants();
 
 		model.addAttribute("merchants", merchantCodes);
@@ -120,6 +116,7 @@ public class CreditCardTransactionController {
 	@PostMapping("/create-card-transaction")
 	public String createCardTransaction(HttpServletRequest request) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
+		System.out.println(request.getParameter("cardId"));
 
 		// CreditCard card =
 		// cardService.findCardByCardId(cardId.longValue()).orElse(null);
@@ -276,16 +273,11 @@ public class CreditCardTransactionController {
 		return false;
 	}
 
-	@GetMapping("/find-by-date")
+	@PostMapping("/find-by-date")
 	public String findByDate(@RequestParam("dateFrom") LocalDate dateFrom, @RequestParam("dateTo") LocalDate dateTo,
-			Model model, HttpServletRequest request) {
-		String stringCardId = (String) session.getAttribute("stringCardId");
-		BigDecimal cardId;
-		if (stringCardId != null) {
-			cardId = new BigDecimal(stringCardId);
-		} else {
-			return "card-transactions";
-		}
+			Model model, HttpServletRequest request, @RequestParam("cardId") Long cardId) {
+
+		System.out.println(cardId);
 
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
 		if (optionalCard.isEmpty()) {
@@ -298,18 +290,14 @@ public class CreditCardTransactionController {
 		List<CreditCardTransaction> transactions = transactionService.findByTransactionDate(startDateTime, endDateTime,
 				card);
 		model.addAttribute("transactions", transactions);
+		model.addAttribute("cardId", cardId);
+
 		return "card-transactions";
 	}
 
-	@GetMapping("/find-by-month")
-	public String findByMonth(@RequestParam("month") Integer month, Model model, HttpServletRequest request) {
-		String stringCardId = (String) session.getAttribute("stringCardId");
-		BigDecimal cardId;
-		if (stringCardId != null) {
-			cardId = new BigDecimal(stringCardId);
-		} else {
-			return "card-transactions";
-		}
+	@PostMapping("/find-by-month")
+	public String findByMonth(@RequestParam("month") Integer month, Model model, HttpServletRequest request,
+			@RequestParam("cardId") Long cardId) {
 
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
 		if (optionalCard.isEmpty()) {
@@ -328,6 +316,7 @@ public class CreditCardTransactionController {
 				System.out.println("No transactions this month");
 			}
 		}
+		model.addAttribute("cardId", cardId);
 		return "card-transactions";
 
 	}

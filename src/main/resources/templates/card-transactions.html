@@ -22,59 +22,42 @@
   </div>
 
   <div class="side-menu menu-active" id="sideMenu">
-  	<div class="user-greeting">
-		<P>My Credit Cards</P>
-	</div>
-    <a href="apply-creditcard">Apply for a credit card</a>
-
-    <a href="create-card-transaction">Create Card Transaction</a>
-
-    <a href="pay-creditcard-balance">Pay bills</a>
-    <a href="account-dashboard">Account dashboard</a>
-    <a href="creditcard-dashboard">Credit card dashboard</a> 
-    <a href="customer-dashboard">Main dashboard</a>
-    <a href="#">Set credit limit (FOR ADMIN)</a>
-    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
-    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
-    <form th:action="@{/logout}" method="post">
-		<div class="buttons">
-			<button type="submit" class="login-button">Logout</button>
+		<div class="user-greeting">
+			<P>My Credit Cards</P>
 		</div>
-	</form>
-    <!-- Add other menu items here -->
-  </div>
+
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a>
+			<a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
+
+		<form th:action="@{/logout}" method="post">
+			<div class="buttons">
+				<button type="submit" class="login-button">Logout</button>
+			</div>
+		</form>
+
+		<!-- Add other menu items here -->
+	</div>
 
 
 
 	<div class="content-area main-content">
 	
 	 <div class="form-group">
+
+
   	<h1>Filter Transactions</h1>
   	<h2>Filter By Date:</h2>
-	<form action="#" th:action="find-by-date" method="get">Start Date:
+	<form action="#" th:action="find-by-date" method="POST">Start Date:
+	
+	<input type="hidden" th:value="${cardId}" name="cardId">
+	
 	<input type="date" name="dateFrom" placeholder="Date From">End Date:
 	<input type="date" name="dateTo" placeholder="Date From">
 	<button type="submit">Search</button>
 	</form> 
-	<h2>Filter By Month:</h2>
-	  <form th:action="find-by-month" method="get"> 
-	  <select id="month-filter" name="month">  
-	  <option value="">Select Month</option>
-        <option value="1">January</option>
-        <option value="2">February</option>
-        <option value="3">March</option>
-        <option value="4">April</option>
-        <option value="5">May</option>
-        <option value="6">June</option>
-        <option value="7">July</option>
-        <option value="8">August</option>
-        <option value="9">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
-    </select>
-    <button type="submit">Filter</button>
-  </form>
+
 
   </div>
 	<div>

@@ -30,27 +30,23 @@
   </div>
 
   <div class="side-menu menu-active" id="sideMenu">
-  	<div class="user-greeting">
-		<P>My Credit Cards</P>
-	</div>
-    <a href="apply-creditcard">Apply for a credit card</a>
-
-    <a href="create-card-transaction">Create Card Transaction</a>
-
-    <a href="pay-creditcard-balance">Pay bills</a>
-    <a href="account-dashboard">Account dashboard</a>
-    <a href="creditcard-dashboard">Credit card dashboard</a> 
-    <a href="customer-dashboard">Main dashboard</a>
-    <a href="#">Set credit limit (FOR ADMIN)</a>
-    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
-    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
-    <form th:action="@{/logout}" method="post">
-		<div class="buttons">
-			<button type="submit" class="login-button">Logout</button>
+		<div class="user-greeting">
+			<P>My Credit Cards</P>
 		</div>
-	</form>
-    <!-- Add other menu items here -->
-  </div>
+
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a>
+			<a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
+
+		<form th:action="@{/logout}" method="post">
+			<div class="buttons">
+				<button type="submit" class="login-button">Logout</button>
+			</div>
+		</form>
+
+		<!-- Add other menu items here -->
+	</div>
 	
 	<div class="content-area main-content">
     <h2>Pay Credit Card Balance</h2>
@@ -84,17 +80,17 @@
         <legend>Payment Options</legend>
         <div class="input-group">
         	<label for="minimumAmount">Minimum Amount Due:</label>
-        	<input type="number" name="minimumAmount" th:value="${bill.minimumAmountDue}" readonly>
+        	<input type="number" name="minimumAmount" th:value="${bill.minimumAmountDue}" readonly class="price-element">
             <button type="submit" class="credit-action-buttons" name="paymentOption" value="minimum">Pay Minimum Amount</button>
         </div>
         <div class="input-group">
         	<label for="outstandingAmount">Outstanding Amount Due:</label>
-        	<input type="number" name="outstandingAmount" th:value="${bill.outstandingAmount}" readonly>
+        	<input type="number" name="outstandingAmount" th:value="${bill.outstandingAmount}" readonly class="price-element">
             <button type="submit" class="credit-action-buttons" name="paymentOption" value="outstanding">Pay Outstanding Amount</button>
         </div>
          <div class="input-group">
         	<label for="currentBalance">Current Card Balance:</label>
-        	<input type="number" name="currentBalance" th:value="${card.balance}" readonly>
+        	<input type="number" name="currentBalance" th:value="${card.balance}" readonly class="price-element">
             <button type="submit" class="credit-action-buttons" name="paymentOption" value="balance">Pay Full Card Balance</button>
         </div>
         <!--  only display this if the minimum amount is 0  -->

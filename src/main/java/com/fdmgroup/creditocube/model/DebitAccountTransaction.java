@@ -195,22 +195,27 @@ public class DebitAccountTransaction {
 	public String getFormattedToAccountNumber() {
 		if (toAccountNumber == null || toAccountNumber.isEmpty() || toAccountNumber.isBlank()) {
 			return "---";
-		} else if (toAccountNumber.length() > 12) {
+		} else if (toAccountNumber.length() == 16) {
 			return (toAccountNumber.substring(0, 4) + "-" + toAccountNumber.substring(4, 8) + "-"
 					+ toAccountNumber.substring(8, 12) + "-" + toAccountNumber.substring(12, 16));
-		} else {
+		} else if (toAccountNumber.length() > 6) {
 			return (toAccountNumber.substring(0, 3) + "-" + toAccountNumber.substring(3, 6) + "-"
 					+ toAccountNumber.substring(6));
+		} else {
+			return (toAccountNumber);
 		}
 	}
 
 	public String getMaskedToAccountNumber() {
 		if (toAccountNumber == null || toAccountNumber.isEmpty() || toAccountNumber.isBlank()) {
 			return "---";
-		} else if (toAccountNumber.length() > 12) {
+		} else if (toAccountNumber.length() == 16) {
 			return ("****-****-****-" + toAccountNumber.substring(12));
-		} else {
+		} else if (toAccountNumber.length() == 9) {
 			return ("***-***-" + toAccountNumber.substring(6));
+		} else {
+			return ("*".repeat(toAccountNumber.length() - 3) + "-"
+					+ toAccountNumber.substring(toAccountNumber.length() - 3));
 		}
 	}
 

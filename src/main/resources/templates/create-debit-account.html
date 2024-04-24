@@ -24,7 +24,10 @@
 			<p>DEBIT ACCOUNTS</p>
 			<p>Start your debit account journey here</p>
 		</div>
-		<a href="customer-dashboard">Back to Main Dashboard</a><a
+		<a href="customer-dashboard">Back to Main Dashboard</a>
+		<a
+			href="account-dashboard">View Account Dashboard</a>
+		<a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form th:action="@{/logout}" method="post">
 			<div class="buttons">
@@ -39,10 +42,10 @@
 				<input type="submit" class="debit-action-buttons"
 					value="Create Debit Account">
 			</form>
-			<form th:action="@{/account-dashboard}" method="get">
-				<input type="submit" class="debit-action-buttons"
-					value="View all Debit Accounts">
-			</form>
+<!-- 			<form th:action="@{/account-dashboard}" method="get"> -->
+<!-- 				<input type="submit" class="debit-action-buttons" -->
+<!-- 					value="View all Debit Accounts"> -->
+<!-- 			</form> -->
 			<form th:action="@{/view-transaction-history}" method="get">
 				<input type="submit" class="debit-action-buttons"
 					value="View transaction history">
