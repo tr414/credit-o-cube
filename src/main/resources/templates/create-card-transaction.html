@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Create Card Transaction</title>
-<link rel="stylesheet" href="../css/login.css">
+<link rel="stylesheet" href="../css/create-card-transaction.css">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
 					<select name="cardId" id="cardId" required>
 						<option th:each="card : ${cards}"
 							th:value="${card.cardId}"
-							th:text="${card.getFormattedCreditCardNumber()}"></option>
+							th:text="${card.getFormattedCreditCardNumber()} + ' - ' + ${card.cardType.name}"></option>
 					</select>
 				</div>
 				<div class="form-group">

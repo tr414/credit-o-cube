@@ -67,9 +67,11 @@ tbody tr:hover {
 
 /* Style for the container of each row of buttons */
 .actions-row {
-    display: flex; /* Use flexbox to align buttons in a row */
-    justify-content: space-evenly; /* Space buttons evenly */
-    margin-bottom: 5px; /* Space between rows */
+/*     display: flex; Use flexbox to align buttons in a row */
+/*     justify-content: space-evenly; Space buttons evenly */
+/*     margin-bottom: 5px; Space between rows */
+    max-width: 150px; /* Match this width to the column width you desire */
+    margin: 0 auto; /* This will keep the dropdown or modal centered under the button */
 }
 
 /* Special style for the single button in the last row to center it */
@@ -80,7 +82,7 @@ tbody tr:hover {
 /* You might need to adjust the width of the 'Actions' column */
 #myTable th:last-child, 
 #myTable td:last-child {
-    width: 35%; /* Adjust the width as needed to make the column narrower */
+    width: 150px; /* Adjust the width as needed to make the column narrower */
 }
 
 /* Style each form as a button */
@@ -96,10 +98,10 @@ tbody tr:hover {
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
-	padding: 5px 10px;
+	padding: 5px 20px;
 	margin: 2px; /* Add horizontal margins between buttons */
 	/* NEWWWWW */
-	width: 100%;
+	width: auto;
 }
 
 .non-credit-action-buttons {
@@ -189,3 +191,24 @@ form.payment-form fieldset.form-section legend {
 #myTable td:nth-child(3) {
   font-weight: bold; /* This will make the text bold */
 }
+
+.actions-dropdown {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 50px rgba(0,0,255,10);
+  position: absolute;
+  z-index: 100;
+  width: 200px; /* Adjust as needed */
+  padding: 10px;
+  display: none; /* Initially hidden */
+}
+
+.actions-dropdown form {
+  margin-bottom: 5px;
+}
+
+.actions-dropdown form:last-child {
+  margin-bottom: 0;
+}
+
