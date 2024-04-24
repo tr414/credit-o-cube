@@ -277,16 +277,25 @@ public class CreditCardController {
 
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
-			return "redirect:/login";
+			return "redirect:/logout";
 		}
 
 		// Get the authenticated customer session object.
 		Customer sessionCustomer = optionalCustomer.get();
 
 		// find debit accounts of customer
-		List<DebitAccount> debitAccountsOfCustomer = sessionCustomer.getDebitAccounts();
-		DebitAccount fromAccount = null;
-
+		List<DebitAccount> debitAccountsOfCustomer = debitAccountService.findAllDebitAccountsForCustomer(sessionCustomer);
+		Optional<DebitAccount> fromAccountOptional =  debitAccountService.findDebitAccountByAccountNumber(debitAccountNumber);
+		
+		if (fromAccountOptional.isEmpty()) {
+			logger.info("Customer did not select valid Debit Account for transaction");
+			return "redirect:creditcard-dashboard";
+		}
+		
+		DebitAccount fromAccount = fromAccountOptional.get();
+		
+		System.out.println(fromAccount.getAccountName());
+		
 		// verify that debit account exists
 		// if they choose a debit account number for a debit account that doesnt exist,
 		// exit this method
@@ -298,8 +307,8 @@ public class CreditCardController {
 			} else {
 				logger.info(
 						"Debit account number selected does not belong to customer, or there is no such debit account number");
-//				System.out.println("Debit account number invalid - you have no such debit accounts with account number "
-//						+ debitAccountNumber);
+				System.out.println("Debit account number invalid - you have no such debit accounts with account number "
+						+ debitAccountNumber);
 				return ("pay-creditcard-balance");
 			}
 		}
@@ -323,50 +332,60 @@ public class CreditCardController {
 //		}
 
 		// find the balance of this credit card
+		
+		
+//		else if (paymentOption.equals("paymentAmount")) {
+//			// make sure that payMent amount is not more than the current balance
+//			if (paymentAmount > cardToBePaidOff.getBalance()) {
+//				System.out.println("Payment amount is more than the current balance");
+//				return ("pay-creditcard-balance");
+//			} else {
+////				billService.recordCustomPayment(bill, amountPayable);
+//				amountPayable = paymentAmount;
+//				// need to record it in bill service
+//			}
+//		}
+		
 		double amountPayable = 0;
+		
 		Bill bill = cardToBePaidOff.getBill();
-
+		
+		
+		// Removed the option for custom payment : Tanay
+		// Also moved bill update to be done after transaction has been performed rather than before
+		// So that we do not update the bill in case of an invalid transaction
 		if (paymentOption.equals("minimum")) {
-
 			amountPayable = cardToBePaidOff.getBill().getMinimumAmountDue();
-			billService.recordMinimumAmountPayment(bill);
 			logger.debug("Customer selected to pay minimum amount");
-//			System.out.println("Paid minimum");
 		} else if (paymentOption.equals("outstanding")) {
 			// pay the outstanding bill
 			amountPayable = cardToBePaidOff.getBill().getOutstandingAmount();
-			billService.recordOutstandingAmountPayment(bill);
 			logger.debug("Customer selected to pay outstanding amount");
-//			System.out.println("Paid Outstanding");
 
-		} else if (paymentOption.equals("paymentAmount")) {
-			// make sure that payMent amount is not more than the current balance
-			if (paymentAmount > cardToBePaidOff.getBalance()) {
-				System.out.println("Payment amount is more than the current balance");
-				return ("pay-creditcard-balance");
-			} else {
-//				billService.recordCustomPayment(bill, amountPayable);
-				amountPayable = paymentAmount;
-				// need to record it in bill service
-			}
 		} else {
-			// Customer is paying off all the outstanding balance on the card.
-			// Therefore any outstanding installment payments are also being paid and should
-			// be removed from the card.
-			installmentService.deleteAllInstallmentPayments(cardToBePaidOff);
-			billService.recordCreditBalancePayment(bill);
+			System.out.println("Pay current balance");
 			amountPayable = cardToBePaidOff.getBalance();
+			System.out.println(amountPayable);
 			logger.debug("Customer selected to pay current balance");
-//			System.out.println("Paid Balance");
-
 		}
-
+		System.out.println(fromAccount.getAccountBalance());
 		// withdraw from their debit account the amount payable
+		if ( amountPayable <= 0 ) {
+			logger.info("Invalid payment amount for credit card");
+			return "redirect:/creditcard-dashboard";
+		}
+		System.out.println(fromAccount.getAccountBalance());
+		if ( fromAccount.getAccountBalance() < amountPayable ) {
+			logger.info("Selected account does not have enough balance to pay the card");
+			return "redirect:/creditcard-dashboard";
+		}
+		System.out.println(fromAccount.getAccountBalance());
 		if (amountPayable > 0 && fromAccount.getAccountBalance() > amountPayable) {
 			// do withdrawal
+			System.out.println("Trying to make transaction");
 			debitAccountService.changeAccountBalance(fromAccount, amountPayable, false);
-//			System.out.println("amountPayable: " + amountPayable);
-
+			System.out.println("amountPayable: " + amountPayable);
+			
 			// Debit account transaction
 			DebitAccountTransaction newTransaction = new DebitAccountTransaction();
 			newTransaction.setDebitAccountTransactionAmount(Double.parseDouble(String.format("%.2f", amountPayable)));
@@ -396,12 +415,22 @@ public class CreditCardController {
 
 //			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
 			logger.debug("Withdrawn $" + amountPayable + "from debit account to pay credit card");
-			return "redirect:/creditcard-dashboard";
-		} else {
-			logger.debug("Amount payable is equal to zero, or account balance is too low");
-//			System.out.println("No amount to be paid");
-			return ("pay-creditcard-balance");
 		}
+		
+		if (paymentOption.equals("minimum")) {
+			billService.recordMinimumAmountPayment(bill);
+		} else if (paymentOption.equals("outstanding")) {
+			billService.recordOutstandingAmountPayment(bill);
+
+		} else {
+			// Customer is paying off all the outstanding balance on the card.
+			// Therefore any outstanding installment payments are also being paid and should
+			// be removed from the card.
+			installmentService.deleteAllInstallmentPayments(cardToBePaidOff);
+			billService.recordCreditBalancePayment(bill);
+		}
+		
+		return "redirect:/creditcard-dashboard";
 
 	}
 
