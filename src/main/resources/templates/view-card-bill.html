@@ -66,9 +66,9 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td th:text="${bill.totalAmountDue}"></td>
-					<td th:text="${bill.outstandingAmount}"></td>
-					<td th:text="${bill.minimumAmountDue}"></td>
+					<td th:text="${bill.totalAmountDue}" class="price-element"></td>
+					<td th:text="${bill.outstandingAmount}" class="price-element"></td>
+					<td th:text="${bill.minimumAmountDue}" class="price-element"></td>
 					<td th:if="${bill.paid}">No</td>
 					<td th:if="${!bill.paid}">Yes</td>
 				</tr>
@@ -87,12 +87,22 @@
 			<tbody>
 					<tr th:each="transaction : ${transactions}">
 					<td th:text="${transaction.getFormattedTransactionDate()}"></td>
-					<td th:text="${transaction.transactionAmount}" class="price-element"></td>
+					<td>
+						<span th:if="${transaction.merchant != null && transaction.merchant.merchantCode == '1'}">+</span>
+						<span th:unless="${transaction.merchant != null && transaction.merchant.merchantCode == '1'}">–</span>
+						<span th:text="${transaction.transactionAmount}" class="price-element"></span>
+					</td>
 					<td th:text="${transaction.description}"></td>
 				</tr>
 				<tr>
 					<td>--/--/----</td>
-					<td th:text="${bill.previousBillOutstandingAmount}"></td>
+					<!-- <td th:text="${bill.previousBillOutstandingAmount}"></td> -->
+					<td>
+						
+						<span th:if="${bill.previousBillOutstandingAmount!=0}">–</span>
+						<span th:text="${bill.previousBillOutstandingAmount}" class="price-element"></span>
+					</td>
+					
 					<td>Balance outstanding at the start of billing cycle</td>
 				</tr>
 			</tbody>

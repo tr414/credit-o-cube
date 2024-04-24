@@ -6,7 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Credit Card Transaction History</title>
 <link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/creditcard-dashboard.css">
+<link rel="stylesheet" href="../css/card-transactions.css">
+
+
 
 </head>
 <body>
@@ -55,42 +57,31 @@
 		<input type="date" name="dateTo" placeholder="Date From">
 		<button type="submit">Search</button>
 	</form> 
-<!-- 	Filter By Month: -->
-<!-- 	  <form th:action="find-by-month" method="POST">  -->
-<!-- 		  <input type="hidden" th:value="${cardId}" name="cardId"> -->
-<!-- 		  <select id="month-filter" name="month">   -->
-<!-- 		  <option value="">Select Month</option> -->
-<!-- 	      <option value="1">January</option> -->
-<!-- 	      <option value="2">February</option> -->
-<!-- 	      <option value="3">March</option> -->
-<!-- 	      <option value="4">April</option> -->
-<!-- 	      <option value="5">May</option> -->
-<!-- 	      <option value="6">June</option> -->
-<!-- 	      <option value="7">July</option> -->
-<!-- 	      <option value="8">August</option> -->
-<!-- 	      <option value="9">September</option> -->
-<!-- 	      <option value="10">October</option> -->
-<!-- 	      <option value="11">November</option> -->
-<!-- 	      <option value="12">December</option> -->
-<!-- 	    </select> -->
-<!-- 	    <button type="submit">Filter</button> -->
-<!--   	</form> -->
+
 
   </div>
 	<div>
 		<table id="myTable">
 			<thead>
 				<tr>
-					<th>Transaction Date</th>
-					<th>Amount<span class="sort-icon"
-						onclick="sortTable(0)">▼</span></th>
-					<th>Description</th>
+					<th>Transaction Date <span class="sort-icon"
+							onclick="sortTable(1)">▼</span></th>
+					<th>Amount <span class="sort-icon"
+						onclick="sortTable(1)">▼</span></th>
+					<th>Description <span class="sort-icon"
+							onclick="sortTable(0)">▼</span></th>
 				</tr>
 			</thead>
 			<tbody>
 					<tr th:each="transaction : ${transactions}">
 					<td th:text="${transaction.getFormattedTransactionDate()}"></td>
-					<td th:text="${transaction.transactionAmount}" class="price-element"></td>
+					<td>
+						<span th:if="${transaction.merchant != null && transaction.merchant.merchantCode == '1'}">+</span>
+						<span th:unless="${transaction.merchant != null && transaction.merchant.merchantCode == '1'}">–</span>
+						<span th:text="${transaction.transactionAmount}" class="price-element"></span>
+					</td>
+					
+					
 					<td th:text="${transaction.description}"></td>
 				</tr>
 			</tbody>
@@ -98,12 +89,8 @@
 	</div>
 	</div>
 	
-
-
-
 	<!-- JavaScript for Sidebar Toggle -->
-	<script src="../js/sidebar.js"></script>
+	<script src="../js/sidebar.js" defer></script>
 	<script src="../js/sort-tables.js" defer></script>
-	
 </body>
 </html>

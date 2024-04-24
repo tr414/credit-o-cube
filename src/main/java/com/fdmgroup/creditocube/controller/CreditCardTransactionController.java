@@ -27,11 +27,11 @@ import com.fdmgroup.creditocube.model.Customer;
 import com.fdmgroup.creditocube.model.ForeignCurrencyCreditCardTransaction;
 import com.fdmgroup.creditocube.model.Merchant;
 import com.fdmgroup.creditocube.model.Rewards;
-import com.fdmgroup.creditocube.repository.MerchantRepository;
 import com.fdmgroup.creditocube.repository.RewardsRepository;
 import com.fdmgroup.creditocube.service.CreditCardService;
 import com.fdmgroup.creditocube.service.CreditCardTransactionService;
 import com.fdmgroup.creditocube.service.CustomerService;
+import com.fdmgroup.creditocube.service.MerchantService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -52,7 +52,7 @@ public class CreditCardTransactionController {
 	CustomerService customerService;
 
 	@Autowired
-	MerchantRepository merchantRepo;
+	MerchantService merchantService;
 
 	@Autowired
 	RewardsRepository rewardsRepo;
@@ -76,7 +76,7 @@ public class CreditCardTransactionController {
 		if (stringCardId != null) {
 			cardId = new BigDecimal(request.getParameter("cardId"));
 		} else {
-			return "card-transactions";
+			return "redirect:creditcard-dashboard";
 		}
 
 		// amended code above to return optional rather than null - tim
@@ -110,7 +110,7 @@ public class CreditCardTransactionController {
 //		List<CreditCard> customerCards = cardService.findAllCardsForCustomer(customer);
 		List<CreditCard> customerCards = cardService.findAllActiveCreditCardsForCustomer(customer);
 
-		List<Merchant> merchantCodes = merchantRepo.findAll();
+		List<Merchant> merchantCodes = merchantService.findAllMerchants();
 
 		model.addAttribute("merchants", merchantCodes);
 		model.addAttribute("cards", customerCards);
@@ -134,7 +134,7 @@ public class CreditCardTransactionController {
 
 		String merchantCode = request.getParameter("merchantCode");
 		Merchant merchant;
-		Optional<Merchant> merchantOptional = merchantRepo.findByMerchantCode(merchantCode);
+		Optional<Merchant> merchantOptional = merchantService.findMerchantByMerchantCode(merchantCode);
 
 		boolean installmentPayment = (request.getParameter("installment") != null);
 		System.out.println(installmentPayment);
