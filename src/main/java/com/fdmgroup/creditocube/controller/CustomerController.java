@@ -276,6 +276,8 @@ public class CustomerController {
 		} else {
 //			customerService.updateCustomerDetails(username, firstName, lastName, email, phoneNumber, nric, address,
 //					salary, gender, dob);
+			// persist the password change in the database
+			customerService.updatePassword(customer, password);
 			return "redirect:/login";
 		}
 

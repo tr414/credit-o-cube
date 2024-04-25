@@ -1,6 +1,7 @@
 package com.fdmgroup.creditocube.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -118,6 +119,12 @@ public class Bill {
 
 	public void setPreviousBillOutstandingAmount(double previousBillOutstandingAmount) {
 		this.previousBillOutstandingAmount = previousBillOutstandingAmount;
+	}
+	
+	public String getFormattedDate(LocalDateTime dateTime) {
+		String date = dateTime.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm"));	//ofLocalizedDateTime( new FormatStyle(dateStyle, timeStyle)));
+//				+ transactionDate.format(DateTimeFormatter.ISO_TIME);
+		return date;
 	}
 	
 	
