@@ -38,7 +38,8 @@
 	<div>
 		<table>
 			<thead>
-			<h1>Viewing Card Bill</h1>
+			<h1 class="page-title">Viewing Card Bill for: <!-- <span th:text="${cardName}"></span> <span th:text="${cardNumber}"></span> --> </h1>
+			<h2 class="bill-info">Bill Status</h2>
 				<tr>
 					<td>Total Bill Amount</td>
 					<td>Outstanding Amount Due</td>
@@ -47,6 +48,7 @@
 				</tr>
 			</thead>
 			<tbody>
+			
 				<tr>
 					<td th:text="${bill.totalAmountDue}" class="price-element"></td>
 					<td th:text="${bill.outstandingAmount}" class="price-element"></td>
@@ -60,6 +62,7 @@
 	<div>
 		<table>
 			<thead>
+			<h2 class="bill-info">Bill Details</h2>
 				<tr>
 					<th>Transaction Date</th>
 					<th>Amount</th>
