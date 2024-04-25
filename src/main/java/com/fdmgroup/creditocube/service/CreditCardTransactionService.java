@@ -51,7 +51,7 @@ public class CreditCardTransactionService {
 	}
 
 	public List<CreditCardTransaction> findAllCreditCardTransactions(CreditCard card) {
-		return repo.findByTransactionCardIs(card);
+		return repo.findByTransactionCardIsOrderByTransactionDateDesc(card);
 	}
 
 	public List<CreditCardTransaction> findAllCreditCardTransactionsForCustomer(Customer customer) {
@@ -64,7 +64,7 @@ public class CreditCardTransactionService {
 
 		Customer targetCustomer = optionalCustomer.get();
 		for (CreditCard card : customer.getCreditCards()) {
-			transactionList.addAll(repo.findByTransactionCardIs(card));
+			transactionList.addAll(repo.findByTransactionCardIsOrderByTransactionDateDesc(card));
 		}
 
 		Comparator<CreditCardTransaction> latestFirst = (transaction1, transaction2) -> {
