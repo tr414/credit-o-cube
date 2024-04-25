@@ -423,18 +423,9 @@ public class DebitAccountController {
 			@RequestParam("dateTo") LocalDate dateToString,
 			@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
 			HttpServletRequest request) {
+		System.out.println("Entered findByDateDebut method body");
 		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
-//		System.out.println(selectedAccountId);
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
-
-		// default time zone
-		ZoneId defaultZoneId = ZoneId.systemDefault();
-
-		// creating the instance of LocalDate using the day, month, year info
-
-		// local date + atStartOfDay() + default time zone + toInstant() = Date
-		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
-		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
 
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account not found in database, redirecting to account-dashboard");
@@ -443,6 +434,10 @@ public class DebitAccountController {
 
 		DebitAccount sessionAccount = optionalAccount.get();
 		logger.debug("Debit Account exists, details retrieved from database");
+		// default time zone
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
+		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
 
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
 				.findByTransactionDate(dateFrom, dateTo, sessionAccount, sessionAccount.getAccountNumber());
