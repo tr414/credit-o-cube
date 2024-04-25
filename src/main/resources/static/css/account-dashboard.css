@@ -292,3 +292,47 @@ tbody tr:hover {
 .transfer-form-section .debit-action-buttons {
   font-size: 16px;
 }
+
+/* Titles styling for clarity and emphasis */
+h1, h2 {
+    color: #333; /* Brand color for emphasis */
+    margin: 10px 0; /* Space around titles */
+    text-align: center; /* Center-aligns titles */
+}
+
+/* Styling for forms and form elements */
+.form-group {
+    margin-bottom: 20px; /* Spacing between form groups */
+    
+}
+
+.form-group form {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f2f2f2; /* Light grey background */
+    border-radius: 5px; /* Rounded corners for the form container */
+}
+
+.form-group input[type="date"],
+.form-group select {
+    padding: 8px;
+    margin: 0 10px; /* Spacing for form elements */
+    border: 1px solid #ccc; /* Subtle border */
+    border-radius: 4px; /* Rounded corners for inputs */
+}
+
+.form-group button {
+    padding: 10px 20px;
+    background-color: #0051ba; /* Brand color for button */
+    color: white;
+    border: none;
+    border-radius: 5px; /* Rounded corners for buttons */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s;
+}
+
+.form-group button:hover {
+    background-color: #003885; /* Darker shade on hover for better interaction */
+}

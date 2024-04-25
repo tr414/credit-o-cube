@@ -334,7 +334,7 @@ public class DebitAccountController {
 
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
 				.findTransactionsOfAccount(sessionAccount);
-		session.setAttribute("selectedAccount", sessionAccount);
+		session.setAttribute("account", sessionAccount);
 		session.setAttribute("accountTransactions", accountTransactions);
 //		System.out.println(sessionAccount.getAccountName());
 		model.addAttribute("account", sessionAccount);
@@ -445,7 +445,7 @@ public class DebitAccountController {
 		logger.debug("Debit Account exists, details retrieved from database");
 
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
-				.findByTransactionDate(dateFrom, dateTo, sessionAccount);
+				.findByTransactionDate(dateFrom, dateTo, sessionAccount, sessionAccount.getAccountNumber());
 		model.addAttribute("accountTransactions", accountTransactions);
 		session.setAttribute("selectedAccount", sessionAccount);
 		session.setAttribute("accountTransactions", accountTransactions);

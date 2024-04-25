@@ -21,7 +21,7 @@
 	<div class="main-container">
 		<div class="mandatory-and-back">
 			<div class="back-to-login">
-				<a href="login">Login</a>
+				<a href="login">&#8592; Back to Login</a>
 			</div>
 			<div class="mandatory-statement">All fields are mandatory.</div>
 		</div>
@@ -31,7 +31,6 @@
 					<div class="form-group">
 						<label for="firstName">First Name</label> <input type="text"
 							id="firstName" name="firstName" required
-							placeholder="Enter first name"
 							th:value="${firstNameError} ? '' : ${firstName}"> <span
 							th:if="${firstNameError}" th:text="${firstNameError}"
 							class="error-message"
@@ -40,7 +39,6 @@
 					<div class="form-group">
 						<label for="lastName">Last Name</label> <input type="text"
 							id="lastName" name="lastName" required
-							placeholder="Enter last name"
 							th:value="${lastNameError} ? '' : ${lastName}"> <span
 							th:if="${lastNameError}" th:text="${lastNameError}"
 							class="error-message"
@@ -51,17 +49,18 @@
 					<div class="form-group">
 						<label for="username">Username</label> <input type="text"
 							id="username" name="username" required
-							placeholder="At least 6 characters, only alphanumerics, '_' and '-'"
-							th:value="${usernameError} ? '' : ${username}"> <span
-							th:if="${usernameError}" th:text="${usernameError}"
+							th:value="${usernameError} ? '' : ${username}">
+						<div class="alert-content">At least 6 characters, with
+							alphanumerics, underscores and dashes only</div>
+						<span th:if="${usernameError}" th:text="${usernameError}"
 							class="error-message"
 							th:style="${usernameError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
 						<label for="nric">NRIC</label> <input type="text" id="nric"
-							name="nric" required placeholder="Enter valid Singapore NRIC"
-							th:value="${nricError} ? '' : ${nric}"> <span
-							th:if="${nricError}" th:text="${nricError}" class="error-message"
+							name="nric" required th:value="${nricError} ? '' : ${nric}">
+						<span th:if="${nricError}" th:text="${nricError}"
+							class="error-message"
 							th:style="${nricError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 					<div class="form-group">
@@ -76,8 +75,9 @@
 				<div class="form-row">
 					<div class="form-group">
 						<label for="password">Password</label> <input type="password"
-							id="password" name="password" required
-							placeholder="At least 8 characters, 1 uppercase, 1 lowercase, 1 digit and 1 special character">
+							id="password" name="password" required>
+						<div class="alert-content">At least 8 characters, 1
+							uppercase, 1 lowercase, 1 digit and 1 special character</div>
 						<span th:if="${passwordError}" th:text="${passwordError}"
 							class="error-message"
 							th:style="${passwordError} ? 'display: block;' : 'display: none;'"></span>
@@ -85,9 +85,8 @@
 					<div class="form-group">
 						<label for="confirm-password">Confirm Password</label> <input
 							type="password" id="confirm-password" name="confirm-password"
-							required placeholder="Enter password again"> <span
-							th:if="${confirmPasswordError}" th:text="${confirmPasswordError}"
-							class="error-message"
+							required> <span th:if="${confirmPasswordError}"
+							th:text="${confirmPasswordError}" class="error-message"
 							th:style="${confirmPasswordError} ? 'display: block;' : 'display: none;'"></span>
 					</div>
 				</div>

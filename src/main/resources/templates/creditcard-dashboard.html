@@ -128,6 +128,7 @@
 		</div>
 
 
+
 		<div>
 			<table id="myTable">
 				<thead>
@@ -142,7 +143,7 @@
 								class="sort-icon"
 								onclick="sortTable(1)">▼</span>
 						</th>
-						<th>Credit Limit</th>
+						<th>Available Credit</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -162,12 +163,14 @@
 								style="width: 200px; height: auto;" />
 
 						</td>
+
 						<td
 							th:text="${card.balance}"
 							class="price-element"></td>
-						<td
-							th:text="${card.cardLimit}"
+						<td 
+							th:text="${card.cardLimit - card.balance}" 
 							class="price-element"></td>
+
 
 						<!-- from here -->
 						<td>
@@ -246,10 +249,10 @@
 										class="credit-action-buttons">Close Credit Card</button>
 								</form>
 								<!-- Generate Bill button -->
-								<!--          <form th:action="@{/generate-bill}" method="POST" class="form-button"> -->
-								<!--          <input type="hidden" th:value="${card.cardId}" name="cardId"> -->
-								<!--          <button type="submit" class="non-credit-action-buttons">Generate Bill</button> -->
-								<!--          </form> -->
+								         <form th:action="@{/generate-bill}" method="POST" class="form-button">
+								         <input type="hidden" th:value="${card.cardId}" name="cardId">
+								         <button type="submit" class="non-credit-action-buttons">Generate Bill</button>
+								         </form>
 								<!--               Simulate Late Payment button -->
 								<!--                <form th:action="@{/simulate-late-payment}" method="POST" class="form-button"> -->
 								<!--               	<input type="hidden" th:value="${card.cardId}" name="cardId"> -->
@@ -268,6 +271,7 @@
 			</table>
 		</div>
 	</div>
+
 
 
 	<script src="../js/sidebar.js">
