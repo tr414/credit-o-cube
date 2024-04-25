@@ -242,7 +242,8 @@ public class DebitAccountController {
 	 */
 	@PostMapping("/update-account-balance")
 	public String updateAccountBalance(@SessionAttribute Customer customer, @RequestParam long accountId,
-			@RequestParam double amount, @RequestParam(value = "transaction") String transactionType) {
+			@RequestParam double amount, @RequestParam(value = "transaction") String transactionType,
+			RedirectAttributes redirectAttrs) {
 
 		boolean isDeposit = transactionType.equals("deposit");
 
@@ -270,7 +271,8 @@ public class DebitAccountController {
 		logger.debug("Debit Account exists, details retrieved from database");
 
 		if (amount <= 0) {
-			return "redirect:/account-dashboard";
+			redirectAttrs.addFlashAttribute("invalidAmount", "Please enter a valid amount");
+			return "redirect:/deposit-withdraw";
 		}
 
 		// Call debitAccountService to deposit into / withdraw from debit account
@@ -421,8 +423,8 @@ public class DebitAccountController {
 			@RequestParam(name = "dateTo", required = false) LocalDate dateToString,
 			@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
 			HttpServletRequest request) {
+		System.out.println("Entered findByDateDebut method body");
 		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
-//		System.out.println(selectedAccountId);
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 		
 		// Validation to do for the input dates
@@ -441,16 +443,6 @@ public class DebitAccountController {
 			dateFromString = dateToString;
 		}
 		
-		
-		// default time zone
-		ZoneId defaultZoneId = ZoneId.systemDefault();
-
-		// creating the instance of LocalDate using the day, month, year info
-
-		// local date + atStartOfDay() + default time zone + toInstant() = Date
-		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
-		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
-
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account not found in database, redirecting to account-dashboard");
 			return "redirect:/view-transaction-history";
@@ -458,6 +450,10 @@ public class DebitAccountController {
 
 		DebitAccount sessionAccount = optionalAccount.get();
 		logger.debug("Debit Account exists, details retrieved from database");
+		// default time zone
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
+		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
 
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
 				.findByTransactionDate(dateFrom, dateTo, sessionAccount, sessionAccount.getAccountNumber());

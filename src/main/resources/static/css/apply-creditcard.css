@@ -182,25 +182,24 @@ label {
 	padding: 10px 15px;
 }
 
-/* /* Error and success message styling */
-*
-/
-/* div[th:if] { */
-/*     padding: 10px; */
-/*     margin-top: 10px; */
-/*     border-radius: 5px; */
-/*     font-size: 16px; */
-/* } */
-
-/* div[th:if="${error}"] { */
-/*     background-color: #ffdddd; Light red for error background */
-/*     border: 1px solid #ff0000; Red border for errors */
-/* } */
-
-/* div[th:if="${success}"] {
-/*     background-color: #ddffdd; Light green for success background */
-/*     border: 1px solid #00b300; Green border for successes */
-/
-*
- 
+/* Input field styling for credit limit */
+#creditCardLimit {
+    width: 100%; /* Full width of its container */
+    padding: 10px; /* Adequate padding for a larger click/tap area */
+    margin-top: 5px; /* Spacing above the input field */
+    margin-bottom: 20px; /* Spacing below the input field */
+    border: 1px solid #ccc; /* Subtle border color */
+    border-radius: 5px; /* Rounded corners for the input */
+    font-size: 16px; /* Larger font size for better visibility */
+    box-sizing: border-box; /* Ensures padding doesn't affect the overall width */
+    display: block; /* Ensures it takes up the full container width */
 }
+
+/* Label styling for the credit limit */
+label[for="creditCardLimit"] {
+    display: block; /* Ensures the label takes up its own line */
+    margin-top: 20px; /* Space above the label */
+    font-size: 18px; /* Font size to match other labels */
+    color: #333; /* Color for consistency with other text */
+}
+ 
