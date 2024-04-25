@@ -120,97 +120,156 @@
 			th:text="${cardStillHasBalance}"
 			class="error-message"
 			th:style="${cardStillHasBalance} ? 'display: block;' : 'display: none;'"></span>
+		
 		<div
 			th:if="${success}"
 			style="color: green;">
 			<p th:text="${success}"></p>
 		</div>
 
-  
-    <div>
-      <table id="myTable">
-        <thead>
-          <tr>
-            
-           
-            <th>Credit Card Number</th>
-            
-            <th>Card Balance<span class="sort-icon"
-				onclick="sortTable(1)">▼</span></th>
-            <th>Credit Limit</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="card : ${credit_cards}">
-            
-            <!-- <td th:text="${card.getFormattedCreditCardNumber()} + ' -- ' + ${card.cardType.name}"></td> -->
-            
-           
-            
+
+		<div>
+			<table id="myTable">
+				<thead>
+					<tr>
+
+
+						<th>Credit Card Number</th>
+
+						<th>
+							Card Balance
+							<span
+								class="sort-icon"
+								onclick="sortTable(1)">▼</span>
+						</th>
+						<th>Credit Limit</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="card : ${credit_cards}">
+
+						<!-- <td th:text="${card.getFormattedCreditCardNumber()} + ' -- ' + ${card.cardType.name}"></td> -->
+
+
+
 						<td>
 							<p th:text="${card.getFormattedCreditCardNumber()}"></p>
-							<p th:text="${card.cardType.name}"></p> 
-							<img th:src="@{'/img/' + ${card.cardType.imageUrl}}" alt="Card Image"
-							style="width: 200px; height: auto;" />
-							
+							<p th:text="${card.cardType.name}"></p>
+							<img
+								th:src="@{'/img/' + ${card.cardType.imageUrl}}"
+								alt="Card Image"
+								style="width: 200px; height: auto;" />
+
 						</td>
-						<td th:text="${card.balance}" class="price-element"></td>
-            <td th:text="${card.cardLimit}" class="price-element"></td>
-            
-            <!-- from here -->
-            <td>
-  			<button class="credit-action-buttons action-btn" data-card-id="${card.cardId}">Click to Expand</button>
-  			<div class="actions-dropdown" id="actions-card-${card.cardId}" style="display: none;">
-    		<!-- Repeat the following structure for each action -->
-    		<!-- View Transaction History button -->
-              <form th:action="@{/card-transactions}" method="POST" class="form-button">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">View Transaction History</button>
-              </form>
-              <!-- View Card Bill button -->
-              <form th:action="@{/view-card-bill}" method="POST" class="form-button">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">View Card Bill</button>
-              </form>
-              <!-- Pay Card Bill/Balance button -->
-               <form th:action="@{/open-card-payment}" method="POST" class="form-button">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="credit-action-buttons">Pay Card Bill/Balance</button>
-              </form>
-              <!-- Update Credit Limit button -->
-              <form th:action="@{/update-credit-limit}" method="get" class="form-button">
-              <input type="hidden" th:value="${card.cardId}" name="cardId">
-              <button type="submit" class="credit-action-buttons">Update Credit Limit</button>
-              </form>
-              <!-- Close Credit Card button -->
-              <form th:action="@{/close-credit-card}" method="POST" class="form-button">
-              <input type="hidden" th:value="${card.cardId}" name="cardId">
-              <button type="submit" class="credit-action-buttons">Close Credit Card</button>
-              </form>
-<!--              Generate Bill button -->
-         <form th:action="@{/generate-bill}" method="POST" class="form-button">
-         <input type="hidden" th:value="${card.cardId}" name="cardId">
-         <button type="submit" class="non-credit-action-buttons">Generate Bill</button>
-         </form>
-<!--               Simulate Late Payment button -->
-               <form th:action="@{/simulate-late-payment}" method="POST" class="form-button">
-              	<input type="hidden" th:value="${card.cardId}" name="cardId">
-                <button type="submit" class="non-credit-action-buttons">Simulate Late Payment</button>
-              </form>
-			</div>
-			</td>
-			
-  
-            
-			
-			
-            
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+
+						<td
+							th:text="${card.balance}"
+							class="price-element"></td>
+						<td
+							th:text="${card.cardLimit}"
+							class="price-element"></td>
+
+						<!-- from here -->
+						<td>
+							<button
+								class="credit-action-buttons action-btn"
+								data-card-id="${card.cardId}">Click to Expand</button>
+							<div
+								class="actions-dropdown"
+								id="actions-card-${card.cardId}"
+								style="display: none;">
+								<!-- Repeat the following structure for each action -->
+								<!-- View Transaction History button -->
+								<form
+									th:action="@{/card-transactions}"
+									method="POST"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">View Transaction
+										History</button>
+								</form>
+								<!-- View Card Bill button -->
+								<form
+									th:action="@{/view-card-bill}"
+									method="POST"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">View Card Bill</button>
+								</form>
+								<!-- Pay Card Bill/Balance button -->
+								<form
+									th:action="@{/open-card-payment}"
+									method="POST"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">Pay Card Bill/Balance</button>
+								</form>
+								<!-- Update Credit Limit button -->
+								<form
+									th:action="@{/update-credit-limit}"
+									method="get"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">Update Credit Limit</button>
+								</form>
+								<!-- Close Credit Card button -->
+								<form
+									th:action="@{/close-credit-card}"
+									method="POST"
+									class="form-button">
+									<input
+										type="hidden"
+										th:value="${card.cardId}"
+										name="cardId">
+									<button
+										type="submit"
+										class="credit-action-buttons">Close Credit Card</button>
+								</form>
+								<!-- Generate Bill button -->
+								<!--          <form th:action="@{/generate-bill}" method="POST" class="form-button"> -->
+								<!--          <input type="hidden" th:value="${card.cardId}" name="cardId"> -->
+								<!--          <button type="submit" class="non-credit-action-buttons">Generate Bill</button> -->
+								<!--          </form> -->
+								<!--               Simulate Late Payment button -->
+								<!--                <form th:action="@{/simulate-late-payment}" method="POST" class="form-button"> -->
+								<!--               	<input type="hidden" th:value="${card.cardId}" name="cardId"> -->
+								<!--                 <button type="submit" class="non-credit-action-buttons">Simulate Late Payment</button> -->
+								<!--               </form> -->
+							</div>
+						</td>
+
+
+
+
+
+
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
 
 
 	<script src="../js/sidebar.js">
@@ -221,7 +280,9 @@
 		src="../js/sort-tables.js"
 		defer></script>
 
-<script src="../js/creditcard-dashboard.js" defer></script>
+	<script
+		src="../js/creditcard-dashboard.js"
+		defer></script>
 
 </body>
 
