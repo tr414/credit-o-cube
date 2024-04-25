@@ -3,6 +3,8 @@ package com.fdmgroup.creditocube.controller;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -423,7 +425,6 @@ public class DebitAccountController {
 			@RequestParam("dateTo") LocalDate dateToString,
 			@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
 			HttpServletRequest request) {
-		System.out.println("Entered findByDateDebut method body");
 		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 
@@ -437,7 +438,14 @@ public class DebitAccountController {
 		// default time zone
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
-		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
+		System.out.println("dateFrom: " + dateFrom);
+
+		LocalDateTime endOfDay = dateToString.atTime(LocalTime.MAX);
+
+		Date dateTo = Date.from(endOfDay.atZone(defaultZoneId).toInstant());
+		System.out.println("dateTo: " + dateTo);
+
+//		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
 
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
 				.findByTransactionDate(dateFrom, dateTo, sessionAccount, sessionAccount.getAccountNumber());
