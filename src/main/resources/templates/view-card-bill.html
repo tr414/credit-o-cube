@@ -95,7 +95,8 @@
 					<td th:text="${transaction.description}"></td>
 				</tr>
 				<tr>
-					<td>--/--/----</td>
+					<td th:text="${bill.getFormattedDate(bill.previousBillIssueTime)}"></td>
+					<!-- <td>--/--/----</td> -->
 					<!-- <td th:text="${bill.previousBillOutstandingAmount}"></td> -->
 					<td>
 						
