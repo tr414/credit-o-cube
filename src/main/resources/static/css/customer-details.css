@@ -16,19 +16,21 @@ body {
 
 /* new */
 .customer-details-background {
-    background-image: url('../img/tech1.jpg'); /* Use the same image as your login page */
-    background-size: cover;
-    background-position: center;
-    filter: blur(5px); /* Adjust the px value to increase or decrease the blur */
-    height: 100%;
-    position: fixed; /* Ensure it covers the whole page even when scrolling */
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: -1; /* Ensure it stays behind the content */
+	background-image: url('../img/tech1.jpg');
+	/* Use the same image as your login page */
+	background-size: cover;
+	background-position: center;
+	filter: blur(5px);
+	/* Adjust the px value to increase or decrease the blur */
+	height: 100%;
+	position: fixed;
+	/* Ensure it covers the whole page even when scrolling */
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: -1; /* Ensure it stays behind the content */
 }
 /* new */
-
 .registration-container {
 	padding: 20px;
 }
@@ -56,7 +58,6 @@ body {
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	margin-bottom: 25px;
 }
 
 .gender-group {
@@ -120,4 +121,10 @@ body {
 	color: #495057; /* Slightly darker text color for contrast */
 	cursor: not-allowed;
 	/* The cursor will indicate the field is not editable */
+}
+
+.alert-content {
+	font-size: 12px;
+	color: rgba(0, 0, 0, 0.7);
+	margin-top: 5px;
 }
