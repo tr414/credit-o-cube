@@ -94,17 +94,20 @@
 					value="Transfer Money">
 			</form>
 		</div>
+		
+		<h1>Debit Account Transactions</h1>
 
 		<div class="account-selection noPrint">
+		<h2>Filter by Date: </h2>
 			<form
 				id ="filterDateForm"
 				th:action="find-by-date-debit"
-				method="POST">
+				method="POST">Start Date:
 				<input
 					type="hidden"
 					th:value="${session.account.accountId}"
 					name="selectedAccountId">
-				Filter Transactions: Start Date:
+				
 				<input
 					id="dateFrom"
 					type="date"
@@ -124,6 +127,7 @@
 					class="debit-action-buttons">Filter</button>
 			</form>
 
+			<h2>Filter by Transaction Type</h2>
 			<form
 				id="filterTypeForm" 
 				th:action="find-by-transaction-type"
@@ -132,7 +136,7 @@
 					type="hidden"
 					th:value="${session.account.accountId}"
 					name="selectedAccountId">
-				Filter Transactions: <select name="transactionType">
+				<select name="transactionType">
 					<option value="deposit">Deposit</option>
 					<option value="withdraw">Withdraw</option>
 					<option value="transfer">Transfer</option>

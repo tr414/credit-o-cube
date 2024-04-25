@@ -2,7 +2,7 @@
 .content-area {
     margin-top: 75px; /* Adequate spacing from the fixed header */
     padding: 20px; /* Padding around the content */
-    background-color: #ffffff; /* White background for clarity */
+    background-color: #f4f7fc; 
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
 }
 
@@ -24,7 +24,7 @@ h1, h2 {
     align-items: baseline;
     justify-content: center;
     padding: 10px;
-    background-color: #f2f2f2; /* Light grey background */
+    background-color: #f4f7fc; /* Light grey background */
     border-radius: 5px; /* Rounded corners for the form container */
 }
 
