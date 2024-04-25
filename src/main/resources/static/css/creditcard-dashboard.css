@@ -23,74 +23,52 @@ td {
 
 /* Add spacing between action buttons in the table */
 td form {
-  margin-bottom: 5px; /* Adjust the space between the forms as needed */
+	margin-bottom: 5px; /* Adjust the space between the forms as needed */
 }
 
 td form:last-child {
-  margin-bottom: 0; /* No space after the last button to align with table row */
+	margin-bottom: 0;
+	/* No space after the last button to align with table row */
 }
-
 
 tbody tr:hover {
 	background-color: #e1f0ff; /* Light blue for hover effect */
 }
 
-.actions-container {
-	display: flex;
-	justify-content: center;
-	gap: 50px; /* This will create 10px space between each button */
-	margin: 50px auto;
-	/* Other styles */
-}
-
-.actions-container .credit-action-buttons {
-	background-color: white;
-	color: #0051ba;
-	border: #0051ba solid 1px;
-}
-
-.actions-container .credit-action-buttons:hover {
-	background-color: #0051ba;
-	/* Change background to the same color as the text */
-	color: white; /* Change text color to white for contrast */
-	border-color: #003585;
-	/* Slightly darker shade of the original blue for the border */
-}
-
 /* This will space out the buttons inside each td */
 .button-container {
-    display: flex; /* Use flexbox to layout the buttons */
-    flex-wrap: wrap; /* Allow the items to wrap as needed */
-    justify-content: space-around; /* Space out buttons evenly */
-    align-items: center; /* Align items vertically */
+	display: flex; /* Use flexbox to layout the buttons */
+	flex-wrap: wrap; /* Allow the items to wrap as needed */
+	justify-content: space-around; /* Space out buttons evenly */
+	align-items: center; /* Align items vertically */
 }
 
 /* Style for the container of each row of buttons */
 .actions-row {
-/*     display: flex; Use flexbox to align buttons in a row */
-/*     justify-content: space-evenly; Space buttons evenly */
-/*     margin-bottom: 5px; Space between rows */
-    max-width: 150px; /* Match this width to the column width you desire */
-    margin: 0 auto; /* This will keep the dropdown or modal centered under the button */
+	/*     display: flex; Use flexbox to align buttons in a row */
+	/*     justify-content: space-evenly; Space buttons evenly */
+	/*     margin-bottom: 5px; Space between rows */
+	max-width: 150px; /* Match this width to the column width you desire */
+	margin: 0 auto;
+	/* This will keep the dropdown or modal centered under the button */
 }
 
 /* Special style for the single button in the last row to center it */
 .form-button-single {
-    margin: 0 auto; /* Auto margins center the button */
+	margin: 0 auto; /* Auto margins center the button */
 }
 
 /* You might need to adjust the width of the 'Actions' column */
-#myTable th:last-child, 
-#myTable td:last-child {
-    width: 150px; /* Adjust the width as needed to make the column narrower */
+#myTable th:last-child, #myTable td:last-child {
+	width: 150px;
+	/* Adjust the width as needed to make the column narrower */
 }
 
 /* Style each form as a button */
 .form-button {
-    margin: 0 2px; /* Space between buttons, adjust as needed */
-    flex: 1; /* Each button grows to fill the space */
+	margin: 0 2px; /* Space between buttons, adjust as needed */
+	flex: 1; /* Each button grows to fill the space */
 }
-
 
 .credit-action-buttons {
 	background-color: #0051ba; /* Blue background to match the theme */
@@ -180,38 +158,63 @@ h2 {
 }
 
 form.payment-form fieldset.form-section legend {
-
-    font-weight: bold; /* Bolds the legend text */
-    font-size: 20px; /* Adjust the font size as desired */
-    padding: 0 5px; /* Optional: Adds padding around the text */
-    margin-bottom: 10px; /* Optional: Adds space below the legend */
+	font-weight: bold; /* Bolds the legend text */
+	font-size: 20px; /* Adjust the font size as desired */
+	padding: 0 5px; /* Optional: Adds padding around the text */
+	margin-bottom: 10px; /* Optional: Adds space below the legend */
 }
 
-
 /* Bolden the content in specific table columns */
-#myTable td:nth-child(1),
-#myTable td:nth-child(2),
-#myTable td:nth-child(3) {
-  font-weight: bold; /* This will make the text bold */
+#myTable td:nth-child(1), #myTable td:nth-child(2), #myTable td:nth-child(3)
+	{
+	font-weight: bold; /* This will make the text bold */
 }
 
 .actions-dropdown {
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 50px rgba(0,0,255,10);
-  position: absolute;
-  z-index: 100;
-  width: 200px; /* Adjust as needed */
-  padding: 10px;
-  display: none; /* Initially hidden */
+	background-color: white;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0 0 50px rgba(0, 0, 255, 10);
+	position: absolute;
+	z-index: 100;
+	width: 200px; /* Adjust as needed */
+	padding: 10px;
+	display: none; /* Initially hidden */
 }
 
 .actions-dropdown form {
-  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 .actions-dropdown form:last-child {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 
+.actions-container {
+	display: flex;
+	justify-content: center;
+	gap: 50px; /* This will create 10px space between each button */
+	margin: 50px auto;
+	/* Other styles */
+}
+
+.actions-container .credit-action-buttons {
+	background-color: white;
+	color: #0051ba;
+	border: #0051ba solid 1px;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+	/* Ensure the buttons don't wrap on smaller screens */
+	white-space: nowrap;
+	margin: 0; /* Remove any margin to prevent overlap */
+	flex: 1; /* Each button will take up equal space */
+}
+
+.actions-container .credit-action-buttons:hover {
+	background-color: #0051ba;
+	/* Change background to the same color as the text */
+	color: white; /* Change text color to white for contrast */
+	border-color: #003585;
+	/* Slightly darker shade of the original blue for the border */
+}

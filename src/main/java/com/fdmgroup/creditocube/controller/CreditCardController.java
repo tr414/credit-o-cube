@@ -217,6 +217,9 @@ public class CreditCardController {
 		if (cardLimit > customer.getSalary()) {
 			redirectAttrs.addFlashAttribute("cardLimitAboveSalary", "Card limit must be less than your salary.");
 			return "redirect:/apply-creditcard";
+		} else if (cardLimit < 0) {
+			redirectAttrs.addFlashAttribute("cardLimitNegative", "Card limit must be positive.");
+			return "redirect:/apply-creditcard";
 		}
 
 		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
@@ -543,6 +546,11 @@ public class CreditCardController {
 
 		if (creditLimit > customerSalary) {
 			model.addAttribute("errorMessage", "Credit limit cannot exceed your salary.");
+			model.addAttribute("creditCard", creditCard); // Ensure creditCard is still available for the form if
+															// returning to it
+			return "update-credit-limit"; // Stay on the page, show an error
+		} else if (creditLimit <= 0) {
+			model.addAttribute("errorMessage", "Credit limit must be positive");
 			model.addAttribute("creditCard", creditCard); // Ensure creditCard is still available for the form if
 															// returning to it
 			return "update-credit-limit"; // Stay on the page, show an error
