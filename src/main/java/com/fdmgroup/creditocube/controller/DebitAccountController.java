@@ -242,7 +242,8 @@ public class DebitAccountController {
 	 */
 	@PostMapping("/update-account-balance")
 	public String updateAccountBalance(@SessionAttribute Customer customer, @RequestParam long accountId,
-			@RequestParam double amount, @RequestParam(value = "transaction") String transactionType) {
+			@RequestParam double amount, @RequestParam(value = "transaction") String transactionType,
+			RedirectAttributes redirectAttrs) {
 
 		boolean isDeposit = transactionType.equals("deposit");
 
@@ -270,7 +271,8 @@ public class DebitAccountController {
 		logger.debug("Debit Account exists, details retrieved from database");
 
 		if (amount <= 0) {
-			return "redirect:/account-dashboard";
+			redirectAttrs.addFlashAttribute("invalidAmount", "Please enter a valid amount");
+			return "redirect:/deposit-withdraw";
 		}
 
 		// Call debitAccountService to deposit into / withdraw from debit account
