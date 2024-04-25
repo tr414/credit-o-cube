@@ -51,7 +51,7 @@ public class CreditCardTransactionService {
 	}
 
 	public List<CreditCardTransaction> findAllCreditCardTransactions(CreditCard card) {
-		return repo.findByTransactionCardIs(card);
+		return repo.findByTransactionCardIsOrderByTransactionDateDesc(card);
 	}
 
 	public List<CreditCardTransaction> findAllCreditCardTransactionsForCustomer(Customer customer) {
@@ -64,7 +64,7 @@ public class CreditCardTransactionService {
 
 		Customer targetCustomer = optionalCustomer.get();
 		for (CreditCard card : customer.getCreditCards()) {
-			transactionList.addAll(repo.findByTransactionCardIs(card));
+			transactionList.addAll(repo.findByTransactionCardIsOrderByTransactionDateDesc(card));
 		}
 
 		Comparator<CreditCardTransaction> latestFirst = (transaction1, transaction2) -> {
@@ -122,7 +122,7 @@ public class CreditCardTransactionService {
 			LOGGER.info("Merchant 1 not found");
 			return;
 		}
-
+		LOGGER.info("Created cashback transaction for card number: {}", card.getCardNumber());
 		cashbackTransaction.setMerchant(optionalMerchant.get());
 		createCreditCardTransaction(cashbackTransaction);
 
@@ -131,6 +131,7 @@ public class CreditCardTransactionService {
 	public void createInstallmentPayment(CreditCard card, double transactionAmount) {
 		InstallmentPayment installmentPayment = new InstallmentPayment(card, transactionAmount, 6);
 		installmentService.createInstallmentPayment(installmentPayment);
+		LOGGER.info("Created installment payment of amount {} for card number: {}", transactionAmount, card.getCardNumber());
 	}
 
 	public List<CreditCardTransaction> findByTransactionDate(LocalDateTime startDateTime, LocalDateTime endDateTime,
@@ -157,7 +158,7 @@ public class CreditCardTransactionService {
 			LOGGER.info("Merchant 1 not found");
 			return;
 		}
-
+		LOGGER.info("Credited cashback carried forward for card number: {}", card.getCardNumber());
 		cashbackTransaction.setMerchant(optionalMerchant.get());
 		createCreditCardTransaction(cashbackTransaction);
 	}

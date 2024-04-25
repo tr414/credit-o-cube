@@ -2,6 +2,8 @@ package com.fdmgroup.creditocube.controller;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -419,22 +421,28 @@ public class DebitAccountController {
 	}
 
 	@PostMapping("/find-by-date-debit")
-	public String findByDate(@RequestParam("dateFrom") LocalDate dateFromString,
-			@RequestParam("dateTo") LocalDate dateToString,
+	public String findByDate(@RequestParam(name = "dateFrom", required = false) LocalDate dateFromString,
+			@RequestParam(name = "dateTo", required = false) LocalDate dateToString,
 			@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
 			HttpServletRequest request) {
 		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
-//		System.out.println(selectedAccountId);
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 
-		// default time zone
-		ZoneId defaultZoneId = ZoneId.systemDefault();
+		// Validation to do for the input dates
+		// if dateFrom is null, set startDateTime to 1 month ago
+		if (dateFromString == null) {
+			dateFromString = LocalDate.now().minusMonths(1);
+		}
 
-		// creating the instance of LocalDate using the day, month, year info
+		// if dateTo is null or is set to a date in the future, set dateTo to today
+		if (dateToString == null || dateToString.isAfter(LocalDate.now())) {
+			dateToString = LocalDate.now();
+		}
 
-		// local date + atStartOfDay() + default time zone + toInstant() = Date
-		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
-		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
+		// if user selects dateFrom to be after dateTo, set dateFrom = dateTo
+		if (dateFromString.isAfter(dateToString)) {
+			dateFromString = dateToString;
+		}
 
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account not found in database, redirecting to account-dashboard");
@@ -443,6 +451,13 @@ public class DebitAccountController {
 
 		DebitAccount sessionAccount = optionalAccount.get();
 		logger.debug("Debit Account exists, details retrieved from database");
+		// default time zone
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
+
+		Instant endInstant = dateToString.atStartOfDay(defaultZoneId).plusDays(1).minus(Duration.ofSeconds(1))
+				.toInstant();
+		Date dateTo = Date.from(endInstant);
 
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
 				.findByTransactionDate(dateFrom, dateTo, sessionAccount, sessionAccount.getAccountNumber());

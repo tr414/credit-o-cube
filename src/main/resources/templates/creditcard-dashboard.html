@@ -120,7 +120,11 @@
 			th:text="${cardStillHasBalance}"
 			class="error-message"
 			th:style="${cardStillHasBalance} ? 'display: block;' : 'display: none;'"></span>
-		
+		<span
+			th:if="${customerHasNoCards}"
+			th:text="${customerHasNoCards}"
+			class="error-message"
+			th:style="${customerHasNoCards} ? 'display: block;' : 'display: none;'"></span>
 		<div
 			th:if="${success}"
 			style="color: green;">

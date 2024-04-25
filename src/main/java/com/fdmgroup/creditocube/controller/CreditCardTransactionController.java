@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
@@ -94,7 +95,7 @@ public class CreditCardTransactionController {
 	}
 
 	@GetMapping("/create-card-transaction")
-	public String getCreateCardTransaction(Model model, Principal principal) {
+	public String getCreateCardTransaction(Model model, Principal principal, RedirectAttributes redirectAttrs) {
 		String username = principal.getName();
 
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(username);
@@ -104,6 +105,10 @@ public class CreditCardTransactionController {
 		Customer customer = optionalCustomer.get();
 
 		List<CreditCard> customerCards = cardService.findAllActiveCreditCardsForCustomer(customer);
+		if (customerCards.isEmpty()) {
+			redirectAttrs.addFlashAttribute("customerHasNoCards", "Please apply for a credit card first");
+			return "redirect:/creditcard-dashboard";
+		}
 		List<Merchant> merchantCodes = merchantService.findAllMerchants();
 
 		model.addAttribute("merchants", merchantCodes);
@@ -113,7 +118,7 @@ public class CreditCardTransactionController {
 	}
 
 	@PostMapping("/create-card-transaction")
-	public String createCardTransaction(HttpServletRequest request) {
+	public String createCardTransaction(HttpServletRequest request, RedirectAttributes redirectAttrs) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
 
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
@@ -155,7 +160,6 @@ public class CreditCardTransactionController {
 		BigDecimal amount = new BigDecimal(request.getParameter("amount")).setScale(2, RoundingMode.HALF_UP);
 		double transactionAmount = amount.doubleValue();
 
-
 		if (currency.equalsIgnoreCase("sgd")) {
 			if (validTransaction(transactionAmount, card)) {
 				card.setBalance(card.getBalance() + transactionAmount);
@@ -185,12 +189,14 @@ public class CreditCardTransactionController {
 					description = String.format("Payment made to merchant code %s in category %s", merchantCode,
 							merchantCategory);
 				}
-				
+
 				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback,
 						transactionDate, transactionAmount, description));
-				
+
 			} else {
-				return "redirect:creditcard-dashboard";
+				redirectAttrs.addFlashAttribute("cardStillHasBalance",
+						"The transaction was unsuccessful as you do not have sufficient balance available on the card");
+				return "redirect:/creditcard-dashboard";
 			}
 
 		} else {
@@ -232,6 +238,8 @@ public class CreditCardTransactionController {
 						new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate,
 								transactionSGDAmount, description, currency, exchangeRate.doubleValue()));
 			} else {
+				redirectAttrs.addFlashAttribute("cardStillHasBalance",
+						"The transaction was unsuccessful as you do not have sufficient balance available on the card");
 				return "redirect:creditcard-dashboard";
 			}
 
@@ -248,16 +256,32 @@ public class CreditCardTransactionController {
 	}
 
 	@PostMapping("/find-by-date")
-	public String findByDate(@RequestParam("dateFrom") LocalDate dateFrom, @RequestParam("dateTo") LocalDate dateTo,
-			Model model, HttpServletRequest request, @RequestParam("cardId") Long cardId) {
-
-		System.out.println(cardId);
+	public String findByDate(@RequestParam(name = "dateFrom", required = false) LocalDate dateFrom,
+			@RequestParam(name = "dateTo", required = false) LocalDate dateTo, Model model, HttpServletRequest request,
+			@RequestParam("cardId") Long cardId) {
 
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
 		if (optionalCard.isEmpty()) {
 			return "redirect:/creditcard-dashboard";
 		}
 		CreditCard card = optionalCard.get();
+
+		// Validation to do for the input dates
+		// if dateFrom is null, set startDateTime to 1 month ago
+		if (dateFrom == null) {
+			dateFrom = LocalDate.now().minusMonths(1);
+		}
+
+		// if dateTo is null or is set to a date in the future, set dateTo to today
+		if (dateTo == null || dateTo.isAfter(LocalDate.now())) {
+			dateTo = LocalDate.now();
+		}
+
+		// if user selects dateFrom to be after dateTo, set dateFrom = dateTo
+		if (dateFrom.isAfter(dateTo)) {
+			dateFrom = dateTo;
+		}
+
 		LocalDateTime endDateTime = dateTo.atTime(23, 59, 59, 999999999);
 		LocalDateTime startDateTime = dateFrom.atTime(0, 0, 0, 0);
 

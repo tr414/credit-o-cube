@@ -219,6 +219,10 @@ public class CreditCardService {
 	public List<CreditCard> findAllCreditCards() {
 		return creditCardRepository.findAll();
 	}
+	
+	public List<CreditCard> findAllActiveCreditCards() {
+		return creditCardRepository.findByIsActiveTrue();
+	}
 
 	public boolean customerAlreadyHasCardType(Customer customer, CardType cardType) {
 		return creditCardRepository.findAllByCustomer(customer).stream()

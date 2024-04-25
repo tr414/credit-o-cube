@@ -18,6 +18,8 @@ public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
 	Optional<CreditCard> findByCardNumber(@Param("cardNumber") String cardNumber);
 
 	List<CreditCard> findAllByCustomer(Customer customer);
+	
+	List<CreditCard> findByIsActiveTrue();
 
 	@Query("SELECT c FROM CreditCard c WHERE c.isActive = true AND c.customer.user_id = :customerId")
 	public List<CreditCard> findAllActiveCreditCardsofCustomer(@Param("customerId") long customerId);

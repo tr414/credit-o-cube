@@ -80,9 +80,10 @@ public class CreditCardController {
 	public String creditCardDashboard(Principal principal, Model model) {
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
-
+		
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
+			logger.info("Could not find customer with username: {}", principal.getName());
 			return "redirect:/login";
 		}
 
@@ -267,7 +268,8 @@ public class CreditCardController {
 		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
 		creditCardService.createCreditCard(newCard);
 		billService.createBillForNewCard(newCard);
-
+		
+		logger.info("Created new Credit Card with card number: {} for user: {}", cardNumber ,principal.getName());
 		redirectAttrs.addFlashAttribute("success", "Successfully created a new credit card.");
 		return "redirect:/creditcard-dashboard";
 	}
@@ -342,7 +344,7 @@ public class CreditCardController {
 		
 		// withdraw from their debit account the amount payable
 		if (amountPayable <= 0) {
-			logger.info("Invalid payment amount for credit card");
+			logger.info("Invalid payment amount for credit card. Need to select amount > 0");
 			redirectAttrs.addFlashAttribute("invalidPaymentAmount",
 					"Payment amount is not valid, please try again after making another transaction");
 			return "redirect:/creditcard-dashboard";
@@ -458,16 +460,28 @@ public class CreditCardController {
 
 		CreditCard card = optionalCreditCard.get();
 		if (card.getBalance() != 0) {
-//			System.out.println("Credit card has balance");
 			logger.debug("Credit card has balance");
 			redirectAttrs.addFlashAttribute("cardStillHasBalance",
 					"The card you are trying to deactivate still has a balance, please pay off remaining balance first");
+			return "redirect:/creditcard-dashboard";
+		}
+		
+		if (card.getCashbackCarriedForward() != 0) {
+			logger.debug("Credit card has balance cashback carried forward pending to be credited to the card");
+			redirectAttrs.addFlashAttribute("cardStillHasBalance",
+					"The card you are trying to deactivate has cashback carried forward from past months pending to be credited, "
+					+ "please contact customer service to help with closing the account");
 			return "redirect:/creditcard-dashboard";
 		}
 
 		logger.debug("Credit card exists, details retrieved from database");
 
 		creditCardService.closeCreditCard(card);
+		
+		// when a credit card is deactivated, delete the corresponding bill for the credit card
+		// this is to avoid the bill being checked for late payments in the current structure of the app
+		Bill billToDelete = card.getBill();
+		billService.deleteBillById(billToDelete.getId());
 
 		// Return a redirect to the dashboard page.
 		return "redirect:/creditcard-dashboard";
