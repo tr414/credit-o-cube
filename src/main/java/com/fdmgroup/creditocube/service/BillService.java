@@ -303,7 +303,10 @@ public class BillService {
 			// If the full cashback accrued was not credited due to the card balance being too low, carry forward the card balance to the
 			// Next billing cycle
 			card.setCashbackCarriedForward(cashbackCarriedForward + cashbackAccrued - cashbackCredited);
-			cardTransactionService.createCashbackTransaction(card, cashbackCredited);
+			
+			if ( cashbackCredited > 0) {
+				cardTransactionService.createCashbackTransaction(card, cashbackCredited);
+			}
 		}
 
 		// Since cashback will be credited to account, reset the card cashback once cashback has been credited reset spending
