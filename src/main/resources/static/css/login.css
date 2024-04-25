@@ -1,94 +1,97 @@
 /* Basic Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body, html {
-    height: 100%;
-    font-family: Arial, sans-serif;
+	height: 100%;
+	font-family: Arial, sans-serif;
 }
 
 .login-background {
-    background-image: url('../img/tech1.jpg'); /* Replace with your actual image path */
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+	background-image: url('../img/tech1.jpg');
+	/* Replace with your actual image path */
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
 }
 
 .container {
-    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px; /* Adjust width as necessary */
-    position: relative; /* Establish a positioning context */
-    min-height: 500px; /* Adjust min-height as necessary to fit content */
+	background: rgba(255, 255, 255, 0.9);
+	/* Semi-transparent white background */
+	padding: 40px;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 300px; /* Adjust width as necessary */
+	position: relative; /* Establish a positioning context */
+	min-height: 500px; /* Adjust min-height as necessary to fit content */
 }
 
 .logo {
-    display: block;
-    margin: 0 auto 30px;
-    height: 100px; /* Adjust size as necessary */
-    width: auto;
+	display: block;
+	margin: 0 auto 30px;
+	height: 100px; /* Adjust size as necessary */
+	width: auto;
 }
 
 .form-group {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 8px;
+	display: block;
+	margin-bottom: 8px;
 }
 
 .form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 .error-message {
-    min-height: 20px; /* Reserve space for one line of text */
-    color: #ff0000;
-    text-align: center;
-    margin-bottom: 10px;
+	min-height: 20px; /* Reserve space for one line of text */
+	color: #ff0000;
+	text-align: center;
+	margin-bottom: 10px;
 }
 
 .buttons {
-    position: absolute;
-    bottom: 25px; /* Adjust as needed, this is the distance from the bottom of the container */
-    left: 105px; /* Align left with the padding of container */
+	position: absolute;
+	bottom: 25px;
+	/* Adjust as needed, this is the distance from the bottom of the container */
+	left: 105px; /* Align left with the padding of container */
 }
 
 .login-button, .signup-button {
-    width: calc(100% - 80px); /* Button width taking into account the padding */
-    padding: 10px 20px;
-    margin-bottom: 10px; /* For spacing between buttons if needed */
-    background-color: #0051ba;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-style: italic;
+	width: calc(100% - 80px);
+	/* Button width taking into account the padding */
+	padding: 10px 20px;
+	margin-bottom: 10px; /* For spacing between buttons if needed */
+	background-color: #0051ba;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
 .login-button:hover, .signup-button:hover {
-    background-color: #0077cc;
+	background-color: #0077cc;
 }
 
 .signup-button {
-    background-color: #4CAF50;
-    width: calc(100% - 80px); /* Match the login button width */
+	background-color: #4CAF50;
+	width: calc(100% - 80px); /* Match the login button width */
 }
 
 .signup-button:hover {
-    background-color: #66bb6a;
+	background-color: #66bb6a;
 }
 
 /* Additional styles for error and logout messages, and to adjust form positioning if necessary */
