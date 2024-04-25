@@ -40,4 +40,57 @@ priceElements.forEach(element => {
   element.textContent = formattedPrice;
 });
 
+function printAndToggleMenu() {
+//	setFilterToAllAndSubmit();
+  toggleMenu(); // Assuming toggleMenu() is already defined and toggles the sidebar visibility.
+  window.print(); // This will trigger the print dialog.
+}
+
+
+
+//function setFilterToAllAndSubmit() {
+//    // Set the transaction type filter to 'all'
+//    var transactionTypeSelect = document.querySelector('select[name="transactionType"]');
+//    if (transactionTypeSelect) {
+//        transactionTypeSelect.value = 'all';
+//    }
+//
+//    // Find the form that contains the transaction type select and submit it
+//    var filterTypeForm = document.getElementById('filterTypeForm');
+//    if (filterTypeForm) {
+//		console.log("submitting form...");
+//        filterTypeForm.submit();
+//        console.log("form submitted");
+//    }
+//    window.print();
+//}
+
+
+
+//function setFilterToAllAndSubmit() {
+//    // Set the transaction type filter to 'all'
+//    var transactionTypeSelect = document.querySelector('select[name="transactionType"]');
+//    if (transactionTypeSelect) {
+//        transactionTypeSelect.value = 'all';
+//    }
+//
+//    // Find the form that contains the transaction type select and submit it
+//    var filterTypeForm = document.getElementById('filterTypeForm');
+//    if (filterTypeForm) {
+//		console.log("Submitting form...");
+//        filterTypeForm.submit();
+//        console.log("Form submitted");
+//
+//        // Add a delay before printing
+//        setTimeout(function() {
+//			console.log("Opening print dialog...");
+//            window.print(); // This will trigger the print dialog.
+//            console.log(window.print());
+//            console.log("opened print dialog");
+//        }, 10); // Adjust the delay time (in milliseconds) as needed
+//    }
+//}
+
+
+
 

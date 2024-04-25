@@ -3,6 +3,7 @@ package com.fdmgroup.creditocube.controller;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -114,9 +115,26 @@ public class CreditCardController {
 		}
 
 		Customer customer = optionalCustomer.get();
-		List<CardType> availableCardTypes = cardTypeService.findAllCardTypes().stream()
-				.filter(cardType -> !creditCardService.customerAlreadyHasCardType(customer, cardType))
-				.collect(Collectors.toList());
+		List<CardType> availableCardTypes = new ArrayList<>();
+		List<CardType> allTypesOfActiveCardsOfCustomer = creditCardService.findAllActiveCreditCardsForCustomer(customer)
+				.stream().map(CreditCard::getCardType).distinct().collect(Collectors.toList());
+		for (CardType cardType : cardTypeService.findAllCardTypes()) {
+			if (!allTypesOfActiveCardsOfCustomer.contains(cardType)) {
+				availableCardTypes.add(cardType);
+			}
+
+		}
+		// search all active credit cards of this customer
+		// if customer already has an active card of a certain type, don't add that card
+		// type to the list of availableCardTypes
+		// give me all the card types
+		// if the customer has an active card of that card type, that card type cannot
+		// be added to the availableCardTypes list
+
+		// if customer doesn't have a card of a certain type
+//		List<CardType> availableCardTypes = cardTypeService.findAllCardTypes().stream()
+//				.filter(cardType -> !creditCardService.customerAlreadyHasCardType(customer, cardType))
+//				.collect(Collectors.toList());
 
 		model.addAttribute("cardTypes", availableCardTypes);
 		return "apply-creditcard";
@@ -187,6 +205,7 @@ public class CreditCardController {
 //	}
 
 	@PostMapping("/apply-creditcard")
+
 	public String registerCreditCard(Principal principal, HttpServletRequest request,
 			RedirectAttributes redirectAttrs) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
@@ -227,6 +246,17 @@ public class CreditCardController {
 			redirectAttrs.addFlashAttribute("error", "Invalid card type selected.");
 			return "redirect:/apply-creditcard";
 		}
+
+//		CardType cardType = optionalCardType.get();
+//		List<CardType> allTypesOfActiveCardsOfCustomer = creditCardService.findAllActiveCreditCardsForCustomer(customer)
+//				.stream().map(CreditCard::getCardType).distinct().collect(Collectors.toList());
+
+//		if (allTypesOfActiveCardsOfCustomer.contains(cardType)) {
+//			// if a customer already has an active card of card type cardType
+//			model.addAttribute("error", "You already have a credit card of this type.");
+//			return "apply-creditcard";
+//
+//		}
 
 		CardType cardType = optionalCardType.get();
 		if (creditCardService.customerAlreadyHasCardType(customer, cardType)) {
