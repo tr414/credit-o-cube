@@ -187,7 +187,8 @@ public class CreditCardController {
 //	}
 
 	@PostMapping("/apply-creditcard")
-	public String registerCreditCard(Principal principal, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+	public String registerCreditCard(Principal principal, HttpServletRequest request,
+			RedirectAttributes redirectAttrs) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
@@ -214,7 +215,7 @@ public class CreditCardController {
 		String cardNumber = creditCardService.generateCreditCardNumber();
 		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
 		if (cardLimit > customer.getSalary()) {
-			redirectAttrs.addFlashAttribute("error", "Card limit must be less than your salary.");
+			redirectAttrs.addFlashAttribute("cardLimitAboveSalary", "Card limit must be less than your salary.");
 			return "redirect:/apply-creditcard";
 		}
 
