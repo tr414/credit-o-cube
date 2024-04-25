@@ -336,3 +336,176 @@ h1, h2 {
 .form-group button:hover {
     background-color: #003885; /* Darker shade on hover for better interaction */
 }
+
+
+
+
+
+
+
+
+
+
+
+/* Adjust the filter forms to be horizontally aligned */
+.account-selection {
+    justify-content: start; /* Align content to the start of the area */
+    flex-wrap: wrap; /* Allow items to wrap onto the next line */
+    gap: 10px; /* Space between items */
+    margin-bottom: 20px; /* Spacing below the section */
+}
+
+/* Style labels in the filter forms */
+.account-selection label {
+    margin-right: 0; /* Remove right margin from label */
+    padding-right: 10px; /* Space between label and input/select */
+    white-space: nowrap; /* Ensure labels do not wrap */
+}
+
+/* Style input fields in the filter forms */
+.account-selection input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px; /* Space after input before button */
+}
+
+/* Style select elements in the filter forms */
+.account-selection select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px; /* Space after select before button */
+}
+
+/* Style buttons in the filter forms */
+.account-selection button {
+    padding: 10px 20px;
+    background-color: #0051ba; /* Brand color for button */
+    color: white;
+    border: none;
+    border-radius: 5px; /* Rounded corners for buttons */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s;
+}
+
+/* Hover effect for buttons in the filter forms */
+.account-selection button:hover {
+    background-color: #003885; /* Darker shade on hover */
+}
+
+/* Additional responsiveness */
+@media (max-width: 768px) {
+    /* Adjust for smaller screens */
+    .account-selection {
+        flex-direction: column;
+        align-items: stretch; /* Make sure items stretch full width */
+    }
+
+    .account-selection form {
+        width: 100%; /* Full width on small screens */
+    }
+}
+
+/* Ensure that the filter section is not affected by other styles */
+.transaction-filter-form, .transaction-filter-form * {
+    all: revert; /* Reverts all styles within this class to browser default */
+}
+
+
+
+
+
+/* Reset margins and padding for the filter forms */
+.account-selection {
+  display: block; /* Stack the forms */
+  max-width: 100%; /* Ensure the forms do not exceed the width of their container */
+  margin-top: 20px; /* Add space at the top of the form */
+  margin-bottom: 20px; /* Add space at the bottom of the form */
+}
+
+/* Target the individual form groups within the filter forms */
+.account-selection form {
+  display: flex; /* Flex layout for the form items */
+  justify-content: space-between; /* Space out the items */
+  flex-wrap: wrap; /* Allow items to wrap to new line as needed */
+  margin-bottom: 10px; /* Space between form groups */
+}
+
+/* Ensure the date inputs and select box do not break the layout on smaller screens */
+.account-selection input[type="date"],
+.account-selection select {
+  max-width: 45%; /* Allow these elements to take up to 45% of the form's width */
+}
+
+/* Style the filter buttons to match */
+.account-selection button {
+  white-space: nowrap; /* Prevent the text inside the buttons from wrapping */
+  margin-top: 5px; /* Add a small margin on top for spacing when wrapped */
+}
+
+@media (max-width: 768px) {
+  /* Responsive adjustments for smaller screens */
+  .account-selection form {
+    flex-direction: column; /* Stack form items vertically on smaller screens */
+  }
+  
+  .account-selection input[type="date"],
+  .account-selection select {
+    max-width: 100%; /* Allow these elements to take full width on smaller screens */
+  }
+
+  .account-selection button {
+    width: 100%; /* Full width buttons on smaller screens for better touch targets */
+  }
+}
+
+/* Styles for the filter buttons to make them smaller */
+.account-selection button {
+    padding: 10px 20px; /* Adjust padding to change button size */
+    background-color: #0051ba; /* Blue background to match the theme */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 14px; /* Smaller font size */
+    width: auto; /* Only as wide as its content plus padding */
+    max-width: 140px; /* Maximum width for the buttons */
+    margin: 0; /* Reset any margin */
+    display: inline-block; /* Allows the use of margin and max-width */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Hover effect for buttons */
+.account-selection button:hover {
+    background-color: #003885; /* Darker blue on hover */
+}
+
+/* Adjustments for the account selection forms */
+.account-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.account-selection form {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* space between form elements */
+}
+
+/* Tighten up the space around the filter buttons */
+.account-selection button {
+  padding: 10px 15px; /* Adjust button padding */
+  max-width: 120px; /* Set a max-width for buttons */
+  margin: 0; /* Remove any existing margin */
+}
+
+/* Ensure input and select fields are closer to the filter button */
+.account-selection input[type="date"],
+.account-selection select {
+  margin-right: 10px; /* Space between the fields and the button */
+}

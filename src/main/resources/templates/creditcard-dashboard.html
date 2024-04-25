@@ -6,7 +6,7 @@
 <meta
 	name="viewport"
 	content="width=device-width, initial-scale=1.0">
-<title>Dashboard Wireframe</title>
+<title>Credit Card Dashboard</title>
 <link
 	rel="stylesheet"
 	href="../css/header-sidebar.css">
@@ -206,6 +206,12 @@
 										type="hidden"
 										th:value="${card.cardId}"
 										name="cardId">
+										
+<!-- 										NEWWWW -->
+<!-- 									<input type="hidden" th:value="${card.getFormattedCreditCardNumber()}" name="cardNumber"> -->
+<!--     								<input type="hidden" th:value="${card.cardType.name}" name="cardName"> -->
+    <!-- 										NEWWWW -->
+										
 									<button
 										type="submit"
 										class="credit-action-buttons">View Card Bill</button>
