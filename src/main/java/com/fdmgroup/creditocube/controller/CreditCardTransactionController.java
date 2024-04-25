@@ -246,18 +246,34 @@ public class CreditCardTransactionController {
 		}
 		return false;
 	}
-
+	
+	
 	@PostMapping("/find-by-date")
-	public String findByDate(@RequestParam("dateFrom") LocalDate dateFrom, @RequestParam("dateTo") LocalDate dateTo,
+	public String findByDate(@RequestParam(name = "dateFrom", required=false) LocalDate dateFrom, @RequestParam(name = "dateTo", required = false) LocalDate dateTo,
 			Model model, HttpServletRequest request, @RequestParam("cardId") Long cardId) {
-
-		System.out.println(cardId);
 
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
 		if (optionalCard.isEmpty()) {
 			return "redirect:/creditcard-dashboard";
 		}
 		CreditCard card = optionalCard.get();
+		
+		// Validation to do for the input dates
+		// if dateFrom is null, set startDateTime to 1 month ago
+		if (dateFrom == null) {
+			dateFrom = LocalDate.now().minusMonths(1);
+		}
+		
+		// if dateTo is null or is set to a date in the future, set dateTo to today
+		if (dateTo == null || dateTo.isAfter(LocalDate.now())) {
+			dateTo = LocalDate.now();
+		}
+		
+		// if user selects dateFrom to be after dateTo, set dateFrom = dateTo
+		if (dateFrom.isAfter(dateTo)) {
+			dateFrom = dateTo;
+		}
+		
 		LocalDateTime endDateTime = dateTo.atTime(23, 59, 59, 999999999);
 		LocalDateTime startDateTime = dateFrom.atTime(0, 0, 0, 0);
 

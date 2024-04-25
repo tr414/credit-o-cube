@@ -49,13 +49,14 @@
 
   	<h1>Filter Credit Card Transactions</h1>
   	<h2>Filter By Date:</h2>
-	<form action="#" th:action="find-by-date" method="POST" >Start Date:
+
+	<form th:action="@{/find-by-date}" method="POST">Start Date:
 	
 	<input type="hidden" th:value="${cardId}" name="cardId">
 	
-	<input type="date" name="dateFrom" placeholder="Date From" required>End Date:
-	<input type="date" name="dateTo" placeholder="Date From" required>
-	<button type="submit">Search</button>
+	<input type="date" name="dateFrom" placeholder="Date From">End Date:
+	<input type="date" name="dateTo" placeholder="Date From">
+	<button type="submit">Find Transactions</button>
 	</form> 
 	
 	
