@@ -269,6 +269,10 @@ public class DebitAccountController {
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
 		logger.debug("Debit Account exists, details retrieved from database");
 
+		if (amount <= 0) {
+			return "redirect:/account-dashboard";
+		}
+
 		// Call debitAccountService to deposit into / withdraw from debit account
 		// balance.
 		debitAccountService.changeAccountBalance(targetDebitAccount, amount, isDeposit);
