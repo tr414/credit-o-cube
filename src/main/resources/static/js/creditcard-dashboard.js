@@ -1,7 +1,8 @@
 document.addEventListener('click', function (e) {
   if (e.target && e.target.classList.contains('action-btn')) {
     const cardId = e.target.getAttribute('data-card-id');
-    const dropdown = document.getElementById('actions-card-' + cardId);
+    
+    const dropdown = document.getElementById(cardId);
 
     // Check if the dropdown for this button is already visible
     const isDropdownVisible = dropdown.style.display === 'block';

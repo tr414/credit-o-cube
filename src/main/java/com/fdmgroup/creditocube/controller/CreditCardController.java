@@ -276,7 +276,6 @@ public class CreditCardController {
 	public String payCreditcardBalance(Principal principal, HttpServletRequest request, Model model,
 			@RequestParam("debitAccountNumber") String debitAccountNumber,
 			@RequestParam(value = "creditCardNumber") String creditCardNumber,
-			// @RequestParam(value = "paymentOption") String paymentOption,
 			@RequestParam(value = "paymentAmount", required = false) Double paymentAmount,
 			RedirectAttributes redirectAttrs) {
 
@@ -309,30 +308,6 @@ public class CreditCardController {
 
 		DebitAccount fromAccount = fromAccountOptional.get();
 
-// Tim's code
-//		List<DebitAccount> debitAccountsOfCustomer = debitAccountService
-//				.findAllDebitAccountsForCustomer(sessionCustomer);
-//		debitAccountsOfCustomer.removeIf(account -> account.isActive() == false);
-//		debitAccountsOfCustomer.forEach(account -> System.out.println(account.getAccountNumber()));
-//		DebitAccount fromAccount = null;
-
-		// verify that debit account exists
-		// if they choose a debit account number for a debit account that doesnt exist,
-		// exit this method
-//		for (DebitAccount debitAccount : debitAccountsOfCustomer) {
-//			if (String.valueOf(debitAccount.getAccountNumber()).equals(debitAccountNumber)) {
-//				fromAccount = debitAccount;
-//				break;
-//
-//			} else {
-//				logger.info(
-//						"Debit account number selected does not belong to customer, or there is no such debit account number");
-//				System.out.println("Debit account number invalid - you have no such debit accounts with account number "
-//						+ debitAccountNumber);
-//				return ("pay-creditcard-balance");
-//			}
-//		}
-
 		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
@@ -342,33 +317,6 @@ public class CreditCardController {
 			return "redirect:/creditcard-dashboard";
 		}
 		CreditCard cardToBePaidOff = optionalCard.get();
-
-		// if they choose to pay off a credit card that doesnt exist, exit this method
-
-//		for (CreditCard card : creditCardsOfCustomer) {
-//			if (String.valueOf(card.getCardNumber()).equals(creditCardNumber)) {
-//				cardToBePaidOff = card;
-//				break;
-//			} else {
-//				System.out.println("Credit card number invalid - you have no such credit cards with card number "
-//						+ creditCardNumber);
-//				return ("pay-creditcard-balance");
-//			}
-//		}
-
-		// find the balance of this credit card
-
-//		else if (paymentOption.equals("paymentAmount")) {
-//			// make sure that payMent amount is not more than the current balance
-//			if (paymentAmount > cardToBePaidOff.getBalance()) {
-//				System.out.println("Payment amount is more than the current balance");
-//				return ("pay-creditcard-balance");
-//			} else {
-////				billService.recordCustomPayment(bill, amountPayable);
-//				amountPayable = paymentAmount;
-//				// need to record it in bill service
-//			}
-//		}
 
 		double amountPayable = 0;
 
@@ -387,12 +335,11 @@ public class CreditCardController {
 			logger.debug("Customer selected to pay outstanding amount");
 
 		} else {
-			System.out.println("Pay current balance");
 			amountPayable = cardToBePaidOff.getBalance();
-			System.out.println(amountPayable);
 			logger.debug("Customer selected to pay current balance");
 		}
-		System.out.println(fromAccount.getAccountBalance());
+		
+		
 		// withdraw from their debit account the amount payable
 		if (amountPayable <= 0) {
 			logger.info("Invalid payment amount for credit card");
@@ -400,19 +347,18 @@ public class CreditCardController {
 					"Payment amount is not valid, please try again after making another transaction");
 			return "redirect:/creditcard-dashboard";
 		}
-		System.out.println(fromAccount.getAccountBalance());
+		
 		if (fromAccount.getAccountBalance() < amountPayable) {
 			logger.info("Selected account does not have enough balance to pay the card");
 			redirectAttrs.addFlashAttribute("insufficientBalance",
 					"You have insufficient balance in your chosen account");
 			return "redirect:/creditcard-dashboard";
 		}
-		System.out.println(fromAccount.getAccountBalance());
+		
 		if (amountPayable > 0 && fromAccount.getAccountBalance() > amountPayable) {
 			// do withdrawal
-			System.out.println("Trying to make transaction");
 			debitAccountService.changeAccountBalance(fromAccount, amountPayable, false);
-			System.out.println("amountPayable: " + amountPayable);
+			
 
 			// Debit account transaction
 			DebitAccountTransaction newTransaction = new DebitAccountTransaction();
@@ -441,7 +387,6 @@ public class CreditCardController {
 			cardToBePaidOff.setBalance(cardToBePaidOff.getBalance() - amountPayable);
 			creditCardService.updateCard(cardToBePaidOff);
 
-//			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
 			logger.debug("Withdrawn $" + amountPayable + "from debit account to pay credit card");
 		}
 
@@ -520,7 +465,6 @@ public class CreditCardController {
 			return "redirect:/creditcard-dashboard";
 		}
 
-		System.out.println("Closing credit card");
 		logger.debug("Credit card exists, details retrieved from database");
 
 		creditCardService.closeCreditCard(card);
