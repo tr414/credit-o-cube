@@ -417,14 +417,31 @@ public class DebitAccountController {
 	}
 
 	@PostMapping("/find-by-date-debit")
-	public String findByDate(@RequestParam("dateFrom") LocalDate dateFromString,
-			@RequestParam("dateTo") LocalDate dateToString,
+	public String findByDate(@RequestParam(name = "dateFrom", required = false) LocalDate dateFromString,
+			@RequestParam(name = "dateTo", required = false) LocalDate dateToString,
 			@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
 			HttpServletRequest request) {
 		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
 //		System.out.println(selectedAccountId);
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
-
+		
+		// Validation to do for the input dates
+		// if dateFrom is null, set startDateTime to 1 month ago
+		if (dateFromString == null) {
+			dateFromString = LocalDate.now().minusMonths(1);
+		}
+		
+		// if dateTo is null or is set to a date in the future, set dateTo to today
+		if (dateToString == null || dateToString.isAfter(LocalDate.now())) {
+			dateToString = LocalDate.now();
+		}
+		
+		// if user selects dateFrom to be after dateTo, set dateFrom = dateTo
+		if (dateFromString.isAfter(dateToString)) {
+			dateFromString = dateToString;
+		}
+		
+		
 		// default time zone
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 
