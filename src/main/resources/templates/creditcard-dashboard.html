@@ -174,10 +174,10 @@
 						<td>
 							<button
 								class="credit-action-buttons action-btn"
-								data-card-id="${card.cardId}">Click to Expand</button>
+								th:data-card-id="${card.cardId}">Click to Expand</button>
 							<div
 								class="actions-dropdown"
-								id="actions-card-${card.cardId}"
+								th:id="${card.cardId}"
 								style="display: none;">
 								<!-- Repeat the following structure for each action -->
 								<!-- View Transaction History button -->

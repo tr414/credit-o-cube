@@ -89,7 +89,6 @@ public class CreditCardTransactionController {
 		List<CreditCardTransaction> cardTransactions = transactionService.findAllCreditCardTransactions(card);
 		model.addAttribute("transactions", cardTransactions);
 		model.addAttribute("cardId", cardId);
-//		session.setAttribute("stringCardId", stringCardId);
 
 		return ("card-transactions");
 	}
@@ -116,11 +115,7 @@ public class CreditCardTransactionController {
 	@PostMapping("/create-card-transaction")
 	public String createCardTransaction(HttpServletRequest request) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
-		System.out.println(request.getParameter("cardId"));
 
-		// CreditCard card =
-		// cardService.findCardByCardId(cardId.longValue()).orElse(null);
-		// amended code above to return optional rather than null - tim
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
 		if (optionalCard.isEmpty()) {
 			return "redirect:/creditcard-dashboard";
@@ -132,7 +127,6 @@ public class CreditCardTransactionController {
 		Optional<Merchant> merchantOptional = merchantService.findMerchantByMerchantCode(merchantCode);
 
 		boolean installmentPayment = (request.getParameter("installment") != null);
-		System.out.println(installmentPayment);
 
 		if (merchantOptional.isEmpty()) {
 			return "redirect:create-card-transaction";
@@ -161,7 +155,6 @@ public class CreditCardTransactionController {
 		BigDecimal amount = new BigDecimal(request.getParameter("amount")).setScale(2, RoundingMode.HALF_UP);
 		double transactionAmount = amount.doubleValue();
 
-		// TODO apply cashback
 
 		if (currency.equalsIgnoreCase("sgd")) {
 			if (validTransaction(transactionAmount, card)) {
@@ -192,10 +185,10 @@ public class CreditCardTransactionController {
 					description = String.format("Payment made to merchant code %s in category %s", merchantCode,
 							merchantCategory);
 				}
-				System.out.println("Transaction in sgd: " + description);
+				
 				transactionService.createCreditCardTransaction(new CreditCardTransaction(card, merchant, cashback,
 						transactionDate, transactionAmount, description));
-				System.out.println("Transaction created");
+				
 			} else {
 				return "redirect:creditcard-dashboard";
 			}
@@ -243,25 +236,6 @@ public class CreditCardTransactionController {
 			}
 
 		}
-
-//		if (currency.equalsIgnoreCase("sgd")) {
-//			CreditCardTransaction newTransaction = new CreditCardTransaction(card, merchant, cashback, transactionDate,
-//					transactionAmount);
-//			transactionService.createCreditCardTransaction(newTransaction);
-//			cardService.updateBalance(card, newTransaction);
-//		} else {
-//
-//			CurrencyExchange forexResponse = restClient.get().uri("?access_key={apiKey}", apiKey).retrieve()
-//					.body(CurrencyExchange.class);
-//
-//			BigDecimal exchangeRate = forexResponse.exchangeRateToSGD(currency).setScale(5, RoundingMode.HALF_UP);
-//			double transactionSGDAmount = exchangeRate.multiply(amount).setScale(2, RoundingMode.HALF_UP).doubleValue();
-//
-//			CreditCardTransaction newTransaction = new ForeignCurrencyCreditCardTransaction(card, merchant, cashback,
-//					transactionDate, transactionSGDAmount, currency, exchangeRate.doubleValue());
-//			transactionService.createCreditCardTransaction(newTransaction);
-//			cardService.updateBalance(card, newTransaction);
-//		}
 
 		return ("redirect:creditcard-dashboard");
 	}
@@ -313,7 +287,7 @@ public class CreditCardTransactionController {
 				return "card-transactions";
 
 			} else {
-				System.out.println("No transactions this month");
+				// No console messages
 			}
 		}
 		model.addAttribute("cardId", cardId);

@@ -68,7 +68,6 @@ public class CreditCardService {
 
 		// if the credit card is already present in the database, just return that
 		if (optionalCard.isPresent()) {
-			System.out.println("Card already exists: " + optionalCard.get().getCardId());
 			logger.info("Card already exists: ");
 			return;
 		}
@@ -91,7 +90,6 @@ public class CreditCardService {
 
 		// if they already hold 3 or more cards, cannot make new ones
 		if (activeCardList.size() >= 3) {
-//			System.out.println("You cannot have 3 or more credit cards per customer.");
 			logger.info("Customer tried to apply for a card when he/she already has 3 active cards");
 			return;
 		}
