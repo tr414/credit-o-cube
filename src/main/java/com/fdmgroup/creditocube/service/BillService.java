@@ -47,6 +47,10 @@ public class BillService {
 
 	public Optional<Bill> updateBill(Bill bill) {
 		Bill currentBill = billRepo.findById(bill.getId()).orElse(null);
+		
+		if (currentBill == null) {
+			return Optional.of(null);
+		}
 		currentBill.setMinimumAmountDue(bill.getMinimumAmountDue());
 		currentBill.setOutstandingAmount(bill.getOutstandingAmount());
 		currentBill.setPaid(bill.isPaid());
@@ -62,10 +66,21 @@ public class BillService {
 	public Optional<Bill> findBillById(long id) {
 		return billRepo.findById(id);
 	}
+	
+	public void deleteBillById(long id) {
+		billRepo.deleteById(id);
+	}
 
 	public Optional<Bill> generateBill(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
-
+		
+		if (card == null) {
+			LOGGER.info("Unable to find card with cardId {}", cardId);
+			return Optional.of(null);
+		}
+		
+		LOGGER.info("Generating bill for card number: {}", card.getCardNumber());
+		
 		// Before generating the bill, check if the customer is eligible for cashback
 		// based on the monthly spend, and apply that cashback
 		applyCashback(card.getCardId());
@@ -81,6 +96,7 @@ public class BillService {
 			newCardBill.setBillIssueTime(LocalDateTime.now());
 			newCardBill.setPreviousBillIssueTime(LocalDateTime.now().minusDays(1));
 			newCardBill.setPreviousBillOutstandingAmount(0);
+			LOGGER.info("Generated empty bill for new card number: {}", card.getCardNumber());
 			return createBill(newCardBill);
 		}
 
@@ -101,7 +117,9 @@ public class BillService {
 		cardBill.setMinimumAmountDue(minimumAmountDue);
 		cardBill.setTotalAmountDue(totalAmountDue);
 		cardBill.setOutstandingAmount(totalAmountDue);
-
+		
+		// If there is no outstanding amount due for the bill, set 'paid' to true so that the bill is not
+		// flagged for late payment, and the customer is aware that no payment is required
 		if (cardBill.getOutstandingAmount() > 0) {
 			cardBill.setPaid(false);
 		} else {
@@ -120,8 +138,11 @@ public class BillService {
 
 	private double calculateNonDueInstallmentPayments(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
+		
 		List<InstallmentPayment> allInstallmentPayments = installmentService.findAllInstallmentPaymentsByCard(card);
-
+		
+		LOGGER.info("Calculating non-due installment payments for card number: {}", card.getCardNumber());
+		
 		double totalNonDueInstallmentPayments = 0.0;
 
 		for (InstallmentPayment installment : allInstallmentPayments) {
@@ -129,7 +150,10 @@ public class BillService {
 			CreditCardTransaction installmentTransaction = new CreditCardTransaction();
 			installmentTransaction.setTransactionCard(card);
 			installmentTransaction.setTransactionDate(LocalDateTime.now());
-			installmentTransaction.setDescription("Installment payment for outstanding big ticket purchase");
+			
+			String installmentNumber = String.valueOf(7 - installment.getInstallmentsLeft());
+			
+			installmentTransaction.setDescription(String.format("Installment payment %s / 6 for purchase", installmentNumber));
 
 			// If this is the final installment, the entire amount needs to be paid, so no
 			// contribution
@@ -254,7 +278,7 @@ public class BillService {
 
 	@Scheduled(cron = "0 27 12 23 4 *")
 	public void generateAllCardBills() {
-		List<CreditCard> creditCards = cardService.findAllCreditCards();
+		List<CreditCard> creditCards = cardService.findAllActiveCreditCards();
 
 		LOGGER.info("Scheduled task: generating all credit card bills.");
 
@@ -331,6 +355,8 @@ public class BillService {
 		for (Bill bill : allBills) {
 			checkLatePayment(bill);
 		}
+		
+		LOGGER.info("Scheduled task: finished checking all credit card bills for late payment.");
 	}
 
 	public void createBillForNewCard(CreditCard newCard) {

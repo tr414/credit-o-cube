@@ -118,7 +118,7 @@ public class CreditCardTransactionController {
 	}
 
 	@PostMapping("/create-card-transaction")
-	public String createCardTransaction(HttpServletRequest request) {
+	public String createCardTransaction(HttpServletRequest request, RedirectAttributes redirectAttrs) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
 
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
@@ -194,7 +194,9 @@ public class CreditCardTransactionController {
 						transactionDate, transactionAmount, description));
 
 			} else {
-				return "redirect:creditcard-dashboard";
+				redirectAttrs.addFlashAttribute("cardStillHasBalance",
+						"The transaction was unsuccessful as you do not have sufficient balance available on the card");
+				return "redirect:/creditcard-dashboard";
 			}
 
 		} else {
@@ -236,6 +238,8 @@ public class CreditCardTransactionController {
 						new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate,
 								transactionSGDAmount, description, currency, exchangeRate.doubleValue()));
 			} else {
+				redirectAttrs.addFlashAttribute("cardStillHasBalance",
+						"The transaction was unsuccessful as you do not have sufficient balance available on the card");
 				return "redirect:creditcard-dashboard";
 			}
 
