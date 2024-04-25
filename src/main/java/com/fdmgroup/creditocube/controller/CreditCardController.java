@@ -187,7 +187,8 @@ public class CreditCardController {
 //	}
 
 	@PostMapping("/apply-creditcard")
-	public String registerCreditCard(Principal principal, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+	public String registerCreditCard(Principal principal, HttpServletRequest request,
+			RedirectAttributes redirectAttrs) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
@@ -214,7 +215,10 @@ public class CreditCardController {
 		String cardNumber = creditCardService.generateCreditCardNumber();
 		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
 		if (cardLimit > customer.getSalary()) {
-			redirectAttrs.addFlashAttribute("error", "Card limit must be less than your salary.");
+			redirectAttrs.addFlashAttribute("cardLimitAboveSalary", "Card limit must be less than your salary.");
+			return "redirect:/apply-creditcard";
+		} else if (cardLimit < 0) {
+			redirectAttrs.addFlashAttribute("cardLimitNegative", "Card limit must be positive.");
 			return "redirect:/apply-creditcard";
 		}
 
@@ -542,6 +546,11 @@ public class CreditCardController {
 
 		if (creditLimit > customerSalary) {
 			model.addAttribute("errorMessage", "Credit limit cannot exceed your salary.");
+			model.addAttribute("creditCard", creditCard); // Ensure creditCard is still available for the form if
+															// returning to it
+			return "update-credit-limit"; // Stay on the page, show an error
+		} else if (creditLimit <= 0) {
+			model.addAttribute("errorMessage", "Credit limit must be positive");
 			model.addAttribute("creditCard", creditCard); // Ensure creditCard is still available for the form if
 															// returning to it
 			return "update-credit-limit"; // Stay on the page, show an error
