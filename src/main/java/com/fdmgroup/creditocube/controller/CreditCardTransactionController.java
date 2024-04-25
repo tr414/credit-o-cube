@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fdmgroup.creditocube.model.CreditCard;
 import com.fdmgroup.creditocube.model.CreditCardTransaction;
@@ -113,7 +114,7 @@ public class CreditCardTransactionController {
 	}
 
 	@PostMapping("/create-card-transaction")
-	public String createCardTransaction(HttpServletRequest request) {
+	public String createCardTransaction(HttpServletRequest request, RedirectAttributes redirectAttrs) {
 		BigDecimal cardId = new BigDecimal(request.getParameter("cardId"));
 
 		Optional<CreditCard> optionalCard = cardService.findCardByCardId(cardId.longValue());
@@ -190,7 +191,9 @@ public class CreditCardTransactionController {
 						transactionDate, transactionAmount, description));
 				
 			} else {
-				return "redirect:creditcard-dashboard";
+				redirectAttrs.addFlashAttribute("cardStillHasBalance",
+						"The transaction was unsuccessful as you do not have sufficient balance available on the card");
+				return "redirect:/creditcard-dashboard";
 			}
 
 		} else {
@@ -232,6 +235,8 @@ public class CreditCardTransactionController {
 						new ForeignCurrencyCreditCardTransaction(card, merchant, cashback, transactionDate,
 								transactionSGDAmount, description, currency, exchangeRate.doubleValue()));
 			} else {
+				redirectAttrs.addFlashAttribute("cardStillHasBalance",
+						"The transaction was unsuccessful as you do not have sufficient balance available on the card");
 				return "redirect:creditcard-dashboard";
 			}
 
