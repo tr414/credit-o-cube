@@ -41,7 +41,7 @@ public interface DebitAccountTransactionRepository extends JpaRepository<DebitAc
 	@Query("SELECT d FROM DebitAccountTransaction d WHERE d.fromAccount.accountId = :account_Id")
 	public List<DebitAccountTransaction> findByFromAccount(@Param("account_Id") long accountId);
 
-	@Query("SELECT d FROM DebitAccountTransaction d WHERE d.debitAccountTransactionDate >= :startDateTime AND d.debitAccountTransactionDate <= :endDateTime AND d.fromAccount = :fromAccount OR d.toAccountNumber = :toAccountNumber")
+	@Query("SELECT d FROM DebitAccountTransaction d WHERE d.debitAccountTransactionDate >= :startDateTime AND d.debitAccountTransactionDate <= :endDateTime AND (d.fromAccount = :fromAccount OR d.toAccountNumber = :toAccountNumber)")
 	List<DebitAccountTransaction> findByTransactionDate(@Param("startDateTime") Date startDateTime,
 			@Param("endDateTime") Date endDateTime, @Param("fromAccount") DebitAccount fromAccount,
 			@Param("toAccountNumber") String toAccountNumber);

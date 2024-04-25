@@ -2,6 +2,8 @@ package com.fdmgroup.creditocube.controller;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -423,26 +425,25 @@ public class DebitAccountController {
 			@RequestParam(name = "dateTo", required = false) LocalDate dateToString,
 			@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
 			HttpServletRequest request) {
-		System.out.println("Entered findByDateDebut method body");
 		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
-		
+
 		// Validation to do for the input dates
 		// if dateFrom is null, set startDateTime to 1 month ago
 		if (dateFromString == null) {
 			dateFromString = LocalDate.now().minusMonths(1);
 		}
-		
+
 		// if dateTo is null or is set to a date in the future, set dateTo to today
 		if (dateToString == null || dateToString.isAfter(LocalDate.now())) {
 			dateToString = LocalDate.now();
 		}
-		
+
 		// if user selects dateFrom to be after dateTo, set dateFrom = dateTo
 		if (dateFromString.isAfter(dateToString)) {
 			dateFromString = dateToString;
 		}
-		
+
 		if (optionalAccount.isEmpty()) {
 			logger.info("Debit account not found in database, redirecting to account-dashboard");
 			return "redirect:/view-transaction-history";
@@ -453,7 +454,10 @@ public class DebitAccountController {
 		// default time zone
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 		Date dateFrom = Date.from(dateFromString.atStartOfDay(defaultZoneId).toInstant());
-		Date dateTo = Date.from(dateToString.atStartOfDay(defaultZoneId).toInstant());
+
+		Instant endInstant = dateToString.atStartOfDay(defaultZoneId).plusDays(1).minus(Duration.ofSeconds(1))
+				.toInstant();
+		Date dateTo = Date.from(endInstant);
 
 		List<DebitAccountTransaction> accountTransactions = debitAccountTransactionService
 				.findByTransactionDate(dateFrom, dateTo, sessionAccount, sessionAccount.getAccountNumber());

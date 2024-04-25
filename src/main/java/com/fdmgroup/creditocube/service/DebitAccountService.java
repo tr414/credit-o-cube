@@ -343,6 +343,10 @@ public class DebitAccountService {
 			return false;
 		}
 
+		if (targetAccount.getAccountBalance() < amount) {
+			amount = targetAccount.getAccountBalance();
+		}
+
 		targetAccount = updateBalance(targetAccount, -amount);
 
 		Optional<DebitAccount> optionalToAccount = debitAccountRepository.findByAccountNumber(toAccountNumber);
