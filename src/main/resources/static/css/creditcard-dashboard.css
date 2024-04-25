@@ -57,14 +57,63 @@ tbody tr:hover {
 	/* Slightly darker shade of the original blue for the border */
 }
 
+/* This will space out the buttons inside each td */
+.button-container {
+    display: flex; /* Use flexbox to layout the buttons */
+    flex-wrap: wrap; /* Allow the items to wrap as needed */
+    justify-content: space-around; /* Space out buttons evenly */
+    align-items: center; /* Align items vertically */
+}
+
+/* Style for the container of each row of buttons */
+.actions-row {
+/*     display: flex; Use flexbox to align buttons in a row */
+/*     justify-content: space-evenly; Space buttons evenly */
+/*     margin-bottom: 5px; Space between rows */
+    max-width: 150px; /* Match this width to the column width you desire */
+    margin: 0 auto; /* This will keep the dropdown or modal centered under the button */
+}
+
+/* Special style for the single button in the last row to center it */
+.form-button-single {
+    margin: 0 auto; /* Auto margins center the button */
+}
+
+/* You might need to adjust the width of the 'Actions' column */
+#myTable th:last-child, 
+#myTable td:last-child {
+    width: 150px; /* Adjust the width as needed to make the column narrower */
+}
+
+/* Style each form as a button */
+.form-button {
+    margin: 0 2px; /* Space between buttons, adjust as needed */
+    flex: 1; /* Each button grows to fill the space */
+}
+
+
 .credit-action-buttons {
 	background-color: #0051ba; /* Blue background to match the theme */
 	color: white;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
-	padding: 10px 15px;
-	margin: 4px 4px; /* Add horizontal margins between buttons */
+	padding: 5px 20px;
+	margin: 2px; /* Add horizontal margins between buttons */
+	/* NEWWWWW */
+	width: auto;
+}
+
+.non-credit-action-buttons {
+	background-color: #A6ACAF; /* Grey background */
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 5px 10px;
+	margin: 2px; /* Add horizontal margins between buttons */
+	/* NEWWWWW */
+	width: 100%;
 }
 
 .credit-action-buttons:hover {
@@ -142,3 +191,24 @@ form.payment-form fieldset.form-section legend {
 #myTable td:nth-child(3) {
   font-weight: bold; /* This will make the text bold */
 }
+
+.actions-dropdown {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 50px rgba(0,0,255,10);
+  position: absolute;
+  z-index: 100;
+  width: 200px; /* Adjust as needed */
+  padding: 10px;
+  display: none; /* Initially hidden */
+}
+
+.actions-dropdown form {
+  margin-bottom: 5px;
+}
+
+.actions-dropdown form:last-child {
+  margin-bottom: 0;
+}
+

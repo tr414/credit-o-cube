@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fdmgroup.creditocube.model.Bill;
 import com.fdmgroup.creditocube.model.CardType;
@@ -90,8 +91,6 @@ public class CreditCardController {
 		session.setAttribute("customer", sessionCustomer);
 		model.addAttribute("customer", sessionCustomer);
 
-//		List<CreditCard> creditCards = creditCardService.findAllCardsForCustomer(sessionCustomer);
-//		model.addAttribute("credit_cards", creditCards);
 		List<CreditCard> activeCreditCards = creditCardService.findAllActiveCreditCardsForCustomer(sessionCustomer);
 		model.addAttribute("credit_cards", activeCreditCards);
 		return "creditcard-dashboard";
@@ -206,7 +205,8 @@ public class CreditCardController {
 //	}
 
 	@PostMapping("/apply-creditcard")
-	public String registerCreditCard(Principal principal, HttpServletRequest request, Model model) {
+	public String registerCreditCard(Principal principal, HttpServletRequest request, RedirectAttributes redirectAttrs,
+			Model model) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
@@ -218,28 +218,29 @@ public class CreditCardController {
 
 		// if they already hold 3 or more cards, cannot make new ones
 		if (activeCardList.size() >= 3) {
-			model.addAttribute("error", "You cannot have more than 3 credit cards.");
-			return "apply-creditcard";
+			redirectAttrs.addFlashAttribute("error", "You cannot have more than 3 credit cards.");
+			return "redirect:/apply-creditcard";
 		}
 
 		if (customer.getFirstName() == null || customer.getLastName() == null || customer.getEmail() == null
 				|| customer.getPhoneNumber() == null || customer.getNric() == null || customer.getAddress() == null
 				|| customer.getSalary() == null || customer.getGender() == null || customer.getDob() == null) {
-			System.out.println("Customer details are not filled up");
-			return ("apply-creditcard");
+//			System.out.println("Customer details are not filled up");
+			redirectAttrs.addFlashAttribute("error", "Please fill up your personal details");
+			return ("redirect:/apply-creditcard");
 		}
 
 		String cardNumber = creditCardService.generateCreditCardNumber();
 		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
 		if (cardLimit > customer.getSalary()) {
-			model.addAttribute("error", "Card limit must be less than your salary.");
-			return "apply-creditcard";
+			redirectAttrs.addFlashAttribute("error", "Card limit must be less than your salary.");
+			return "redirect:/apply-creditcard";
 		}
 
 		Optional<CardType> optionalCardType = cardTypeService.findCardTypeByName(request.getParameter("cardType"));
 		if (optionalCardType.isEmpty()) {
-			model.addAttribute("error", "Invalid card type selected.");
-			return "apply-creditcard";
+			redirectAttrs.addFlashAttribute("error", "Invalid card type selected.");
+			return "redirect:/apply-creditcard";
 		}
 
 		CardType cardType = optionalCardType.get();
@@ -250,39 +251,15 @@ public class CreditCardController {
 			// if a customer already has an active card of card type cardType
 			model.addAttribute("error", "You already have a credit card of this type.");
 			return "apply-creditcard";
+
 		}
 
 		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
 		creditCardService.createCreditCard(newCard);
 		billService.createBillForNewCard(newCard);
 
-		model.addAttribute("success", "Successfully created a new credit card.");
+		redirectAttrs.addFlashAttribute("success", "Successfully created a new credit card.");
 		return "redirect:/creditcard-dashboard";
-	}
-
-	@GetMapping("/pay-creditcard-balance")
-	public String payCreditcardBalance(Model model, Principal principal) {
-
-		List<String> payamentOptions = new ArrayList<>();
-		payamentOptions.add("Pay Current Balance"); // pays the full bill
-		payamentOptions.add("Pay minimum"); // pays the minimum they can without getting penalised
-		payamentOptions.add("Pay Custom Amount"); // pays a custom amount
-		// if they choose pay a custom amount, i need to get the payment amount
-		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
-
-		// If the user is not found, redirect to the login page.
-		if (optionalCustomer.isEmpty()) {
-			return "redirect:/login";
-		}
-
-		// set customer and their accounts as session attributes to retrieve in view
-		Customer sessionCustomer = optionalCustomer.get();
-		session.setAttribute("customer", sessionCustomer);
-		model.addAttribute("customer", sessionCustomer);
-		model.addAttribute("accounts", sessionCustomer.getDebitAccounts());
-		// model.addAttribute("payamentOptions", payamentOptions);
-		return "pay-creditcard-balance"; // Name of your Thymeleaf template
-
 	}
 
 	@PostMapping("/pay-creditcard-balance")
@@ -290,7 +267,8 @@ public class CreditCardController {
 			@RequestParam("debitAccountNumber") String debitAccountNumber,
 			@RequestParam(value = "creditCardNumber") String creditCardNumber,
 			// @RequestParam(value = "paymentOption") String paymentOption,
-			@RequestParam(value = "paymentAmount", required = false) Double paymentAmount) {
+			@RequestParam(value = "paymentAmount", required = false) Double paymentAmount,
+			RedirectAttributes redirectAttrs) {
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
@@ -298,37 +276,62 @@ public class CreditCardController {
 
 		// If the user is not found, redirect to the login page.
 		if (optionalCustomer.isEmpty()) {
-			return "redirect:/login";
+			return "redirect:/logout";
 		}
 
 		// Get the authenticated customer session object.
 		Customer sessionCustomer = optionalCustomer.get();
 
 		// find debit accounts of customer
-		List<DebitAccount> debitAccountsOfCustomer = sessionCustomer.getDebitAccounts();
-		DebitAccount fromAccount = null;
+
+		List<DebitAccount> debitAccountsOfCustomer = debitAccountService
+				.findAllDebitAccountsForCustomer(sessionCustomer);
+		debitAccountsOfCustomer.removeIf(account -> account.isActive() == false);
+
+		Optional<DebitAccount> fromAccountOptional = debitAccountService
+				.findDebitAccountByAccountNumber(debitAccountNumber);
+
+		if (fromAccountOptional.isEmpty()) {
+			logger.info("Customer did not select valid Debit Account for transaction");
+			redirectAttrs.addFlashAttribute("invalidDebitAccount", "Please select an active Debit Account");
+			return "redirect:creditcard-dashboard";
+		}
+
+		DebitAccount fromAccount = fromAccountOptional.get();
+
+// Tim's code
+//		List<DebitAccount> debitAccountsOfCustomer = debitAccountService
+//				.findAllDebitAccountsForCustomer(sessionCustomer);
+//		debitAccountsOfCustomer.removeIf(account -> account.isActive() == false);
+//		debitAccountsOfCustomer.forEach(account -> System.out.println(account.getAccountNumber()));
+//		DebitAccount fromAccount = null;
 
 		// verify that debit account exists
 		// if they choose a debit account number for a debit account that doesnt exist,
 		// exit this method
-		for (DebitAccount debitAccount : debitAccountsOfCustomer) {
-			if (String.valueOf(debitAccount.getAccountNumber()).equals(debitAccountNumber)) {
-				fromAccount = debitAccount;
-				break;
-
-			} else {
-				logger.info(
-						"Debit account number selected does not belong to customer, or there is no such debit account number");
+//		for (DebitAccount debitAccount : debitAccountsOfCustomer) {
+//			if (String.valueOf(debitAccount.getAccountNumber()).equals(debitAccountNumber)) {
+//				fromAccount = debitAccount;
+//				break;
+//
+//			} else {
+//				logger.info(
+//						"Debit account number selected does not belong to customer, or there is no such debit account number");
 //				System.out.println("Debit account number invalid - you have no such debit accounts with account number "
 //						+ debitAccountNumber);
-				return ("pay-creditcard-balance");
-			}
-		}
+//				return ("pay-creditcard-balance");
+//			}
+//		}
 
 		// verify if the credit card exists
 		// find out which credit card they want to pay off
 		List<CreditCard> creditCardsOfCustomer = sessionCustomer.getCreditCards();
-		CreditCard cardToBePaidOff = creditCardService.findCardByCardNumber(creditCardNumber).get();
+		Optional<CreditCard> optionalCard = creditCardService.findCardByCardNumber(creditCardNumber);
+
+		if (optionalCard.isEmpty()) {
+			return "redirect:/creditcard-dashboard";
+		}
+		CreditCard cardToBePaidOff = optionalCard.get();
 
 		// if they choose to pay off a credit card that doesnt exist, exit this method
 
@@ -344,49 +347,62 @@ public class CreditCardController {
 //		}
 
 		// find the balance of this credit card
+
+//		else if (paymentOption.equals("paymentAmount")) {
+//			// make sure that payMent amount is not more than the current balance
+//			if (paymentAmount > cardToBePaidOff.getBalance()) {
+//				System.out.println("Payment amount is more than the current balance");
+//				return ("pay-creditcard-balance");
+//			} else {
+////				billService.recordCustomPayment(bill, amountPayable);
+//				amountPayable = paymentAmount;
+//				// need to record it in bill service
+//			}
+//		}
+
 		double amountPayable = 0;
+
 		Bill bill = cardToBePaidOff.getBill();
 
+		// Removed the option for custom payment : Tanay
+		// Also moved bill update to be done after transaction has been performed rather
+		// than before
+		// So that we do not update the bill in case of an invalid transaction
 		if (paymentOption.equals("minimum")) {
-
 			amountPayable = cardToBePaidOff.getBill().getMinimumAmountDue();
-			billService.recordMinimumAmountPayment(bill);
 			logger.debug("Customer selected to pay minimum amount");
-//			System.out.println("Paid minimum");
 		} else if (paymentOption.equals("outstanding")) {
 			// pay the outstanding bill
 			amountPayable = cardToBePaidOff.getBill().getOutstandingAmount();
-			billService.recordOutstandingAmountPayment(bill);
 			logger.debug("Customer selected to pay outstanding amount");
-//			System.out.println("Paid Outstanding");
 
-		} else if (paymentOption.equals("paymentAmount")) {
-			// make sure that payMent amount is not more than the current balance
-			if (paymentAmount > cardToBePaidOff.getBalance()) {
-				System.out.println("Payment amount is more than the current balance");
-				return ("pay-creditcard-balance");
-			} else {
-//				billService.recordCustomPayment(bill, amountPayable);
-				amountPayable = paymentAmount;
-				// need to record it in bill service
-			}
 		} else {
-			// Customer is paying off all the outstanding balance on the card.
-			// Therefore any outstanding installment payments are also being paid and should
-			// be removed from the card.
-			installmentService.deleteAllInstallmentPayments(cardToBePaidOff);
-			billService.recordCreditBalancePayment(bill);
+			System.out.println("Pay current balance");
 			amountPayable = cardToBePaidOff.getBalance();
+			System.out.println(amountPayable);
 			logger.debug("Customer selected to pay current balance");
-//			System.out.println("Paid Balance");
-
 		}
-
+		System.out.println(fromAccount.getAccountBalance());
 		// withdraw from their debit account the amount payable
+		if (amountPayable <= 0) {
+			logger.info("Invalid payment amount for credit card");
+			redirectAttrs.addFlashAttribute("invalidPaymentAmount",
+					"Payment amount is not valid, please try again after making another transaction");
+			return "redirect:/creditcard-dashboard";
+		}
+		System.out.println(fromAccount.getAccountBalance());
+		if (fromAccount.getAccountBalance() < amountPayable) {
+			logger.info("Selected account does not have enough balance to pay the card");
+			redirectAttrs.addFlashAttribute("insufficientBalance",
+					"You have insufficient balance in your chosen account");
+			return "redirect:/creditcard-dashboard";
+		}
+		System.out.println(fromAccount.getAccountBalance());
 		if (amountPayable > 0 && fromAccount.getAccountBalance() > amountPayable) {
 			// do withdrawal
+			System.out.println("Trying to make transaction");
 			debitAccountService.changeAccountBalance(fromAccount, amountPayable, false);
-//			System.out.println("amountPayable: " + amountPayable);
+			System.out.println("amountPayable: " + amountPayable);
 
 			// Debit account transaction
 			DebitAccountTransaction newTransaction = new DebitAccountTransaction();
@@ -417,12 +433,22 @@ public class CreditCardController {
 
 //			System.out.println("Successfully withdrawn " + amountPayable + " from " + fromAccount.getAccountNumber());
 			logger.debug("Withdrawn $" + amountPayable + "from debit account to pay credit card");
-			return "redirect:/creditcard-dashboard";
-		} else {
-			logger.debug("Amount payable is equal to zero, or account balance is too low");
-//			System.out.println("No amount to be paid");
-			return ("pay-creditcard-balance");
 		}
+
+		if (paymentOption.equals("minimum")) {
+			billService.recordMinimumAmountPayment(bill);
+		} else if (paymentOption.equals("outstanding")) {
+			billService.recordOutstandingAmountPayment(bill);
+
+		} else {
+			// Customer is paying off all the outstanding balance on the card.
+			// Therefore any outstanding installment payments are also being paid and should
+			// be removed from the card.
+			installmentService.deleteAllInstallmentPayments(cardToBePaidOff);
+			billService.recordCreditBalancePayment(bill);
+		}
+
+		return "redirect:/creditcard-dashboard";
 
 	}
 
@@ -433,20 +459,27 @@ public class CreditCardController {
 			return "redirect:/login";
 		}
 		long cardId = new BigDecimal(request.getParameter("cardId")).longValue();
-		CreditCard card = creditCardService.findCardByCardId(cardId).orElse(null);
-		Bill bill = billService.findBillByCreditCard(card).orElse(null);
+
+		Optional<CreditCard> optionalCreditCard = creditCardService.findCardByCardId(cardId);
+		CreditCard card = optionalCreditCard.get();
+
+		Optional<Bill> optionalBill = billService.findBillByCreditCard(card);
+		Bill bill = optionalBill.get();
 
 		Customer customer = optionalCustomer.get();
 
 		model.addAttribute("bill", bill);
 		model.addAttribute("card", card);
 		model.addAttribute("customer", customer);
-		model.addAttribute("accounts", customer.getDebitAccounts());
+		List<DebitAccount> availableAccounts = debitAccountService.findAllDebitAccountsForCustomer(customer);
+		availableAccounts.removeIf(account -> account.isActive() == false);
+		model.addAttribute("accounts", availableAccounts);
 		return "pay-creditcard-balance";
 	}
 
 	@PostMapping("/close-credit-card")
-	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam long cardId) {
+	public String closeDebitAccount(@SessionAttribute Customer customer, @RequestParam long cardId,
+			RedirectAttributes redirectAttrs) {
 
 		// Find the user associated with the provided customer ID.
 		Optional<Customer> optionalCustomer = customerService.findCustomerById(customer.getUser_id());
@@ -470,8 +503,10 @@ public class CreditCardController {
 
 		CreditCard card = optionalCreditCard.get();
 		if (card.getBalance() != 0) {
-			System.out.println("Credit card has balance");
+//			System.out.println("Credit card has balance");
 			logger.debug("Credit card has balance");
+			redirectAttrs.addFlashAttribute("cardStillHasBalance",
+					"The card you are trying to deactivate still has a balance, please pay off remaining balance first");
 			return "redirect:/creditcard-dashboard";
 		}
 
@@ -484,28 +519,28 @@ public class CreditCardController {
 		return "redirect:/creditcard-dashboard";
 	}
 
-	@GetMapping("/show-inactive-cards")
-	public String showInactiveCards(Principal principal, Model model) {
-
-		// Find the user associated with the provided customer ID.
-		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
-
-		// If the user is not found, redirect to the login page.
-		if (optionalCustomer.isEmpty()) {
-			return "redirect:/login";
-		}
-
-		// set customer and their accounts as session attributes to retrieve in view
-		// Customer customer = optionalCustomer.get();
-		Customer sessionCustomer = optionalCustomer.get();
-		session.setAttribute("customer", sessionCustomer);
-		model.addAttribute("customer", sessionCustomer);
-
-		List<CreditCard> inactiveCreditCards = creditCardService.findAllInactiveCreditCardsForCustomer(sessionCustomer);
-		model.addAttribute("inactive_credit_cards", inactiveCreditCards);
-		return "show-inactive-cards";
-
-	}
+//	@GetMapping("/show-inactive-cards")
+//	public String showInactiveCards(Principal principal, Model model) {
+//
+//		// Find the user associated with the provided customer ID.
+//		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
+//
+//		// If the user is not found, redirect to the login page.
+//		if (optionalCustomer.isEmpty()) {
+//			return "redirect:/login";
+//		}
+//
+//		// set customer and their accounts as session attributes to retrieve in view
+//		// Customer customer = optionalCustomer.get();
+//		Customer sessionCustomer = optionalCustomer.get();
+//		session.setAttribute("customer", sessionCustomer);
+//		model.addAttribute("customer", sessionCustomer);
+//
+//		List<CreditCard> inactiveCreditCards = creditCardService.findAllInactiveCreditCardsForCustomer(sessionCustomer);
+//		model.addAttribute("inactive_credit_cards", inactiveCreditCards);
+//		return "show-inactive-cards";
+//
+//	}
 
 	@GetMapping("/update-credit-limit")
 	public String showUpdateCreditLimitForm(@RequestParam long cardId, Model model, HttpServletRequest request) {

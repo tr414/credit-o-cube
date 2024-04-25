@@ -48,6 +48,13 @@ tbody tr:hover {
 	/* Slightly darker shade of the original blue for the border */
 }
 
+/* NEWWWWWW */
+.button-container {
+    display: flex; /* Use flexbox to align buttons */
+    justify-content: space-around; /* Space buttons evenly */
+    padding: 0 10px; /* Optional: add padding if needed for visual appeal */
+}
+
 .debit-action-buttons {
 	background-color: #0051ba; /* Blue background to match the theme */
 	color: white;
@@ -57,6 +64,8 @@ tbody tr:hover {
 	cursor: pointer;
 	/* Ensure the buttons don't wrap on smaller screens */
 	white-space: nowrap;
+	margin: 0; /* Remove any margin to prevent overlap */
+	flex: 1; /* Each button will take up equal space */
 }
 
 /* Remove the margin from the last button */
