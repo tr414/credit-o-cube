@@ -205,8 +205,9 @@ public class CreditCardController {
 //	}
 
 	@PostMapping("/apply-creditcard")
-	public String registerCreditCard(Principal principal, HttpServletRequest request, RedirectAttributes redirectAttrs,
-			Model model) {
+
+	public String registerCreditCard(Principal principal, HttpServletRequest request,
+			RedirectAttributes redirectAttrs) {
 		Optional<Customer> optionalCustomer = customerService.findCustomerByUsername(principal.getName());
 		if (optionalCustomer.isEmpty()) {
 			return "redirect:/login";
@@ -233,7 +234,10 @@ public class CreditCardController {
 		String cardNumber = creditCardService.generateCreditCardNumber();
 		int cardLimit = Integer.parseInt(request.getParameter("creditCardLimit"));
 		if (cardLimit > customer.getSalary()) {
-			redirectAttrs.addFlashAttribute("error", "Card limit must be less than your salary.");
+			redirectAttrs.addFlashAttribute("cardLimitAboveSalary", "Card limit must be less than your salary.");
+			return "redirect:/apply-creditcard";
+		} else if (cardLimit < 0) {
+			redirectAttrs.addFlashAttribute("cardLimitNegative", "Card limit must be positive.");
 			return "redirect:/apply-creditcard";
 		}
 
@@ -243,15 +247,21 @@ public class CreditCardController {
 			return "redirect:/apply-creditcard";
 		}
 
+//		CardType cardType = optionalCardType.get();
+//		List<CardType> allTypesOfActiveCardsOfCustomer = creditCardService.findAllActiveCreditCardsForCustomer(customer)
+//				.stream().map(CreditCard::getCardType).distinct().collect(Collectors.toList());
+
+//		if (allTypesOfActiveCardsOfCustomer.contains(cardType)) {
+//			// if a customer already has an active card of card type cardType
+//			model.addAttribute("error", "You already have a credit card of this type.");
+//			return "apply-creditcard";
+//
+//		}
+
 		CardType cardType = optionalCardType.get();
-		List<CardType> allTypesOfActiveCardsOfCustomer = creditCardService.findAllActiveCreditCardsForCustomer(customer)
-				.stream().map(CreditCard::getCardType).distinct().collect(Collectors.toList());
-
-		if (allTypesOfActiveCardsOfCustomer.contains(cardType)) {
-			// if a customer already has an active card of card type cardType
-			model.addAttribute("error", "You already have a credit card of this type.");
-			return "apply-creditcard";
-
+		if (creditCardService.customerAlreadyHasCardType(customer, cardType)) {
+			redirectAttrs.addFlashAttribute("error", "You already have a credit card of this type.");
+			return "redirect:/apply-creditcard";
 		}
 
 		CreditCard newCard = new CreditCard(customer, cardNumber, 0, cardLimit, cardType);
@@ -566,6 +576,11 @@ public class CreditCardController {
 
 		if (creditLimit > customerSalary) {
 			model.addAttribute("errorMessage", "Credit limit cannot exceed your salary.");
+			model.addAttribute("creditCard", creditCard); // Ensure creditCard is still available for the form if
+															// returning to it
+			return "update-credit-limit"; // Stay on the page, show an error
+		} else if (creditLimit <= 0) {
+			model.addAttribute("errorMessage", "Credit limit must be positive");
 			model.addAttribute("creditCard", creditCard); // Ensure creditCard is still available for the form if
 															// returning to it
 			return "update-credit-limit"; // Stay on the page, show an error

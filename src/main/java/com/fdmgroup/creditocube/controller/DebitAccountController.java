@@ -269,6 +269,10 @@ public class DebitAccountController {
 		DebitAccount targetDebitAccount = optionalDebitAccount.get();
 		logger.debug("Debit Account exists, details retrieved from database");
 
+		if (amount <= 0) {
+			return "redirect:/account-dashboard";
+		}
+
 		// Call debitAccountService to deposit into / withdraw from debit account
 		// balance.
 		debitAccountService.changeAccountBalance(targetDebitAccount, amount, isDeposit);
@@ -330,7 +334,7 @@ public class DebitAccountController {
 				.findTransactionsOfAccount(sessionAccount);
 		session.setAttribute("account", sessionAccount);
 		session.setAttribute("accountTransactions", accountTransactions);
-		System.out.println(sessionAccount.getAccountName());
+//		System.out.println(sessionAccount.getAccountName());
 		model.addAttribute("account", sessionAccount);
 		logger.debug("Account transactions are set as session attribute");
 
@@ -418,7 +422,7 @@ public class DebitAccountController {
 			@RequestParam("selectedAccountId") String selectedAccountIdString, Model model,
 			HttpServletRequest request) {
 		long selectedAccountId = new BigDecimal(selectedAccountIdString).longValue();
-		System.out.println(selectedAccountId);
+//		System.out.println(selectedAccountId);
 		Optional<DebitAccount> optionalAccount = debitAccountService.findDebitAccountByAccountId(selectedAccountId);
 
 		// default time zone

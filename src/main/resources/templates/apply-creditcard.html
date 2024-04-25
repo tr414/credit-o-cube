@@ -1,85 +1,149 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html
+	lang="en"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1.0">
 <title>Apply for Credit Card</title>
-<link rel="stylesheet" href="../css/header-sidebar.css">
-<link rel="stylesheet" href="../css/apply-creditcard.css">
-<script src="../js/sidebar.js" defer></script>
-<script src="../js/apply-creditcard-select.js" defer></script>
+<link
+	rel="stylesheet"
+	href="../css/header-sidebar.css">
+<link
+	rel="stylesheet"
+	href="../css/apply-creditcard.css">
+<script
+	src="../js/sidebar.js"
+	defer></script>
+<script
+	src="../js/apply-creditcard-select.js"
+	defer></script>
 </head>
 <body>
 	<div class="top-bar">
-		<span class="menu-btn" onclick="toggleMenu()">&#9776;</span> <img
-			src="../img/CreditOCubeLogo.png" alt="Logo" class="center-logo">
+		<span
+			class="menu-btn"
+			onclick="toggleMenu()">&#9776;</span>
+		<img
+			src="../img/CreditOCubeLogo.png"
+			alt="Logo"
+			class="center-logo">
 	</div>
 
 
-  <div class="side-menu menu-active" id="sideMenu">
-    <div class="user-greeting"><p>My Credit Cards</p></div>
-    <a href="customer-dashboard">Back to Main Dashboard</a>
-		<a
-			href="account-dashboard">View Account Dashboard</a>
-		<a
-			href="creditcard-dashboard">View Credit Card Dashboard</a>
-    
-    <form th:action="@{/logout}" method="post">
-      <div class="buttons">
-        <button type="submit" class="login-button">Logout</button>
-      </div>
-    </form>
-    <a href="create-card-type">Create Card Type (FOR ADMIN)</a>
-    <a href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
-  </div>
-
-  <div class="main-content">
-    <div class="content-container">
-      <h1 class="title">Apply for a New Credit Card</h1>
-      
-      <div th:if="${error}" style="color: red;">
-        <p th:text="${error}"></p>
-      </div>
-      <div th:if="${success}" style="color: green;">
-        <p th:text="${success}"></p>
-      </div>
-
-      <form id="creditCardApplication" th:action="@{/apply-creditcard}" method="post">
-        <div class="card-selection">
-  			<th:block th:each="cardType : ${cardTypes}">
-    			<label class="card-info">
-<!--       				Hidden radio button -->
-        				<input type="radio" name="cardType" th:value="${cardType.name}" required>
-        				<img th:src="@{'/img/' + ${cardType.imageUrl}}" alt="Card Image" style="width: 100px; height: auto;">
-      					<div class="card-details">
-        					<h3 th:text="${cardType.name}">Card Type Name</h3>
-        					<ul class="requirements-list" th:data-requirements="${cardType.requirements}"></ul>
-        					<h4>Associated Cashback</h4>
-        					<ul class="rewards-list">
-                  				<li th:each="reward : ${cardType.rewards}">
-                    				<strong th:text="${reward.category}">Reward Category</strong>: 
-                    				<span th:text="${reward.cashback_rate} + '%'">Cashback Rate</span>
-                  				</li>
-                			</ul>
-      					</div>
-    			</label>
-  			</th:block>
-
+	<div
+		class="side-menu menu-active"
+		id="sideMenu">
+		<div class="user-greeting">
+			<p>My Credit Cards</p>
 		</div>
-		
+		<a href="customer-dashboard">Back to Main Dashboard</a> <a
+			href="account-dashboard">View Account Dashboard</a> <a
+			href="creditcard-dashboard">View Credit Card Dashboard</a>
+
+		<form
+			th:action="@{/logout}"
+			method="post">
+			<div class="buttons">
+				<button
+					type="submit"
+					class="login-button">Logout</button>
+			</div>
+		</form>
+		<a href="create-card-type">Create Card Type (FOR ADMIN)</a> <a
+			href="create-reward">Create Reward for Card Type (FOR ADMIN)</a>
+	</div>
+
+	<div class="main-content">
+		<div class="content-container">
+			<h1 class="title">Apply for a New Credit Card</h1>
+
+			<div
+				th:if="${error}"
+				style="color: red;">
+				<p th:text="${error}"></p>
+			</div>
+			<div
+				th:if="${success}"
+				style="color: green;">
+				<p th:text="${success}"></p>
+			</div>
+
+			<form
+				id="creditCardApplication"
+				th:action="@{/apply-creditcard}"
+				method="post">
+				<div class="card-selection">
+					<th:block th:each="cardType : ${cardTypes}">
+						<label class="card-info">
+							<!--       				Hidden radio button -->
+							<input
+								type="radio"
+								name="cardType"
+								th:value="${cardType.name}"
+								required>
+							<img
+								th:src="@{'/img/' + ${cardType.imageUrl}}"
+								alt="Card Image"
+								style="width: 100px; height: auto;">
+							<div class="card-details">
+								<h3 th:text="${cardType.name}">Card Type Name</h3>
+								<ul
+									class="requirements-list"
+									th:data-requirements="${cardType.requirements}"></ul>
+								<h4>Associated Cashback</h4>
+								<ul class="rewards-list">
+									<li th:each="reward : ${cardType.rewards}">
+										<strong th:text="${reward.category}">Reward Category</strong>:
+										<span th:text="${reward.cashback_rate} + '%'">Cashback
+											Rate</span>
+									</li>
+								</ul>
+							</div>
+						</label>
+					</th:block>
+
+				</div>
+				<span
+					th:if="${cardLimitAboveSalary}"
+					th:text="${cardLimitAboveSalary}"
+					class="error-message"
+					th:style="${cardLimitAboveSalary} ? 'display: block;' : 'display: none;'"></span>
+				<span
+					th:if="${cardLimitNegative}"
+					th:text="${cardLimitNegative}"
+					class="error-message"
+					th:style="${cardLimitNegative} ? 'display: block;' : 'display: none;'"></span>
 
 
-		<div id="creditLimitField" class="visible">
-        <label for="creditCardLimit">Credit Card Limit:</label>
-        <p class="input-hint">Please ensure that your credit limit is within your salary for your credit card application to be approved.</p>
-        <input type="text" id="creditCardLimit" name="creditCardLimit" required placeholder="Enter your desired credit limit"><br><br>
-        </div>
-        
-        <button type="submit" class="apply-card-button">Submit Application</button>
-      </form>
-    </div>
-  </div>
+				<div
+					id="creditLimitField"
+					class="visible">
+					<label for="creditCardLimit">Credit Card Limit:</label>
+					<p class="input-hint">Please ensure that your credit limit is
+						within your salary for your credit card application to be
+						approved.</p>
+					<input
+						type="number"
+						step="0.01"
+						min="0"
+						id="creditCardLimit"
+						name="creditCardLimit"
+						required
+						placeholder="Enter your desired credit limit">
+					<br>
+					<br>
+				</div>
 
-			
+				<button
+					type="submit"
+					class="apply-card-button">Submit Application</button>
+			</form>
+		</div>
+	</div>
+
+
 </body>
 </html>
