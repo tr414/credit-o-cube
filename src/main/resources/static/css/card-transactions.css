@@ -7,7 +7,7 @@
 }
 
 /* Titles styling for clarity and emphasis */
-h1, h2, h4 {
+h1, h2, h4, h3 {
     color: #333; /* Brand color for emphasis */
     margin: 10px 0; /* Space around titles */
     text-align: center; /* Center-aligns titles */

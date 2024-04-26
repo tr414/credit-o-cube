@@ -147,7 +147,7 @@ public class DebitAccountTransactionService {
 		relatedTransactions.addAll(debitAccountTransactionRepository.findByFromAccount(targetAccount.getAccountId()));
 
 		// Sort the transactions by their transaction date
-		relatedTransactions.sort(Comparator.comparing(DebitAccountTransaction::getDebitAccountTransactionDate));
+		relatedTransactions.sort(Comparator.comparing(DebitAccountTransaction::getDebitAccountTransactionDate).reversed());
 
 		return relatedTransactions;
 	}

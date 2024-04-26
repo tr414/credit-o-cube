@@ -32,8 +32,28 @@ public class Bill {
 	private double outstandingAmount;
 	
 	private double previousBillOutstandingAmount;
+	
+	private double monthlySpend;
+	
+	private double cashbackEarned;
 
 	// private LocalDateTime dueDate;
+
+	public double getMonthlySpend() {
+		return monthlySpend;
+	}
+
+	public void setMonthlySpend(double monthlySpend) {
+		this.monthlySpend = monthlySpend;
+	}
+
+	public double getCashbackEarned() {
+		return cashbackEarned;
+	}
+
+	public void setCashbackEarned(double cashbackEarned) {
+		this.cashbackEarned = cashbackEarned;
+	}
 
 	private boolean paid;
 

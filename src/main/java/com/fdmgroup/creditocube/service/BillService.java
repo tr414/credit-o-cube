@@ -32,6 +32,7 @@ public class BillService {
 
 	@Autowired
 	private InstallmentPaymentService installmentService;
+	
 
 	private long latePaymentFees = 100;
 
@@ -55,6 +56,8 @@ public class BillService {
 		currentBill.setOutstandingAmount(bill.getOutstandingAmount());
 		currentBill.setPaid(bill.isPaid());
 		currentBill.setTotalAmountDue(bill.getTotalAmountDue());
+		currentBill.setCashbackEarned(bill.getCashbackEarned());
+		currentBill.setMonthlySpend(bill.getMonthlySpend());
 
 		return Optional.ofNullable(billRepo.save(currentBill));
 	}
@@ -291,10 +294,16 @@ public class BillService {
 
 	private void applyCashback(long cardId) {
 		CreditCard card = cardService.findCardByCardId(cardId).orElse(null);
+		Bill bill = findBillByCreditCard(card).orElse(null);
+		
+		
 		double monthlySpend = card.getMonthlySpend();
 		double cashbackAccrued = card.getCashback();
 		double cashbackCarriedForward = card.getCashbackCarriedForward();
 		double cashbackCredited = 0.0;
+		
+		// Update the monthly spend in the bill
+		bill.setMonthlySpend(monthlySpend);
 		
 		// of the cashback carried forward, credit the entire amount to the card balance, or = to card balance, whichever is smaller
 		double cashbackCarriedForwardCredited =  cashbackCarriedForward <= card.getBalance() ? cashbackCarriedForward : card.getBalance();
@@ -332,6 +341,10 @@ public class BillService {
 				cardTransactionService.createCashbackTransaction(card, cashbackCredited);
 			}
 		}
+		
+		bill.setCashbackEarned(cashbackCredited);
+		
+		updateBill(bill);
 
 		// Since cashback will be credited to account, reset the card cashback once cashback has been credited reset spending
 		// in billing cycle to 0, and persist the new state of the card

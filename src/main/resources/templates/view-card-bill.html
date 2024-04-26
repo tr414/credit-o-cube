@@ -38,8 +38,8 @@
 	<div>
 		<table>
 			<thead>
-			<h3 class="page-title">Viewing Card Bill for: <span th:text="${bill.card.getFormattedCreditCardNumber()}"></span> </h3>
-			<h3 class="bill-info">Bill Status</h3>
+			<h2 class="page-title"><span th:text="${bill.card.cardType.name} + ' Card' + ' (' + ${bill.card.getFormattedCreditCardNumber()} + ')'"></span> </h2>
+			<h3 class="bill-info">My Bill Summary</h3>
 				<tr>
 					<th>Total Bill Amount</th>
 					<th>Outstanding Amount Due</th>
@@ -62,7 +62,28 @@
 	<div>
 		<table>
 			<thead>
-			<h3 class="bill-info">Bill Details</h2>
+			<h3 class="bill-info">My Cashback</h3>
+				<tr>
+					<th>Spending in this billing cycle</th>
+					<th>Cashback earned on spending this month</th>
+					<th>Cashback carried forward from past months</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+				<tr>
+					<td th:text="${bill.monthlySpend}" class="price-element"></td>
+					<td th:text="${bill.cashbackEarned}" class="price-element"></td>
+					<td th:text="${bill.card.cashbackCarriedForward}" class="price-element"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div>
+		<table>
+			<thead>
+			<h3 class="bill-info">My Transactions</h3>
 				<tr>
 					<th>Transaction Date</th>
 					<th>Amount</th>
