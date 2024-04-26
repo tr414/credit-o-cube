@@ -7,7 +7,7 @@
 }
 
 /* Titles styling for clarity and emphasis */
-h1, h2 {
+h1, h2, h4 {
     color: #333; /* Brand color for emphasis */
     margin: 10px 0; /* Space around titles */
     text-align: center; /* Center-aligns titles */
@@ -54,7 +54,7 @@ h1, h2 {
 table {
     width: 100%; /* Full width tables */
     border-collapse: collapse; /* Collapses borders */
-    margin-top: 20px; /* Spacing from form */
+    margin: 20px auto; /* Spacing from form */
 }
 
 table thead {

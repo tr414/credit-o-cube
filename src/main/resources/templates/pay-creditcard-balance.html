@@ -61,7 +61,7 @@
         <div class="input-group">
             <label for="debitAccountNumber">Debit Account Number:</label>
             <select id="debitAccountNumber" name="debitAccountNumber" required>
-                <option th:each="account : ${accounts}" th:value="${account.accountNumber}" th:text="${account.getFormattedAccountNumber()}">Debit Account Number</option>
+                <option th:each="account : ${accounts}" th:value="${account.accountNumber}" th:text="${account.getFormattedAccountNumber()} + ' (Available balance: ' + ${account.getFormattedBalance()} + ')'">Debit Account Number</option>
             </select>
         </div>
         <div class="input-group">

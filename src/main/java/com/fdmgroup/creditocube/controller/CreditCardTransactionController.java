@@ -90,6 +90,7 @@ public class CreditCardTransactionController {
 		List<CreditCardTransaction> cardTransactions = transactionService.findAllCreditCardTransactions(card);
 		model.addAttribute("transactions", cardTransactions);
 		model.addAttribute("cardId", cardId);
+		model.addAttribute("card", card);
 
 		return ("card-transactions");
 	}
@@ -289,6 +290,7 @@ public class CreditCardTransactionController {
 				card);
 		model.addAttribute("transactions", transactions);
 		model.addAttribute("cardId", cardId);
+		model.addAttribute("card", card);
 
 		return "card-transactions";
 	}

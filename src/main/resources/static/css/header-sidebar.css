@@ -88,7 +88,7 @@ body {
 .menu-btn {
 	cursor: pointer; /* Indicates the element is clickable */
 	font-size: 30px; /* Larger font size for the menu icon */
-	color: #818181; /* Grey color for the icon/button */
+	color: white; /*#818181;  Grey color for the icon/button */
 	z-index: 2; /* Ensures the button is clickable over other content */
 	position: relative; /* Needed for proper placement */
 }

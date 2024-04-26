@@ -48,7 +48,7 @@
 
 
   	<h1>Credit Card Transactions</h1>
-  	<h2>Filter By Date:</h2>
+  	<h4>Card number: <span th:text="${card.getFormattedCreditCardNumber()}"></span></h4>
 
 	<form th:action="@{/find-by-date}" method="POST">Start Date:
 	
@@ -58,13 +58,15 @@
 	<input type="date" name="dateTo" placeholder="Date From">
 	<button type="submit">Find Transactions</button>
 	</form> 
-	
-	
-
-
   </div>
+  
 	<div>
 		<table>
+			<colgroup>
+		       <col span="1" style="width: 15%;">
+		       <col span="1" style="width: 15%;">
+		       <col span="1" style="width: 70%;">
+		    </colgroup>
 			<thead>
 				<tr>
 					<th>Transaction Date</th>

@@ -38,8 +38,8 @@
 	<div>
 		<table>
 			<thead>
-			<h1 class="page-title">Viewing Card Bill for: <!-- <span th:text="${cardName}"></span> <span th:text="${cardNumber}"></span> --> </h1>
-			<h2 class="bill-info">Bill Status</h2>
+			<h3 class="page-title">Viewing Card Bill for: <span th:text="${bill.card.getFormattedCreditCardNumber()}"></span> </h3>
+			<h3 class="bill-info">Bill Status</h3>
 				<tr>
 					<th>Total Bill Amount</th>
 					<th>Outstanding Amount Due</th>
@@ -62,7 +62,7 @@
 	<div>
 		<table>
 			<thead>
-			<h2 class="bill-info">Bill Details</h2>
+			<h3 class="bill-info">Bill Details</h2>
 				<tr>
 					<th>Transaction Date</th>
 					<th>Amount</th>

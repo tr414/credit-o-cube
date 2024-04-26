@@ -6,6 +6,9 @@
  */
 package com.fdmgroup.creditocube.model;
 
+import java.text.NumberFormat;
+import java.util.Currency;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -191,6 +194,12 @@ public class DebitAccount {
 	public String getMaskedAccountNumber() {
 		return "***-***-" + accountNumber.substring(6, 9);
 
+	}
+	
+	public String getFormattedBalance() {
+		NumberFormat formatter = NumberFormat.getCurrencyInstance();
+		formatter.setCurrency(Currency.getInstance("SGD"));
+		return formatter.format(accountBalance);
 	}
 
 }
