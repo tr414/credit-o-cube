@@ -372,7 +372,8 @@ public class DebitAccountController {
 	 */
 	@PostMapping("/transfer-to-account-number")
 	public String transferToAccountNumber(@RequestParam long selectedAccountId, @RequestParam String toAccountNumber,
-			@RequestParam String toOwnAccountNumber, @RequestParam double amount) {
+			@RequestParam String toOwnAccountNumber, @RequestParam double amount,
+			RedirectAttributes redirectAttributes) {
 
 		if (toAccountNumber == null || toAccountNumber.isEmpty() || toAccountNumber.isBlank()) {
 			toAccountNumber = toOwnAccountNumber;
@@ -395,6 +396,12 @@ public class DebitAccountController {
 		if (optionalToAccount.isEmpty()) {
 			logger.info("toAccount not found in database, assume account is in another bank");
 			targetIsInThisBank = false;
+		}
+
+		if (fromAccount.getAccountNumber().equals(toAccountNumber)) {
+			redirectAttributes.addFlashAttribute("toAndFromAccountNumbersSame",
+					"You are trying to transfer to the same account - please choose another account");
+			return "redirect:/transfer-to-account-number";
 		}
 
 		// Perform transfer for from-account

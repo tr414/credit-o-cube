@@ -69,14 +69,13 @@
 			</form>
 
 
-			
+
 			<form
 				th:action="@{/deposit-withdraw}"
 				method="get">
 				<input
 					type="submit"
 					class="debit-action-buttons"
-
 					value="Deposit / Withdraw">
 			</form>
 			<form
@@ -87,7 +86,14 @@
 					class="toggle-debit-action-buttons"
 					value="Transfer Money">
 			</form>
+			
+			
 		</div>
+		<p
+				th:if="${toAndFromAccountNumbersSame}"
+				th:text="${toAndFromAccountNumbersSame}"
+				class="error-message"
+				th:style="${toAndFromAccountNumbersSame} ? 'display: block;' : 'display: none;'"></p>
 
 		<div class="transfer-form-section">
 			<div>
@@ -100,23 +106,26 @@
 					<option
 						th:each="account : ${session.accounts}"
 						th:value="${account.accountId}"
-						th:text="${account.accountName}"></option>
+						th:text="${account.accountName} + ' - ' + ${account.getFormattedAccountNumber()}"></option>
 				</select>
 				<label for="amount">Amount</label>
 				<input
 					type="number"
+					min="0.01"
+					step="0.01"
 					name="amount">
 				<label>Transfer to another account in this application</label>
 				<select name="toOwnAccountNumber">
 					<option
 						th:each="account : ${session.accounts}"
 						th:value="${account.accountNumber}"
-						th:text="${account.accountName}"></option>
+						th:text="${account.accountName} + ' - ' + ${account.getFormattedAccountNumber()}"></option>
 				</select>
 				<label for="toAccountNumber">Transfer to External Account
 					Number</label>
 				<input
-					type="text"
+					type="number"
+					min="1"
 					id="toAccountNumber"
 					name="toAccountNumber">
 				<br>
