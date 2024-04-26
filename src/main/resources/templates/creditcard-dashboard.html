@@ -261,11 +261,11 @@
 								         <input type="hidden" th:value="${card.cardId}" name="cardId">
 								         <button type="submit" class="non-credit-action-buttons">Generate Bill</button>
 								         </form>
-								<!--               Simulate Late Payment button -->
-								<!--                <form th:action="@{/simulate-late-payment}" method="POST" class="form-button"> -->
-								<!--               	<input type="hidden" th:value="${card.cardId}" name="cardId"> -->
-								<!--                 <button type="submit" class="non-credit-action-buttons">Simulate Late Payment</button> -->
-								<!--               </form> -->
+<!-- 								              Simulate Late Payment button -->
+								               <form th:action="@{/simulate-late-payment}" method="POST" class="form-button">
+								              	<input type="hidden" th:value="${card.cardId}" name="cardId">
+								                <button type="submit" class="non-credit-action-buttons">Simulate Late Payment</button>
+								              </form>
 							</div>
 						</td>
 
