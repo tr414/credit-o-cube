@@ -84,9 +84,7 @@ public class BillService {
 		
 		LOGGER.info("Generating bill for card number: {}", card.getCardNumber());
 		
-		// Before generating the bill, check if the customer is eligible for cashback
-		// based on the monthly spend, and apply that cashback
-		applyCashback(card.getCardId());
+		
 
 		double totalAmountDue = card.getBalance();
 		Optional<Bill> cardBillOptional = billRepo.findByCardIs(card);
@@ -102,7 +100,11 @@ public class BillService {
 			LOGGER.info("Generated empty bill for new card number: {}", card.getCardNumber());
 			return createBill(newCardBill);
 		}
-
+		
+		// Before generating the bill, check if the customer is eligible for cashback
+				// based on the monthly spend, and apply that cashback
+		applyCashback(card.getCardId());
+		
 		Bill cardBill = cardBillOptional.get();
 
 		// Modify total amount due by accounting for transactions made on installment
