@@ -10,7 +10,7 @@ body {
   background-color: #f4f4f4;
   color: #333;
   line-height: 1.6;
-  padding-bottom: 180px;
+  padding-bottom: 0;
 }
 
 .container {
@@ -57,7 +57,7 @@ main{
 }
 
 .tagline h1 {
-  font-size: 50px;
+  font-size: 40px;
   text-align: center;
   margin-top: 10px;
   line-height: 50px;
@@ -321,7 +321,7 @@ footer {
   padding: 10px 20px;
   display: flex;
   justify-content: space-around;
-  position: fixed; /* Fix the position of the footer */
+  position: relative; /* Fix the position of the footer */
   bottom: 0; /* Align the footer to the bottom of the viewport */
   left: 0; /* Align the footer to the left of the viewport */
   width: 100%; /* Ensure the footer spans the full width */

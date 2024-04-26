@@ -114,10 +114,11 @@
 			<div th:if="${session.selectedAccount != null}">
 				<h2
 					th:text="'Account Name: '+${session.selectedAccount.accountName}"></h2>
-				<p
-					th:text="'Account Number: '+${session.selectedAccount.accountNumber}"></p>
-				<p
-					th:text="'Current Balance: $'+${session.selectedAccount.accountBalance}"></p>
+				<span
+					th:text="'Account Number: '+${session.selectedAccount.getFormattedAccountNumber()}"></span><br><br>
+				<span>Current Balance:</span>
+				<span
+					th:text="${session.selectedAccount.accountBalance}" class="price-element"></span>
 				<form
 					th:action="update-account-balance"
 					method="POST">
