@@ -77,6 +77,23 @@ tbody tr:hover {
 	background-color: #003c8f; /* Darker blue on hover */
 }
 
+.toggle-debit-action-buttons {
+	background-color: #0051ba; /* Blue background to match the theme */
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+	/* Ensure the buttons don't wrap on smaller screens */
+	white-space: nowrap;
+	margin: 0; /* Remove any margin to prevent overlap */
+	flex: 1; /* Each button will take up equal space */
+	box-shadow: 0 0 20px rgba(0, 81, 186, 0.75); /* Blue glow */
+}
+
+
+
+
 .content-area {
 	margin-left: 250px;
 	margin-top: 5px;

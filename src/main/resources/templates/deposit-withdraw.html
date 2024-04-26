@@ -36,10 +36,10 @@
 		class="side-menu menu-active"
 		id="sideMenu">
 		<div class="user-greeting">
-			<p>Deposit or withdraw your money here</p>
+			<p>Deposit or withdraw your money</p>
 		</div>
 		<a href="customer-dashboard">Back to Main Dashboard</a> <a
-			href="account-dashboard">View Account Dashboard</a> <a
+			href="account-dashboard">View Debit Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form
 			th:action="@{/logout}"
@@ -75,7 +75,7 @@
 				method="get">
 				<input
 					type="submit"
-					class="debit-action-buttons"
+					class="toggle-debit-action-buttons"
 					value="Deposit / Withdraw">
 			</form>
 			<form
