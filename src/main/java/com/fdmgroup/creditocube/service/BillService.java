@@ -86,7 +86,7 @@ public class BillService {
 		
 		
 
-		double totalAmountDue = card.getBalance();
+		
 		Optional<Bill> cardBillOptional = billRepo.findByCardIs(card);
 
 		// The bill for this card does not exist, suggesting that this is a new card,
@@ -104,6 +104,7 @@ public class BillService {
 		// Before generating the bill, check if the customer is eligible for cashback
 				// based on the monthly spend, and apply that cashback
 		applyCashback(card.getCardId());
+		double totalAmountDue = card.getBalance();
 		
 		Bill cardBill = cardBillOptional.get();
 
