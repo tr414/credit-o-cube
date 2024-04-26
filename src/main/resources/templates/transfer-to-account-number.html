@@ -100,7 +100,7 @@
 					<option
 						th:each="account : ${session.accounts}"
 						th:value="${account.accountId}"
-						th:text="${account.accountName}"></option>
+						th:text="${account.accountName} + ' - ' + ${account.getFormattedAccountNumber()}"></option>
 				</select>
 				<label for="amount">Amount</label>
 				<input
@@ -111,7 +111,7 @@
 					<option
 						th:each="account : ${session.accounts}"
 						th:value="${account.accountNumber}"
-						th:text="${account.accountName}"></option>
+						th:text="${account.accountName} + ' - ' + ${account.getFormattedAccountNumber()}"></option>
 				</select>
 				<label for="toAccountNumber">Transfer to External Account
 					Number</label>
