@@ -37,11 +37,11 @@
 		class="side-menu menu-active"
 		id="sideMenu">
 		<div class="user-greeting">
-			<p>Transfer money</p>
+			<p>Transfer money to other accounts</p>
 
 		</div>
 		<a href="customer-dashboard">Back to Main Dashboard</a> <a
-			href="account-dashboard">View Account Dashboard</a> <a
+			href="account-dashboard">View Debit Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form
 			th:action="@{/logout}"
@@ -84,14 +84,14 @@
 				method="get">
 				<input
 					type="submit"
-					class="debit-action-buttons"
+					class="toggle-debit-action-buttons"
 					value="Transfer Money">
 			</form>
 		</div>
 
 		<div class="transfer-form-section">
 			<div>
-				<p>Please choose an account from the dropdown menu below.</p>
+				<p>Transfer from:</p>
 			</div>
 			<form
 				th:action="@{/transfer-to-account-number}"
@@ -106,7 +106,7 @@
 				<input
 					type="number"
 					name="amount">
-				<label>Transfer to another account in this app</label>
+				<label>Transfer to another account in this application</label>
 				<select name="toOwnAccountNumber">
 					<option
 						th:each="account : ${session.accounts}"

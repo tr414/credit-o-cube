@@ -55,9 +55,9 @@ body {
 .user-greeting {
 	color: #fff; /* Sets text color to white */
 	background: #0051ba; /* Blue background for the greeting area */
-	padding: 10px 32px; /* Adequate padding for visual comfort */
+	padding: 5px 16px; /* Adequate padding for visual comfort */
 	font-size: 18px; /* Larger font size for better readability */
-	text-align: left; /* Aligns text to the left */
+	text-align: center; /* Aligns text to the left */
 	margin-top: 13px; /* Margin top for spacing */
 	margin-bottom: 20px; /* Margin bottom for spacing */
 }

@@ -36,11 +36,10 @@
 		class="side-menu menu-active"
 		id="sideMenu">
 		<div class="user-greeting">
-			<p>DEBIT ACCOUNTS</p>
 			<p>Start your debit account journey here</p>
 		</div>
 		<a href="customer-dashboard">Back to Main Dashboard</a> <a
-			href="account-dashboard">View Account Dashboard</a> <a
+			href="account-dashboard">View Debit Account Dashboard</a> <a
 			href="creditcard-dashboard">View Credit Card Dashboard</a>
 		<form
 			th:action="@{/logout}"
@@ -60,7 +59,7 @@
 				method="get">
 				<input
 					type="submit"
-					class="debit-action-buttons"
+					class="toggle-debit-action-buttons"
 					value="Create Debit Account">
 			</form>
 			<!-- 			<form th:action="@{/account-dashboard}" method="get"> -->
@@ -89,6 +88,7 @@
 			</form>
 		</div>
 		<div class="debit-form-wrapper">
+		<h1>Create your Debit Account here</h1>
 			<form
 				th:action="@{/create-debit-account}"
 				method="POST">
