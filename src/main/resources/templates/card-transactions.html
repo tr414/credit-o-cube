@@ -48,7 +48,7 @@
 
 
   	<h2>Credit Card Transactions</h2>
-  	<h3><span th:text="${card.cardType.name} + ' Card' + ' (' + ${card.getFormattedCreditCardNumber()} + ')'"></span></h3>
+  	<h3><span th:text="${card.cardType.name} + ' (' + ${card.getFormattedCreditCardNumber()} + ')'"></span></h3>
 
 	<form th:action="@{/find-by-date}" method="POST">Start Date:
 	
