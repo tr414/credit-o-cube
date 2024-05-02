@@ -45,6 +45,7 @@
 					<th>Outstanding Amount Due</th>
 					<th>Minimum Amount Due</th>
 					<th>Payment Required</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -55,6 +56,20 @@
 					<td th:text="${bill.minimumAmountDue}" class="price-element"></td>
 					<td th:if="${bill.paid}">No</td>
 					<td th:if="${!bill.paid}">Yes</td>
+					<td th:if="${bill.outstandingAmount > 0}">
+						<form
+							th:action="@{/open-card-payment}"
+							method="POST"
+							class="form-button">
+							<input
+								type="hidden"
+								th:value="${bill.card.cardId}"
+								name="cardId">
+							<button
+								type="submit"
+								class="credit-action-buttons">Make Payment</button>
+						</form>
+					</td>
 				</tr>
 			</tbody>
 		</table>
