@@ -1,5 +1,7 @@
 package com.fdmgroup.creditocube.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -44,7 +46,7 @@ public class Bill {
 	}
 
 	public void setMonthlySpend(double monthlySpend) {
-		this.monthlySpend = monthlySpend;
+		this.monthlySpend = new BigDecimal(monthlySpend).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public double getCashbackEarned() {
@@ -52,7 +54,7 @@ public class Bill {
 	}
 
 	public void setCashbackEarned(double cashbackEarned) {
-		this.cashbackEarned = cashbackEarned;
+		this.cashbackEarned = new BigDecimal(cashbackEarned).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	private boolean paid;
@@ -74,7 +76,7 @@ public class Bill {
 	}
 
 	public void setTotalAmountDue(double totalAmountDue) {
-		this.totalAmountDue = totalAmountDue;
+		this.totalAmountDue = new BigDecimal(totalAmountDue).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public double getMinimumAmountDue() {
@@ -82,7 +84,7 @@ public class Bill {
 	}
 
 	public void setMinimumAmountDue(double minimumAmountDue) {
-		this.minimumAmountDue = minimumAmountDue;
+		this.minimumAmountDue = new BigDecimal(minimumAmountDue).setScale(2, RoundingMode.HALF_UP).doubleValue();;
 	}
 
 	public boolean isPaid() {
@@ -114,7 +116,7 @@ public class Bill {
 	}
 
 	public void setOutstandingAmount(double outstandingAmount) {
-		this.outstandingAmount = outstandingAmount;
+		this.outstandingAmount = new BigDecimal(outstandingAmount).setScale(2, RoundingMode.HALF_UP).doubleValue();;
 	}
 
 	public LocalDateTime getBillIssueTime() {
@@ -138,7 +140,7 @@ public class Bill {
 	}
 
 	public void setPreviousBillOutstandingAmount(double previousBillOutstandingAmount) {
-		this.previousBillOutstandingAmount = previousBillOutstandingAmount;
+		this.previousBillOutstandingAmount = new BigDecimal(previousBillOutstandingAmount).setScale(2, RoundingMode.HALF_UP).doubleValue();;
 	}
 	
 	public String getFormattedDate(LocalDateTime dateTime) {

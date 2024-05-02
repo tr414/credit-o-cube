@@ -1,5 +1,7 @@
 package com.fdmgroup.creditocube.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -89,7 +91,7 @@ public class CreditCardTransaction {
 	}
 
 	public void setCashbackAmount(double cashbackAmount) {
-		this.cashbackAmount = cashbackAmount;
+		this.cashbackAmount = new BigDecimal(cashbackAmount).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public LocalDateTime getTransactionDate() {
@@ -105,7 +107,7 @@ public class CreditCardTransaction {
 	}
 
 	public void setTransactionAmount(double transactionAmount) {
-		this.transactionAmount = transactionAmount;
+		this.transactionAmount = new BigDecimal(transactionAmount).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public String getDescription() {

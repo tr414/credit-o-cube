@@ -1,5 +1,7 @@
 package com.fdmgroup.creditocube.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -100,7 +102,8 @@ public class CreditCard {
 	}
 
 	public void setBalance(double balance) {
-		this.balance = balance;
+		
+		this.balance = new BigDecimal(balance).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public double getCardLimit() {
@@ -141,7 +144,7 @@ public class CreditCard {
 	}
 
 	public void setCashback(double cashback) {
-		this.cashback = cashback;
+		this.cashback = new BigDecimal(cashback).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 	
 	public double getMonthlySpend() {
@@ -149,7 +152,7 @@ public class CreditCard {
 	}
 
 	public void setMonthlySpend(double monthlySpend) {
-		this.monthlySpend = monthlySpend;
+		this.monthlySpend = new BigDecimal(monthlySpend).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public List<InstallmentPayment> getInstallmentPayments() {
@@ -191,7 +194,7 @@ public class CreditCard {
 	}
 
 	public void setCashbackCarriedForward(double cashbackCarriedForward) {
-		this.cashbackCarriedForward = cashbackCarriedForward;
+		this.cashbackCarriedForward = new BigDecimal(cashbackCarriedForward).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 }
