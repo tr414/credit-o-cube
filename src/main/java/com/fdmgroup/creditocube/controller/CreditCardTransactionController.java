@@ -163,7 +163,7 @@ public class CreditCardTransactionController {
 
 		if (currency.equalsIgnoreCase("sgd")) {
 			if (validTransaction(transactionAmount, card)) {
-				card.setBalance(card.getBalance() + transactionAmount);
+				card.setBalance( new BigDecimal(card.getBalance() + transactionAmount).setScale(2, RoundingMode.HALF_UP).doubleValue() );
 
 				// calculate cashback based on merchant category and card reward
 				double cashback = new BigDecimal(transactionAmount * cashbackRate).setScale(2, RoundingMode.HALF_UP)
@@ -210,14 +210,15 @@ public class CreditCardTransactionController {
 
 			if (validTransaction(transactionSGDAmount, card)) {
 				card.setBalance(card.getBalance() + transactionSGDAmount);
-
+				
+				// Calculate the cashback earned on the transaction and add it to the card monthly accrued cashback
 				double cashback = new BigDecimal(transactionSGDAmount * cashbackRate).setScale(2, RoundingMode.HALF_UP)
 						.doubleValue();
 				card.setCashback(card.getCashback() + cashback);
 
 				// add the transaction to monthly spend on the card for eventual cashback
 				// eligibility check
-				card.setMonthlySpend(transactionSGDAmount + card.getMonthlySpend());
+				card.setMonthlySpend(new BigDecimal(card.getBalance() + transactionSGDAmount).setScale(2, RoundingMode.HALF_UP).doubleValue());
 
 				cardService.updateCard(card);
 

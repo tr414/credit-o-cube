@@ -219,13 +219,13 @@ public class BillService {
 			// Interest rate is hard coded as 10% at the moment
 			double interestFee = new BigDecimal(bill.getOutstandingAmount() * 0.1).setScale(2, RoundingMode.HALF_UP)
 					.doubleValue();
-			card.setBalance(cardBalance + interestFee);
+			card.setBalance( new BigDecimal(cardBalance + interestFee).setScale(2, RoundingMode.HALF_UP).doubleValue() ); 
 			cardTransactionService.createInterestFeeTransaction(card, interestFee);
 			LOGGER.info("Interest fee charged on outstanding amount for card number: {}", card.getCardNumber());
 		}
 
 		if (!bill.isPaid()) {
-			card.setBalance(card.getBalance() + latePaymentFees);
+			card.setBalance( new BigDecimal(card.getBalance() + latePaymentFees).setScale(2, RoundingMode.HALF_UP).doubleValue() ); 
 			cardTransactionService.createLatePaymentTransaction(card, latePaymentFees);
 			LOGGER.info("Late payment fee charged to card number: {}", card.getCardNumber());
 		}
@@ -305,6 +305,7 @@ public class BillService {
 		double cashbackCarriedForward = card.getCashbackCarriedForward();
 		double cashbackCredited = 0.0;
 		
+		
 		// Update the monthly spend in the bill
 		bill.setMonthlySpend(monthlySpend);
 		
@@ -319,7 +320,7 @@ public class BillService {
 		cashbackCarriedForward = cashbackCarriedForward - cashbackCarriedForwardCredited;
 		
 		// deduct the cashback carried forward from the card balance
-		card.setBalance(card.getBalance() - cashbackCarriedForwardCredited);
+		card.setBalance( new BigDecimal( card.getBalance() - cashbackCarriedForwardCredited ).setScale(2, RoundingMode.HALF_UP).doubleValue() ); 
 		card.setCashbackCarriedForward(cashbackCarriedForward);
 		
 		
@@ -334,7 +335,7 @@ public class BillService {
 			else {
 				cashbackCredited = cashbackAccrued;
 			}
-			card.setBalance(card.getBalance() - cashbackCredited);
+			card.setBalance( new BigDecimal( card.getBalance() - cashbackCredited ).setScale(2, RoundingMode.HALF_UP).doubleValue() ); 
 			
 			// If the full cashback accrued was not credited due to the card balance being too low, carry forward the card balance to the
 			// Next billing cycle

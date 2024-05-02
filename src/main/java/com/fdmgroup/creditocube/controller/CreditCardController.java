@@ -1,6 +1,7 @@
 package com.fdmgroup.creditocube.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -386,7 +387,7 @@ public class CreditCardController {
 			newCreditCardTransaction.setMerchant(credit);
 			creditCardTransactionService.createCreditCardTransaction(newCreditCardTransaction);
 
-			cardToBePaidOff.setBalance(cardToBePaidOff.getBalance() - amountPayable);
+			cardToBePaidOff.setBalance( new BigDecimal(cardToBePaidOff.getBalance() - amountPayable).setScale(2, RoundingMode.HALF_UP).doubleValue() ); 
 			creditCardService.updateCard(cardToBePaidOff);
 
 			logger.debug("Withdrawn $" + amountPayable + "from debit account to pay credit card");
