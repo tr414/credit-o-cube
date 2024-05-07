@@ -1,7 +1,7 @@
 # Credit-O-Cube
 
 ## Description
-This is a Web Application build using Spring Boot. It is a simple online banking system that allows customers to apply for and manage credit cards and bank accounts.
+This is a Web Application built using Spring Boot. It is a simple online banking system that allows customers to apply for and manage credit cards and bank accounts.
 
 ## Authors and acknowledgment
 I worked on this project over a 2 week timeframe with 4 of my colleagues at FDM as part of our final project.<br>
@@ -14,11 +14,10 @@ In terms of code, I was in charge of the following:
     <li>Design and build the business logic to calculate cashback, generate bills, and apply late payment fees for bills that are not paid on time</li>
 </ul>
 
-Logging reference video: https://www.youtube.com/watch?v=T_lWpqOWaE0 <br>
-
+Some resources I used to help me along the way:
 How to save and access credentials in an env.properties file: https://medium.com/@Marou_arnault/spring-boot-hide-your-credentials-fb1ca22ae911
 
 Spring Security and Testing: https://www.youtube.com/watch?v=6nibjpYC7hk (YouTube video) https://github.com/eleftherias/devoxx-greece/tree/main (Github Repo for project in the video)
 
 ## Project status
-Under development.
+MVP completed. No further development planned at the moment.
