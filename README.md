@@ -12,6 +12,7 @@ In terms of code, I was in charge of the following:
     <li>Implement user authentication and session management using Spring Security</li>
     <li>Design and build the business logic to allow installment payments on credit card transactions</li>
     <li>Design and build the business logic to calculate cashback, generate bills, and apply late payment fees for bills that are not paid on time</li>
+    <li>Build a system to retrieve forex data from an API, to allow foreign currency transactions on the credit card.</li>
 </ul>
 
 Some resources I used to help me along the way:<br>
