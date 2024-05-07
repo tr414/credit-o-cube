@@ -14,7 +14,7 @@ In terms of code, I was in charge of the following:
     <li>Design and build the business logic to calculate cashback, generate bills, and apply late payment fees for bills that are not paid on time</li>
 </ul>
 
-Some resources I used to help me along the way:
+Some resources I used to help me along the way:<br>
 How to save and access credentials in an env.properties file: https://medium.com/@Marou_arnault/spring-boot-hide-your-credentials-fb1ca22ae911
 
 Spring Security and Testing: https://www.youtube.com/watch?v=6nibjpYC7hk (YouTube video) https://github.com/eleftherias/devoxx-greece/tree/main (Github Repo for project in the video)
